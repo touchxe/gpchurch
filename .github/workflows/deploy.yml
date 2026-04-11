@@ -14,25 +14,27 @@ jobs:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
 
-      - name: 📤 lftp로 테마 업로드
+      - name: 🔍 FTP 경로 탐색
         run: |
           sudo apt-get install -y lftp
+          echo "=== lftp 경로 탐색 ==="
           lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "ftp://${{ secrets.FTP_HOST }}" -e "
             set ftp:ssl-allow no;
-            set mirror:parallel-transfer-count 5;
+            echo '--- pwd ---';
             pwd;
-            cd wp-content/themes;
+            echo '--- ls / ---';
+            ls;
+            echo '--- cd / then pwd ---';
+            cd /;
             pwd;
-            mirror --reverse --delete --verbose \
-              --exclude .git/ \
-              --exclude .DS_Store \
-              --exclude node_modules/ \
-              ./wp-content/themes/gapyeong-church/ gapyeong-church/;
-            mirror --reverse --delete --verbose \
-              --exclude .git/ \
-              --exclude .DS_Store \
-              --exclude node_modules/ \
-              ./wp-content/themes/gapyeong-church-child/ gapyeong-church-child/;
+            ls;
+            echo '--- try cd /www ---';
+            cd /www && pwd && ls || echo 'FAIL /www';
+            echo '--- try cd /www/wp-content/themes ---';
+            cd /www/wp-content/themes && pwd && ls || echo 'FAIL /www/wp-content/themes';
+            echo '--- back to home, try relative ---';
+            cd ~;
+            pwd;
+            cd wp-content/themes && pwd && ls || echo 'FAIL relative wp-content/themes';
             bye
           "
-          echo "✅ 배포 완료!"
