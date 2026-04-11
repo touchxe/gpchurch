@@ -6,8 +6,8 @@ HOST = os.environ['FTP_HOST']
 USER = os.environ['FTP_USER']
 PASS = os.environ['FTP_PASS']
 
-LOCAL_DIR = './wp-content/themes/'
-REMOTE_DIR = 'wp-content/themes/'
+LOCAL_DIR = './wp-content/themes'
+REMOTE_DIR = 'wp-content/themes'
 
 SKIP = {'.git', '.DS_Store', 'node_modules', '__pycache__'}
 
@@ -35,7 +35,7 @@ def upload_dir(ftp, local_path, remote_path):
                 ftp.storbinary(f'STOR {remote_item}', f)
             print(f'  ✅ {remote_item}')
 
-print(f'🔌 FTP 연결 중...')
+print('🔌 FTP 연결 중...')
 ftp = ftplib.FTP()
 ftp.connect(HOST, 21, timeout=30)
 ftp.login(USER, PASS)
