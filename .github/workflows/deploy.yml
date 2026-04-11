@@ -1,0 +1,35 @@
+name: 🚀 Cafe24 자동 배포
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push(merge)될 때만 실행
+
+jobs:
+  deploy:
+    name: FTP 배포 → Cafe24
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 코드 받기
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # 변경된 파일만 감지하기 위해
+
+      - name: 📤 FTP 업로드 (wp-content/themes)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: 21
+          protocol: ftp
+          local-dir: ./wp-content/themes/
+          server-dir: /www/wp-content/themes/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+          log-level: standard
+          security: loose
