@@ -26,13 +26,13 @@ jobs:
               --exclude .DS_Store \
               --exclude node_modules/ \
               ./wp-content/themes/gapyeong-church/ \
-              /wp-content/themes/gapyeong-church/;
+              /www/wp-content/themes/gapyeong-church/;
             mirror --reverse --delete --verbose \
               --exclude .git/ \
               --exclude .DS_Store \
               --exclude node_modules/ \
               ./wp-content/themes/gapyeong-church-child/ \
-              /wp-content/themes/gapyeong-church-child/;
+              /www/wp-content/themes/gapyeong-church-child/;
             bye
           "
           echo "✅ 배포 완료!"
