@@ -11,19 +11,18 @@ REMOTE_DIR = 'wp-content/themes/'
 
 SKIP = {'.git', '.DS_Store', 'node_modules', '__pycache__'}
 
-def ftp_mkdirs(ftp, path):
+def ensure_remote_dir(ftp, path):
     parts = path.strip('/').split('/')
     current = ''
     for part in parts:
         current = current + '/' + part if current else part
         try:
             ftp.mkd(current)
-            print(f'  📁 생성: {current}')
         except ftplib.error_perm:
-            pass  # 이미 존재
+            pass
 
 def upload_dir(ftp, local_path, remote_path):
-    ftp_mkdirs(ftp, remote_path)
+    ensure_remote_dir(ftp, remote_path)
     for item in sorted(os.listdir(local_path)):
         if item in SKIP:
             continue
@@ -32,20 +31,16 @@ def upload_dir(ftp, local_path, remote_path):
         if os.path.isdir(local_item):
             upload_dir(ftp, local_item, remote_item)
         else:
-            try:
-                with open(local_item, 'rb') as f:
-                    ftp.storbinary(f'STOR {remote_item}', f)
-                print(f'  ✅ {remote_item}')
-            except Exception as e:
-                print(f'  ❌ 실패: {remote_item} → {e}', file=sys.stderr)
-                sys.exit(1)
+            with open(local_item, 'rb') as f:
+                ftp.storbinary(f'STOR {remote_item}', f)
+            print(f'  ✅ {remote_item}')
 
-print(f'🔌 FTP 연결 중: {HOST}')
+print(f'🔌 FTP 연결 중...')
 ftp = ftplib.FTP()
 ftp.connect(HOST, 21, timeout=30)
 ftp.login(USER, PASS)
 ftp.set_pasv(True)
-print(f'✅ 연결 성공 (홈: {ftp.pwd()})')
+print('✅ 로그인 성공')
 
 upload_dir(ftp, LOCAL_DIR, REMOTE_DIR)
 
