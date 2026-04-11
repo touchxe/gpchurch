@@ -28,7 +28,7 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./wp-content/themes/
-          server-dir: /wp-content/themes/
+          server-dir: wp-content/themes/
           exclude: |
             **/.git*
             **/.git*/**
