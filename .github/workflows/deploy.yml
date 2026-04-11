@@ -14,27 +14,9 @@ jobs:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
 
-      - name: 🔍 FTP 경로 탐색
-        run: |
-          sudo apt-get install -y lftp
-          echo "=== lftp 경로 탐색 ==="
-          lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "ftp://${{ secrets.FTP_HOST }}" -e "
-            set ftp:ssl-allow no;
-            echo '--- pwd ---';
-            pwd;
-            echo '--- ls / ---';
-            ls;
-            echo '--- cd / then pwd ---';
-            cd /;
-            pwd;
-            ls;
-            echo '--- try cd /www ---';
-            cd /www && pwd && ls || echo 'FAIL /www';
-            echo '--- try cd /www/wp-content/themes ---';
-            cd /www/wp-content/themes && pwd && ls || echo 'FAIL /www/wp-content/themes';
-            echo '--- back to home, try relative ---';
-            cd ~;
-            pwd;
-            cd wp-content/themes && pwd && ls || echo 'FAIL relative wp-content/themes';
-            bye
-          "
+      - name: 📤 FTP 업로드 (Python)
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+        run: python3 scripts/ftp_deploy.py

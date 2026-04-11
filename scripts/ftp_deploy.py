@@ -2,47 +2,63 @@ import ftplib
 import os
 import sys
 
-HOST = os.environ['FTP_HOST']
-USER = os.environ['FTP_USER']
-PASS = os.environ['FTP_PASS']
+FTP_HOST = os.environ['FTP_HOST']
+FTP_USER = os.environ['FTP_USER']
+FTP_PASS = os.environ['FTP_PASS']
 
-LOCAL_DIR = './wp-content/themes'
-REMOTE_DIR = 'wp-content/themes'
+LOCAL_THEMES = './wp-content/themes'
+REMOTE_THEMES = 'wp-content/themes'
 
-SKIP = {'.git', '.DS_Store', 'node_modules', '__pycache__'}
+def upload_dir(ftp, local_dir, remote_dir):
+    """로컬 디렉토리를 FTP 서버에 재귀적으로 업로드"""
+    # 원격 디렉토리 생성 시도
+    try:
+        ftp.mkd(remote_dir)
+        print(f"  📁 생성: {remote_dir}")
+    except ftplib.error_perm:
+        pass  # 이미 존재
 
-def ensure_remote_dir(ftp, path):
-    parts = path.strip('/').split('/')
-    current = ''
-    for part in parts:
-        current = current + '/' + part if current else part
-        try:
-            ftp.mkd(current)
-        except ftplib.error_perm:
-            pass
+    for item in sorted(os.listdir(local_dir)):
+        local_path = os.path.join(local_dir, item)
+        remote_path = f"{remote_dir}/{item}"
 
-def upload_dir(ftp, local_path, remote_path):
-    ensure_remote_dir(ftp, remote_path)
-    for item in sorted(os.listdir(local_path)):
-        if item in SKIP:
+        # 제외 항목
+        if item in ['.git', '.DS_Store', 'node_modules', '.gitignore']:
             continue
-        local_item = os.path.join(local_path, item)
-        remote_item = remote_path + '/' + item
-        if os.path.isdir(local_item):
-            upload_dir(ftp, local_item, remote_item)
+
+        if os.path.isdir(local_path):
+            upload_dir(ftp, local_path, remote_path)
         else:
-            with open(local_item, 'rb') as f:
-                ftp.storbinary(f'STOR {remote_item}', f)
-            print(f'  ✅ {remote_item}')
+            with open(local_path, 'rb') as f:
+                try:
+                    ftp.storbinary(f'STOR {remote_path}', f)
+                    print(f"  ✅ {remote_path}")
+                except Exception as e:
+                    print(f"  ❌ {remote_path}: {e}")
 
-print('🔌 FTP 연결 중...')
-ftp = ftplib.FTP()
-ftp.connect(HOST, 21, timeout=30)
-ftp.login(USER, PASS)
-ftp.set_pasv(True)
-print('✅ 로그인 성공')
+def main():
+    print("🔌 FTP 접속 중...")
+    ftp = ftplib.FTP()
+    ftp.connect(FTP_HOST, 21, timeout=30)
+    ftp.login(FTP_USER, FTP_PASS)
+    ftp.encoding = 'utf-8'
+    print(f"  PWD: {ftp.pwd()}")
 
-upload_dir(ftp, LOCAL_DIR, REMOTE_DIR)
+    themes = ['gapyeong-church', 'gapyeong-church-child']
+    
+    for theme in themes:
+        local_dir = os.path.join(LOCAL_THEMES, theme)
+        remote_dir = f"{REMOTE_THEMES}/{theme}"
 
-ftp.quit()
-print('🎉 배포 완료!')
+        if not os.path.isdir(local_dir):
+            print(f"⏭️  {theme} 로컬에 없음, 스킵")
+            continue
+
+        print(f"\n🚀 배포 중: {theme}")
+        upload_dir(ftp, local_dir, remote_dir)
+
+    ftp.quit()
+    print("\n✅ 배포 완료!")
+
+if __name__ == '__main__':
+    main()
