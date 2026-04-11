@@ -17,22 +17,22 @@ jobs:
       - name: 📤 lftp로 테마 업로드
         run: |
           sudo apt-get install -y lftp
-          lftp -e "
+          lftp -u "${{ secrets.FTP_USER }},${{ secrets.FTP_PASS }}" "ftp://${{ secrets.FTP_HOST }}" -e "
             set ftp:ssl-allow no;
             set mirror:parallel-transfer-count 5;
-            open ftp://${{ secrets.FTP_USER }}:${{ secrets.FTP_PASS }}@${{ secrets.FTP_HOST }};
+            pwd;
+            cd wp-content/themes;
+            pwd;
             mirror --reverse --delete --verbose \
               --exclude .git/ \
               --exclude .DS_Store \
               --exclude node_modules/ \
-              ./wp-content/themes/gapyeong-church/ \
-              /www/wp-content/themes/gapyeong-church/;
+              ./wp-content/themes/gapyeong-church/ gapyeong-church/;
             mirror --reverse --delete --verbose \
               --exclude .git/ \
               --exclude .DS_Store \
               --exclude node_modules/ \
-              ./wp-content/themes/gapyeong-church-child/ \
-              /www/wp-content/themes/gapyeong-church-child/;
+              ./wp-content/themes/gapyeong-church-child/ gapyeong-church-child/;
             bye
           "
           echo "✅ 배포 완료!"
