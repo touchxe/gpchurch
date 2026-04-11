@@ -1,0 +1,151 @@
+/* Small Group Page Design */
+
+.sg-section {
+    margin-bottom: 80px;
+}
+
+.sg-section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 30px;
+    padding-left: 15px;
+    border-left: 5px solid #ec4899;
+    /* Pink Accent */
+}
+
+/* Section 1: Intro Goals */
+.sg-goal-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.sg-goal-list {
+    margin-top: 15px;
+}
+
+.sg-goal-item {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 15px;
+}
+
+.sg-goal-icon {
+    color: #ec4899;
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+/* Section 2: Group Cards (Grid) */
+.sg-group-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.sg-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-top: 4px solid #f472b6;
+    /* Pink Top Border */
+    border-radius: 8px;
+    padding: 25px;
+    height: 100%;
+}
+
+.sg-card h3 {
+    font-size: 1.4rem;
+    color: #831843;
+    font-weight: 700;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #fce7f3;
+    padding-bottom: 10px;
+}
+
+.sg-leader-row {
+    font-weight: 700;
+    color: #be185d;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.sg-slogan {
+    color: #be185d;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.sg-verse {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.6;
+    padding: 12px;
+    background: rgba(236, 72, 153, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid #f472b6;
+}
+
+/* Section 3: Cycle Steps */
+.cycle-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.cycle-step {
+    flex: 1;
+    min-width: 140px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px 15px;
+    text-align: center;
+    position: relative;
+}
+
+.cycle-num {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: #ec4899;
+    color: #fff;
+    border-radius: 50%;
+    line-height: 30px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.cycle-title {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.cycle-desc {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sg-group-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cycle-container {
+        flex-direction: column;
+    }
+
+    .cycle-step {
+        margin-bottom: 10px;
+    }
+}

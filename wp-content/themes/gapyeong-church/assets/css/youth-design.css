@@ -1,0 +1,183 @@
+/* Youth Page Design */
+
+.youth-section {
+    margin-bottom: 80px;
+}
+
+.youth-section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 30px;
+    padding-left: 15px;
+    border-left: 5px solid #06b6d4;
+    /* Cyan Accent for Youth */
+}
+
+/* Section 1: Motto & Officers */
+.youth-intro-box {
+    background: linear-gradient(to right, #ecfeff, #fff);
+    border: 1px solid #cffafe;
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 40px;
+}
+
+.youth-motto {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #0e7490;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.youth-verse {
+    text-align: center;
+    color: #155e75;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.youth-officer-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    border-top: 1px dashed #a5f3fc;
+    padding-top: 20px;
+}
+
+.youth-officer-item {
+    text-align: center;
+}
+
+.yo-role {
+    display: block;
+    font-size: 0.9rem;
+    color: #0891b2;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.yo-name {
+    font-size: 1.1rem;
+    color: #1e293b;
+}
+
+/* Section 2: SS Class Info */
+.youth-class-box {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 30px;
+}
+
+.youth-member-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.youth-member-badge {
+    background: #f1f5f9;
+    padding: 6px 14px;
+    border-radius: 20px;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+/* Section 3: Goals & Projects */
+.youth-project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.youth-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    transition: transform 0.2s;
+}
+
+.youth-card:hover {
+    transform: translateY(-5px);
+    border-color: #06b6d4;
+}
+
+.youth-card-icon {
+    width: 50px;
+    height: 50px;
+    background: #e0f2fe;
+    color: #0284c7;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.youth-card.special {
+    background: #f0fdfa;
+    /* Teal Tint */
+    border-color: #ccfbf1;
+}
+
+.youth-card.special .youth-card-icon {
+    background: #14b8a6;
+    color: #fff;
+}
+
+.yc-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.yc-list {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    padding-left: 15px;
+}
+
+/* Section 4: Action Items */
+.youth-action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.action-item {
+    text-align: center;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+}
+
+.action-title {
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.action-desc {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .youth-project-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .youth-action-grid {
+        grid-template-columns: 1fr;
+    }
+}

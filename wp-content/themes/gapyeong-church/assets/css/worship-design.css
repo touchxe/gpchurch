@@ -1,0 +1,249 @@
+/* Worship Page Design */
+
+/* Section Common */
+.program-section {
+    margin-bottom: 80px;
+}
+
+.program-section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 30px;
+    padding-left: 15px;
+    border-left: 5px solid #3b82f6;
+    /* Blue Accent */
+}
+
+/* Section 1: Worship & Prayer (List Style) */
+.worship-schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.worship-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    /* Soft Shadow */
+    border: 1px solid #f1f5f9;
+    transition: transform 0.2s;
+}
+
+.worship-item:hover {
+    transform: translateY(-2px);
+    border-color: #e2e8f0;
+}
+
+.worship-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-right: 20px;
+    min-width: 100px;
+    text-align: center;
+}
+
+.badge-dawn {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+/* Sky Blue */
+.badge-friday {
+    background: #f0f9ff;
+    color: #0369a1;
+}
+
+/* Darker Blue */
+.badge-sunset {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+/* Orange */
+
+.worship-info {
+    flex-grow: 1;
+}
+
+.worship-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 4px;
+}
+
+.worship-time {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Section 2: Afternoon Activities (Cards) */
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.activity-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.activity-icon {
+    width: 70px;
+    height: 70px;
+    background: #eff6ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: #3b82f6;
+}
+
+.activity-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.activity-time {
+    color: #475569;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.activity-desc {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* Section 3: Meetings (Table) */
+.meeting-table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.meeting-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    min-width: 600px;
+    /* Force scroll on small mobile */
+}
+
+.meeting-table th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    text-align: left;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.meeting-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.meeting-table tr:last-child td {
+    border-bottom: none;
+}
+
+.meeting-name {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Section 4: Rules (Notice Box) */
+.rules-box {
+    background: #fff1f2;
+    /* Light Red/Pink bg */
+    border: 1px solid #fecdd3;
+    /* Red border */
+    border-radius: 12px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.rules-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 6px;
+    background: #f43f5e;
+    /* Sidebar Accent */
+}
+
+.rules-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #be123c;
+    margin-bottom: 20px;
+}
+
+.rules-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.rule-item {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ffe4e6;
+}
+
+.rule-role {
+    font-weight: 700;
+    color: #881337;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.rule-action {
+    color: #4c0519;
+    font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rules-list {
+        grid-template-columns: 1fr;
+    }
+
+    .worship-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .worship-badge {
+        margin-right: 0;
+    }
+}

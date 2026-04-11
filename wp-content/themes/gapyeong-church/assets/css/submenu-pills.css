@@ -1,0 +1,74 @@
+/* Submenu Pill Navigation */
+/* Reference: Image 1 (Rounded Pills, Blue Gradient Active) */
+
+.submenu-nav-section {
+    background: transparent;
+    border-bottom: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 15px 0;
+    box-shadow: none;
+}
+
+.submenu-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 5px;
+    /* Space for focus rings/shadows */
+}
+
+.submenu-nav-item {
+    padding: 10px 32px;
+    border-radius: 50px;
+    /* Full pill shape */
+    font-size: 1rem;
+    font-weight: 600;
+    color: #475569;
+    background: #f1f5f9;
+    /* Light gray default */
+    border: 1px solid transparent;
+    /* Prevent layout shift */
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Active State - Blue/Purple Gradient */
+.submenu-nav-item.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    border-color: transparent;
+}
+
+/* Hover State */
+.submenu-nav-item:hover:not(.active) {
+    background: #e2e8f0;
+    color: #1e293b;
+    transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .submenu-nav {
+        justify-content: flex-start;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .submenu-nav-item {
+        padding: 8px 20px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Dept pages: disable sticky (too many items) */
+.submenu-no-sticky {
+    position: relative !important;
+}

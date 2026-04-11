@@ -1,0 +1,227 @@
+/* Sabbath School Page Design */
+
+.ss-section {
+    margin-bottom: 80px;
+}
+
+.ss-section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 30px;
+    padding-left: 15px;
+    border-left: 5px solid #10b981;
+    /* Emerald Green Accent */
+}
+
+/* Section 1: Officers (Simple Grid) */
+.officer-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.officer-row {
+    display: flex;
+    align-items: baseline;
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.officer-row:last-child {
+    border-bottom: none;
+}
+
+.officer-role {
+    font-weight: 700;
+    color: #059669;
+    /* Green Text */
+    width: 100px;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+}
+
+.officer-names {
+    color: #334155;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* Section 2: Motto (Banner) */
+.motto-banner {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    border: 1px solid #a7f3d0;
+}
+
+.motto-main {
+    font-family: 'Playfair Display', serif;
+    /* Use serif for motto */
+    font-size: 1.8rem;
+    color: #065f46;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.motto-verse {
+    font-size: 1.1rem;
+    color: #047857;
+    font-style: italic;
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+/* Section 3: Mission Cards */
+.mission-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.mission-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s;
+}
+
+.mission-card:hover {
+    transform: translateY(-3px);
+    border-color: #10b981;
+}
+
+.mission-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mission-title i {
+    color: #10b981;
+}
+
+.mission-desc {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Section 4: Class Groups */
+.class-groups-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.class-group {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.class-group-header {
+    background: #f8fafc;
+    padding: 15px 20px;
+    font-weight: 700;
+    color: #334155;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.class-list {
+    padding: 20px;
+}
+
+.class-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.class-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.class-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #059669;
+    margin-bottom: 5px;
+}
+
+.class-detail {
+    font-size: 0.95rem;
+    color: #475569;
+    margin-bottom: 3px;
+}
+
+.class-location {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+/* Section 5: Budget */
+.budget-box {
+    background: #fff7ed;
+    /* Light Orange */
+    border: 1px solid #ffedd5;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.budget-total {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ea580c;
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.budget-items {
+    list-style: disc;
+    padding-left: 20px;
+    color: #7c2d12;
+    line-height: 1.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mission-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .class-groups-container {
+        grid-template-columns: 1fr;
+    }
+
+    .officer-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .motto-main {
+        font-size: 1.5rem;
+    }
+}

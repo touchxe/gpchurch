@@ -1,0 +1,209 @@
+/* Pathfinder Page Design */
+
+.pf-section {
+    margin-bottom: 80px;
+}
+
+.pf-section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 30px;
+    padding-left: 15px;
+    border-left: 5px solid #8b5cf6;
+    /* Violet Accent */
+}
+
+/* Section 1: Officers Lists */
+.pf-officer-box {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.pf-officer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.pf-officer-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.pf-role {
+    font-size: 0.9rem;
+    color: #8b5cf6;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.pf-name {
+    font-size: 1.1rem;
+    color: #334155;
+    font-weight: 500;
+}
+
+/* Section 2: Goals */
+.pf-goal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.pf-goal-card {
+    background: #fdf4ff;
+    /* Light Violet Bg */
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #fae8ff;
+    text-align: center;
+}
+
+.pf-goal-icon {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8b5cf6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.pf-goal-title {
+    font-weight: 700;
+    color: #4c1d95;
+    margin-bottom: 10px;
+}
+
+.pf-goal-desc {
+    font-size: 0.95rem;
+    color: #6d28d9;
+    line-height: 1.5;
+}
+
+/* Section 3: Class Table */
+.pf-table-container {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.pf-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.pf-table th {
+    background: #f8fafc;
+    padding: 15px;
+    font-weight: 700;
+    color: #475569;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pf-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: top;
+}
+
+.pf-level-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.level-adv {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.level-pf {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.level-senior {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Section 4: Activities & Fees */
+.pf-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.pf-info-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.pf-info-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.pf-info-list li::before {
+    content: '•';
+    color: #8b5cf6;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+/* Section 5: Budget */
+.pf-budget-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.budget-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #cbd5e1;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.budget-amount {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pf-officer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-goal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-info-grid {
+        grid-template-columns: 1fr;
+    }
+}

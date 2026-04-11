@@ -1,0 +1,159 @@
+/* History Page - Chevron Stepper Navigation */
+.history-stepper-container {
+    margin-bottom: 50px;
+    padding: 0 10px;
+}
+
+.history-stepper {
+    display: flex;
+    justify-content: space-between;
+    gap: 0;
+    /* Connected items */
+    margin: 0 -10px;
+    /* Offset spacing */
+}
+
+/* CSS Chevron Stepper (Better approach for pixel perfection with Flexbox) */
+.step-item {
+    flex: 1;
+    position: relative;
+    height: 80px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    margin-right: -20px;
+    /* Overlap for arrow */
+    padding-left: 50px;
+    /* Space for tail */
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1;
+    clip-path: polygon(0% 0%,
+            calc(100% - 30px) 0%,
+            100% 50%,
+            calc(100% - 30px) 100%,
+            0% 100%,
+            30px 50%);
+    margin-bottom: 20px;
+}
+
+/* First item - flat left */
+.step-item:first-child {
+    padding-left: 30px;
+    clip-path: polygon(0% 0%,
+            calc(100% - 30px) 0%,
+            100% 50%,
+            calc(100% - 30px) 100%,
+            0% 100%);
+}
+
+/* Last item - flat right? User image has arrow on right. Allow arrow. */
+.step-item:last-child {
+    margin-right: 0;
+    /* If we want flat right: 
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 30px 50%); */
+}
+
+/* Active State */
+.step-item.active {
+    background-color: #2C5F8D;
+    color: white;
+    z-index: 10;
+}
+
+.step-item:hover:not(.active) {
+    background-color: #f8fbff;
+}
+
+.step-item.active .step-title {
+    color: white;
+}
+
+.step-item.active .step-desc {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Text Styles */
+.step-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2C5F8D;
+    margin-bottom: 4px;
+    display: block;
+    line-height: 1.2;
+}
+
+.step-desc {
+    font-size: 0.85rem;
+    color: #64748b;
+    display: block;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .step-item {
+        margin-right: -15px;
+        clip-path: polygon(0% 0%,
+                calc(100% - 20px) 0%,
+                100% 50%,
+                calc(100% - 20px) 100%,
+                0% 100%,
+                20px 50%);
+    }
+
+    .step-item:first-child {
+        clip-path: polygon(0% 0%,
+                calc(100% - 20px) 0%,
+                100% 50%,
+                calc(100% - 20px) 100%,
+                0% 100%);
+    }
+}
+
+@media (max-width: 768px) {
+    .history-stepper {
+        flex-direction: column;
+        gap: 15px;
+        margin: 0;
+    }
+
+    .step-item {
+        width: 100%;
+        margin-right: 0;
+        padding: 20px;
+        height: auto;
+        clip-path: none !important;
+        /* Remove clip path on mobile */
+        border-radius: 12px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .step-item:first-child {
+        padding-left: 20px;
+    }
+}
+
+/* Panel visibility */
+.history-panel {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.history-panel.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

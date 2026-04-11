@@ -1,0 +1,91 @@
+/* ================================
+   MOBILE MENU ENHANCEMENTS ONLY
+   This file adds styles WITHOUT breaking desktop
+   ================================ */
+
+/* Only target mobile dropdown animation improvements */
+@media (max-width: 768px) {
+
+    /* Smoother dropdown animation - more easing */
+    .mobile-nav-dropdown {
+        max-height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        padding: 0 12px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.4s ease 0.05s,
+            padding 0.4s ease !important;
+    }
+
+    .mobile-nav-group.open .mobile-nav-dropdown {
+        max-height: 500px !important;
+        opacity: 1 !important;
+        padding: 8px 12px 14px !important;
+    }
+
+    /* Prevent menu items from being squished */
+    .mobile-nav-group,
+    .mobile-nav-link {
+        flex-shrink: 0 !important;
+        min-height: 52px !important;
+    }
+
+    /* Nav group toggle button - fixed height */
+    .mobile-nav-toggle {
+        min-height: 52px !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Dropdown items - proper styling to prevent cut-off */
+    .mobile-nav-dropdown a {
+        padding: 14px 18px !important;
+        display: block !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        border-radius: 12px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .mobile-nav-dropdown a:hover,
+    .mobile-nav-dropdown a:active {
+        background: rgba(255, 255, 255, 0.2) !important;
+        transform: translateX(6px) !important;
+    }
+
+    /* Chevron icon rotation - smoother */
+    .mobile-nav-toggle i,
+    .mobile-nav-toggle svg {
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    }
+
+    .mobile-nav-group.open .mobile-nav-toggle i,
+    .mobile-nav-group.open .mobile-nav-toggle svg {
+        transform: rotate(180deg) !important;
+    }
+
+    /* Mobile nav container - scrollable */
+    .mobile-nav {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Scrollbar styling */
+    .mobile-nav::-webkit-scrollbar {
+        width: 3px !important;
+    }
+
+    .mobile-nav::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .mobile-nav::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.25) !important;
+        border-radius: 3px !important;
+    }
+}

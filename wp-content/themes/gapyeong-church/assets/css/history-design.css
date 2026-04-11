@@ -1,0 +1,182 @@
+/* History Page - Vertical Timeline Design (Blue Theme) */
+/* Final Polish: Clean, Unified, Interactive */
+
+.history-timeline-container {
+    padding: 20px 0;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.history-panel {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.history-panel.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Timeline Item (Year Group) */
+.timeline-item {
+    display: flex;
+    padding-bottom: 40px;
+    position: relative;
+    align-items: flex-start;
+}
+
+/* Vertical Line */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 110px;
+    top: 5px;
+    bottom: 0;
+    width: 2px;
+    background-color: #E2E8F0;
+    /* Soft Gray */
+    z-index: 1;
+}
+
+.history-panel .timeline-item:last-child::before {
+    display: none;
+}
+
+/* Year Dot */
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 105px;
+    top: 8px;
+    /* Align with year */
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 3px solid #2C5F8D;
+    /* Blue Ring */
+    box-shadow: 0 0 0 4px #F8FAFC;
+    /* Blend with bg */
+    z-index: 2;
+}
+
+.timeline-year {
+    width: 90px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e293b;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 40px;
+    margin-top: 0;
+    line-height: 1.2;
+    font-family: 'Pretendard', sans-serif;
+    letter-spacing: -0.5px;
+}
+
+.timeline-content {
+    padding-left: 30px;
+    flex-grow: 1;
+    padding-top: 2px;
+}
+
+/* Events List - Clean */
+.events-list {
+    background: transparent;
+    border: none;
+}
+
+/* Unified Row Design */
+.event-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 8px;
+    /* Compact spacing */
+    align-items: baseline;
+    /* Better for text */
+    padding: 12px 20px;
+    /* Comfortable padding */
+    border-radius: 12px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+    /* "Background is one" - starts transparent */
+}
+
+/* Hover Effect REMOVED */
+.event-row:hover {
+    background-color: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Date - Clean Text (No Pill) */
+.event-date {
+    flex-shrink: 0;
+    width: 160px;
+    font-size: 1rem;
+    color: #2563EB;
+    /* Vivid Blue Text */
+    font-weight: 700;
+    text-align: left;
+    background: transparent;
+    /* REMOVED PILL Background */
+    padding: 0;
+    border: none;
+}
+
+.event-desc {
+    color: #334155;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .timeline-item {
+        flex-direction: column;
+        padding-left: 20px;
+        padding-bottom: 30px;
+        border-left: 2px solid #E2E8F0;
+    }
+
+    .timeline-item::before {
+        left: -6px;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        border: 2px solid #2C5F8D;
+        background: #fff;
+    }
+
+    .timeline-item::after {
+        display: none;
+    }
+
+    .timeline-year {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        font-size: 1.4rem;
+        padding-left: 15px;
+        color: #2C5F8D;
+    }
+
+    .timeline-content {
+        padding-left: 5px;
+    }
+
+    .event-row {
+        padding: 10px 15px;
+        /* Mobile usability: slight bg helps? */
+    }
+
+    .event-date {
+        width: 50px;
+        font-size: 0.95rem;
+    }
+}

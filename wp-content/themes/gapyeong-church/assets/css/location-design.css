@@ -1,0 +1,209 @@
+/* Location Page Design */
+
+/* Section 1: Contact Info Grid (Top) */
+.location-info-section {
+    padding: 20px 0 50px;
+    background-color: #fff;
+}
+
+.contact-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    text-align: center;
+}
+
+.contact-card {
+    background: #fff;
+    padding: 40px 20px;
+    border-radius: 0;
+    /* Clean, no border radius as per Ref 1 */
+    /* Light border or shadow? Let's go with meaningful whitespace as per Ref 1 */
+    transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+}
+
+.contact-icon {
+    font-size: 2.5rem;
+    color: #ef4444;
+    /* Reference 1 uses Red/Pink accents */
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    /* Optional: circle bg if needed, but Ref 1 is icon only. Let's stick to simple icon */
+}
+
+/* Custom colors for icons based on type */
+.contact-icon.address {
+    color: #f43f5e;
+}
+
+/* Pink/Red */
+.contact-icon.phone {
+    color: #f59e0b;
+}
+
+/* Amber/Orange */
+.contact-icon.time {
+    color: #3b82f6;
+}
+
+/* Blue */
+
+.contact-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
+    /* Elegant font for headers if avail, else sans */
+}
+
+.contact-card p {
+    color: #64748B;
+    line-height: 1.6;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.contact-card .highlight-text {
+    font-weight: 600;
+    color: #334155;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Section 2: Map (Middle) */
+.map-section {
+    width: 100%;
+    height: 450px;
+    background: #f1f5f9;
+    margin-bottom: 60px;
+    position: relative;
+}
+
+.map-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    filter: grayscale(0%);
+    /* Full color map */
+}
+
+/* Section 3: Transportation (Bottom) */
+.transport-section {
+    padding-bottom: 80px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+/* Transport List Item (Ref 3 Style) */
+.transport-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    border-bottom: 1px dashed #e2e8f0;
+    padding-bottom: 40px;
+}
+
+.transport-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.trans-icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #000;
+    /* Black circle as per Ref 3 */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 30px;
+    color: #fff;
+}
+
+.trans-icon-circle i,
+.trans-icon-circle svg {
+    width: 40px;
+    height: 40px;
+}
+
+.trans-content {
+    flex-grow: 1;
+    padding-top: 10px;
+}
+
+.trans-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.trans-desc {
+    font-size: 1rem;
+    color: #475569;
+    line-height: 1.8;
+}
+
+.trans-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 5px;
+}
+
+.badge-bus {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.badge-subway {
+    background: #dbeafe;
+    color: #2563EB;
+}
+
+.badge-car {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contact-info-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .transport-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .trans-icon-circle {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}

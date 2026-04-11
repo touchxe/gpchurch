@@ -1,0 +1,115 @@
+/* History Page - Horizontal Tab Stepper (Rounded Style) */
+/* Updated: Primary Color with Rounded Corners */
+
+.history-stepper-container {
+    margin-bottom: 50px;
+    padding: 0 10px;
+}
+
+.history-stepper {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    width: 100%;
+}
+
+.step-item {
+    flex: 1;
+    position: relative;
+    height: 70px;
+    background: #fff;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+    border: 2px solid #e2e8f0;
+    z-index: 1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* First Item */
+.step-item:first-child {
+    padding: 12px 20px;
+}
+
+/* Last Item */
+.step-item:last-child {
+    margin-right: 0;
+}
+
+/* Active State (Primary Blue) */
+.step-item.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-color: #3b82f6;
+    color: white;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Next/Secondary State (Light Primary) */
+.step-item.next {
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Inactive/Default State */
+.step-item {
+    background-color: #ffffff;
+    color: #64748b;
+}
+
+.step-item:hover:not(.active) {
+    background-color: #f8fafc;
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+/* Text Styles */
+.step-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: block;
+    line-height: 1.2;
+}
+
+.step-desc {
+    font-size: 0.85rem;
+    display: block;
+    opacity: 0.9;
+}
+
+.step-item.active .step-title,
+.step-item.active .step-desc {
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .history-stepper {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .step-item {
+        width: 100%;
+        margin-right: 0;
+        padding: 20px;
+        height: auto;
+        clip-path: none !important;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+    }
+
+    .step-item:first-child {
+        padding-left: 20px;
+    }
+}

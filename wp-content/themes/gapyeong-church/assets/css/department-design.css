@@ -1,0 +1,110 @@
+/* ========================================
+   부서 페이지 공통 디자인 시스템
+   department-design.css
+   ======================================== */
+
+/* 부서 페이지 섹션 */
+.dept-page-section {
+    padding: 3rem 0 4rem;
+}
+
+/* 리더 카드 */
+.dept-leader-card {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1.5rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dept-leader-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.12);
+}
+
+.dept-leader-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+}
+
+.dept-leader-icon i,
+.dept-leader-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.dept-leader-role {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted, #64748b);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.dept-leader-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-text, #1e293b);
+}
+
+/* 부서 멤버 박스 */
+.dept-members-box {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+}
+
+/* 부서 섹션 타이틀 */
+.dept-section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text, #1e293b);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.15);
+}
+
+/* ==========================================
+   반응형 디자인
+   ========================================== */
+@media (max-width: 768px) {
+    .dept-page-section {
+        padding: 2rem 0 3rem;
+    }
+
+    .dept-leader-card {
+        padding: 1.5rem 1rem;
+        border-radius: 1rem;
+    }
+
+    .dept-leader-name {
+        font-size: 1.15rem;
+    }
+
+    .dept-members-box {
+        padding: 1.5rem 1rem;
+        border-radius: 1rem;
+    }
+
+    .dept-section-title {
+        font-size: 1.25rem;
+    }
+}
