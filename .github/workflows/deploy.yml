@@ -1,8 +1,5 @@
 name: 🚀 Cafe24 자동 배포
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 on:
   push:
     branches:
@@ -16,23 +13,24 @@ jobs:
     steps:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2  # 변경된 파일만 감지하기 위해
+
+      - name: 📦 lftp 설치
+        run: sudo apt-get install -y lftp
 
       - name: 📤 FTP 업로드 (wp-content/themes)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          port: 21
-          protocol: ftp
-          local-dir: ./wp-content/themes/
-          server-dir: wp-content/themes/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.DS_Store
-          log-level: standard
-          security: loose
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+        run: |
+          lftp -c "
+          set ftp:ssl-allow no;
+          set net:timeout 30;
+          set net:max-retries 3;
+          open -u $FTP_USER,$FTP_PASS $FTP_HOST;
+          mirror -R --only-newer --no-umask --parallel=4 \
+            --exclude .git \
+            --exclude .DS_Store \
+            --exclude node_modules \
+            ./wp-content/themes/ wp-content/themes/;
+          "
