@@ -14,32 +14,43 @@ jobs:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
 
-      - name: 📤 SFTP로 테마 업로드
+      - name: 🔍 SSH 인증 방식 확인
         run: |
           sudo apt-get install -y sshpass
-
-          # 호스트 키 자동 수락
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
-
-          echo "=== gapyeong-church 배포 ==="
+          echo "=== SSH 인증 방식 확인 ==="
+          ssh -v -o BatchMode=yes -o ConnectTimeout=5 \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
+            echo "test" 2>&1 | grep -i "authentications"
+          
+          echo ""
+          echo "=== 비밀번호 인증 시도 ==="
           sshpass -p "${{ secrets.FTP_PASS }}" \
-            rsync -avz --delete \
-            --exclude '.git/' \
-            --exclude '.DS_Store' \
-            --exclude 'node_modules/' \
-            -e "ssh -o StrictHostKeyChecking=no" \
-            ./wp-content/themes/gapyeong-church/ \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:/www/wp-content/themes/gapyeong-church/
+            ssh -v -o StrictHostKeyChecking=no \
+            -o PreferredAuthentications=password \
+            -o PubkeyAuthentication=no \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
+            "pwd && ls wp-content/themes/" 2>&1 | tail -20
 
-          echo "=== gapyeong-church-child 배포 ==="
+          echo ""
+          echo "=== keyboard-interactive 인증 시도 ==="
           sshpass -p "${{ secrets.FTP_PASS }}" \
-            rsync -avz --delete \
-            --exclude '.git/' \
-            --exclude '.DS_Store' \
-            --exclude 'node_modules/' \
-            -e "ssh -o StrictHostKeyChecking=no" \
-            ./wp-content/themes/gapyeong-church-child/ \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:/www/wp-content/themes/gapyeong-church-child/
+            ssh -v -o StrictHostKeyChecking=no \
+            -o PreferredAuthentications=keyboard-interactive \
+            -o PubkeyAuthentication=no \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
+            "pwd && ls wp-content/themes/" 2>&1 | tail -20
+        continue-on-error: true
 
-          echo "✅ 배포 완료!"
+      - name: 📤 sftp 직접 시도
+        run: |
+          echo "=== sftp 배치 모드 시도 ==="
+          sshpass -p "${{ secrets.FTP_PASS }}" \
+            sftp -o StrictHostKeyChecking=no \
+            -o PreferredAuthentications=password,keyboard-interactive \
+            -o PubkeyAuthentication=no \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} <<'EOF'
+          pwd
+          ls wp-content/themes/
+          bye
+          EOF
+        continue-on-error: true
