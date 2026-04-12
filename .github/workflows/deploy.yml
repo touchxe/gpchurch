@@ -21,7 +21,24 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
+      - name: 🔍 SSH 키 검증 및 연결 테스트
+        run: |
+          echo "=== 키 파일 확인 ==="
+          echo "첫 줄: $(head -1 ~/.ssh/deploy_key)"
+          echo "마지막 줄: $(tail -1 ~/.ssh/deploy_key)"
+          echo "줄 수: $(wc -l < ~/.ssh/deploy_key)"
+          echo "바이트: $(wc -c < ~/.ssh/deploy_key)"
+          
+          echo ""
+          echo "=== SSH 연결 테스트 ==="
+          ssh -vvv -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o BatchMode=yes \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
+            "pwd" 2>&1 | grep -E "debug1|Authenticated|Permission|identity|sign_and_send|offering|Connection"
+
       - name: 📤 테마 배포 (scp)
+        if: success()
         run: |
           SCP_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no"
           TARGET="${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}"
