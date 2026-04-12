@@ -1,4 +1,4 @@
-name: 🚀 Cafe24 자동 배포 (SCP)
+name: 🚀 Cafe24 자동 배포 (SFTP)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: SCP 배포 → Cafe24
+    name: SFTP 배포 → Cafe24
     runs-on: ubuntu-latest
 
     steps:
@@ -19,38 +19,16 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          echo "=== 키 파일 검증 ==="
+          head -1 ~/.ssh/deploy_key
+          wc -l ~/.ssh/deploy_key
+          ssh-keygen -l -f ~/.ssh/deploy_key || echo "키 형식 오류!"
 
-      - name: 🔍 SSH 키 검증 및 연결 테스트
-        run: |
-          echo "=== 키 파일 확인 ==="
-          echo "첫 줄: $(head -1 ~/.ssh/deploy_key)"
-          echo "마지막 줄: $(tail -1 ~/.ssh/deploy_key)"
-          echo "줄 수: $(wc -l < ~/.ssh/deploy_key)"
-          echo "바이트: $(wc -c < ~/.ssh/deploy_key)"
-          
-          echo ""
-          echo "=== SSH 연결 테스트 ==="
-          ssh -vvv -i ~/.ssh/deploy_key \
-            -o StrictHostKeyChecking=no \
-            -o BatchMode=yes \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
-            "pwd" 2>&1 | grep -E "debug1|Authenticated|Permission|identity|sign_and_send|offering|Connection"
+      - name: 📦 paramiko 설치
+        run: pip install paramiko
 
-      - name: 📤 테마 배포 (scp)
-        if: success()
-        run: |
-          SCP_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no"
-          TARGET="${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}"
-
-          echo "=== gapyeong-church 배포 ==="
-          scp -r $SCP_OPTS \
-            ./wp-content/themes/gapyeong-church/* \
-            ${TARGET}:www/wp-content/themes/gapyeong-church/
-
-          echo "=== gapyeong-church-child 배포 ==="
-          scp -r $SCP_OPTS \
-            ./wp-content/themes/gapyeong-church-child/* \
-            ${TARGET}:www/wp-content/themes/gapyeong-church-child/
-
-          echo "✅ 배포 완료!"
+      - name: 📤 SFTP 배포
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+        run: python3 scripts/ftp_deploy.py
