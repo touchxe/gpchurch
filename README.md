@@ -31,9 +31,9 @@ gpchurch/
 
 | 역할 | 이름 | GitHub | 담당 |
 |------|------|--------|------|
-| 관리자 | YoungBin | [@touchxe](https://github.com/touchxe) | 코드 리뷰, Merge 승인, 배포 관리 |
-| 개발자 | HyunChan | - | 프론트엔드 개발 |
-| 개발자 | JunSeok | - | 프론트엔드 개발 |
+| 총괄 · 디자인 | YoungBin | [@touchxe](https://github.com/touchxe) | 프로젝트 총괄, UI/UX 디자인, 코드 리뷰, 배포 관리 |
+| 기획 · 콘텐츠 | HyunChan | - | 사이트 기획, 콘텐츠 작성 및 관리 |
+| 백엔드 · 플러그인 · 프로그래밍 | JunSeok | - | 백엔드 개발, WordPress 플러그인, 기능 구현 |
 
 ---
 
