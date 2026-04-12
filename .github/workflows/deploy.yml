@@ -1,4 +1,4 @@
-name: 🚀 Cafe24 자동 배포 (SSH Key)
+name: 🚀 Cafe24 자동 배포 (SCP)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: SSH 배포 → Cafe24
+    name: SCP 배포 → Cafe24
     runs-on: ubuntu-latest
 
     steps:
@@ -21,24 +21,19 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: 📤 테마 배포 (rsync over SSH)
+      - name: 📤 테마 배포 (scp)
         run: |
+          SCP_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no"
+          TARGET="${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}"
+
           echo "=== gapyeong-church 배포 ==="
-          rsync -avz --delete \
-            --exclude '.git/' \
-            --exclude '.DS_Store' \
-            --exclude 'node_modules/' \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            ./wp-content/themes/gapyeong-church/ \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:www/wp-content/themes/gapyeong-church/
+          scp -r $SCP_OPTS \
+            ./wp-content/themes/gapyeong-church/* \
+            ${TARGET}:www/wp-content/themes/gapyeong-church/
 
           echo "=== gapyeong-church-child 배포 ==="
-          rsync -avz --delete \
-            --exclude '.git/' \
-            --exclude '.DS_Store' \
-            --exclude 'node_modules/' \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            ./wp-content/themes/gapyeong-church-child/ \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:www/wp-content/themes/gapyeong-church-child/
+          scp -r $SCP_OPTS \
+            ./wp-content/themes/gapyeong-church-child/* \
+            ${TARGET}:www/wp-content/themes/gapyeong-church-child/
 
           echo "✅ 배포 완료!"
