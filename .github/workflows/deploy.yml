@@ -1,4 +1,4 @@
-name: 🔍 FTP 기능 테스트
+name: 🚀 Cafe24 자동 배포 (SFTP)
 
 on:
   push:
@@ -6,17 +6,40 @@ on:
       - main
 
 jobs:
-  test:
-    name: FTP 기능 테스트
+  deploy:
+    name: SFTP 배포 → Cafe24
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
 
-      - name: 🔍 FTP 전체 기능 테스트
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASS: ${{ secrets.FTP_PASS }}
-        run: python3 scripts/ftp_test.py
+      - name: 📤 SFTP로 테마 업로드
+        run: |
+          sudo apt-get install -y sshpass
+
+          # 호스트 키 자동 수락
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+          echo "=== gapyeong-church 배포 ==="
+          sshpass -p "${{ secrets.FTP_PASS }}" \
+            rsync -avz --delete \
+            --exclude '.git/' \
+            --exclude '.DS_Store' \
+            --exclude 'node_modules/' \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            ./wp-content/themes/gapyeong-church/ \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:/www/wp-content/themes/gapyeong-church/
+
+          echo "=== gapyeong-church-child 배포 ==="
+          sshpass -p "${{ secrets.FTP_PASS }}" \
+            rsync -avz --delete \
+            --exclude '.git/' \
+            --exclude '.DS_Store' \
+            --exclude 'node_modules/' \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            ./wp-content/themes/gapyeong-church-child/ \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:/www/wp-content/themes/gapyeong-church-child/
+
+          echo "✅ 배포 완료!"
