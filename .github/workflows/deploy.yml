@@ -1,4 +1,4 @@
-name: 🚀 Cafe24 자동 배포 (SFTP)
+name: 🚀 Cafe24 자동 배포 (SSH Key)
 
 on:
   push:
@@ -7,50 +7,38 @@ on:
 
 jobs:
   deploy:
-    name: SFTP 배포 → Cafe24
+    name: SSH 배포 → Cafe24
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
 
-      - name: 🔍 SSH 인증 방식 확인
+      - name: 🔑 SSH 키 설정
         run: |
-          sudo apt-get install -y sshpass
-          echo "=== SSH 인증 방식 확인 ==="
-          ssh -v -o BatchMode=yes -o ConnectTimeout=5 \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
-            echo "test" 2>&1 | grep -i "authentications"
-          
-          echo ""
-          echo "=== 비밀번호 인증 시도 ==="
-          sshpass -p "${{ secrets.FTP_PASS }}" \
-            ssh -v -o StrictHostKeyChecking=no \
-            -o PreferredAuthentications=password \
-            -o PubkeyAuthentication=no \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
-            "pwd && ls wp-content/themes/" 2>&1 | tail -20
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
-          echo ""
-          echo "=== keyboard-interactive 인증 시도 ==="
-          sshpass -p "${{ secrets.FTP_PASS }}" \
-            ssh -v -o StrictHostKeyChecking=no \
-            -o PreferredAuthentications=keyboard-interactive \
-            -o PubkeyAuthentication=no \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} \
-            "pwd && ls wp-content/themes/" 2>&1 | tail -20
-        continue-on-error: true
-
-      - name: 📤 sftp 직접 시도
+      - name: 📤 테마 배포 (rsync over SSH)
         run: |
-          echo "=== sftp 배치 모드 시도 ==="
-          sshpass -p "${{ secrets.FTP_PASS }}" \
-            sftp -o StrictHostKeyChecking=no \
-            -o PreferredAuthentications=password,keyboard-interactive \
-            -o PubkeyAuthentication=no \
-            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} <<'EOF'
-          pwd
-          ls wp-content/themes/
-          bye
-          EOF
-        continue-on-error: true
+          echo "=== gapyeong-church 배포 ==="
+          rsync -avz --delete \
+            --exclude '.git/' \
+            --exclude '.DS_Store' \
+            --exclude 'node_modules/' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./wp-content/themes/gapyeong-church/ \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:www/wp-content/themes/gapyeong-church/
+
+          echo "=== gapyeong-church-child 배포 ==="
+          rsync -avz --delete \
+            --exclude '.git/' \
+            --exclude '.DS_Store' \
+            --exclude 'node_modules/' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./wp-content/themes/gapyeong-church-child/ \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:www/wp-content/themes/gapyeong-church-child/
+
+          echo "✅ 배포 완료!"
