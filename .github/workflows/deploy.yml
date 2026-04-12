@@ -1,4 +1,4 @@
-name: 🚀 Cafe24 자동 배포
+name: 🔍 FTP 기능 테스트
 
 on:
   push:
@@ -6,17 +6,17 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: FTP 배포 → Cafe24
+  test:
+    name: FTP 기능 테스트
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
 
-      - name: 📤 FTP 업로드 (Python)
+      - name: 🔍 FTP 전체 기능 테스트
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_USER: ${{ secrets.FTP_USER }}
           FTP_PASS: ${{ secrets.FTP_PASS }}
-        run: python3 scripts/ftp_deploy.py
+        run: python3 scripts/ftp_test.py
