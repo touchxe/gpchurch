@@ -19,13 +19,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          echo "=== 키 파일 검증 ==="
-          head -1 ~/.ssh/deploy_key
-          wc -l ~/.ssh/deploy_key
-          ssh-keygen -l -f ~/.ssh/deploy_key || echo "키 형식 오류!"
-
-      - name: 📦 paramiko 설치
-        run: pip install paramiko
+          ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          echo "키 검증:"
+          ssh-keygen -l -f ~/.ssh/deploy_key && echo "OK" || echo "FAIL"
 
       - name: 📤 SFTP 배포
         env:

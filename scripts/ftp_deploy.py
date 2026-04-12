@@ -1,74 +1,95 @@
 """
 Cafe24 SFTP 배포 스크립트
-- SSH Key 인증 + SFTP 서브시스템 사용
-- 디렉토리 재귀 업로드
+- OpenSSH sftp 명령어 사용 (paramiko 대신)
+- 배치 파일 생성 후 실행
 """
-import paramiko
 import os
+import subprocess
 import sys
-import stat
 
+SSH_KEY = os.path.expanduser('~/.ssh/deploy_key')
 SSH_HOST = os.environ['FTP_HOST']
 SSH_USER = os.environ['FTP_USER']
-SSH_KEY_PATH = os.path.expanduser('~/.ssh/deploy_key')
 
 LOCAL_THEMES = './wp-content/themes'
 REMOTE_BASE = 'www/wp-content/themes'
 
-def upload_dir(sftp, local_dir, remote_dir):
-    """디렉토리 재귀 업로드"""
-    # 원격 디렉토리 생성
-    try:
-        sftp.stat(remote_dir)
-    except FileNotFoundError:
-        print(f"  📁 mkdir: {remote_dir}")
-        sftp.mkdir(remote_dir)
-
-    for item in sorted(os.listdir(local_dir)):
-        if item in ['.git', '.DS_Store', 'node_modules', '.gitignore']:
-            continue
-
-        local_path = os.path.join(local_dir, item)
-        remote_path = f"{remote_dir}/{item}"
-
-        if os.path.isdir(local_path):
-            upload_dir(sftp, local_path, remote_path)
+def generate_batch(local_dir, remote_dir):
+    """sftp 배치 명령어 생성"""
+    commands = []
+    
+    for root, dirs, files in os.walk(local_dir):
+        # 제외
+        dirs[:] = [d for d in dirs if d not in ['.git', 'node_modules']]
+        
+        # 상대경로 계산
+        rel = os.path.relpath(root, local_dir)
+        if rel == '.':
+            remote_path = remote_dir
         else:
-            sftp.put(local_path, remote_path)
-            print(f"  ✅ {remote_path}")
+            remote_path = f"{remote_dir}/{rel}"
+        
+        # 디렉토리 생성 (실패해도 계속 - 이미 존재할 수 있음)
+        commands.append(f"-mkdir {remote_path}")
+        
+        # 파일 업로드
+        for fname in sorted(files):
+            if fname in ['.DS_Store', '.gitignore']:
+                continue
+            local_file = os.path.join(root, fname)
+            commands.append(f"put {local_file} {remote_path}/{fname}")
+    
+    return commands
 
 def main():
-    print("🔌 SFTP 접속 중...")
-    
-    # SSH 키 로드
-    key = paramiko.RSAKey.from_private_key_file(SSH_KEY_PATH)
-    print(f"  키 로드 완료: {SSH_KEY_PATH}")
-    
-    # SSH 연결
-    transport = paramiko.Transport((SSH_HOST, 22))
-    transport.connect(username=SSH_USER, pkey=key)
-    sftp = paramiko.SFTPClient.from_transport(transport)
-    print(f"  SFTP 연결 성공!")
-    print(f"  PWD: {sftp.normalize('.')}")
-
     themes = ['gapyeong-church', 'gapyeong-church-child']
+    all_commands = []
     
     for theme in themes:
         local_dir = os.path.join(LOCAL_THEMES, theme)
         remote_dir = f"{REMOTE_BASE}/{theme}"
-
+        
         if not os.path.isdir(local_dir):
-            print(f"⏭️  SKIP: {theme} (로컬에 없음)")
+            print(f"SKIP: {theme}")
             continue
-
-        file_count = sum(len(files) for _, _, files in os.walk(local_dir))
-        print(f"\n🚀 배포: {theme} ({file_count} files)")
-        upload_dir(sftp, local_dir, remote_dir)
-        print(f"  ✅ 완료: {theme}")
-
-    sftp.close()
-    transport.close()
-    print("\n🎉 전체 배포 완료!")
+        
+        file_count = sum(len(f) for _, _, f in os.walk(local_dir))
+        print(f"Deploy: {theme} ({file_count} files)")
+        all_commands.extend(generate_batch(local_dir, remote_dir))
+    
+    all_commands.append("bye")
+    
+    # 배치 파일 생성
+    batch_file = '/tmp/sftp_batch.txt'
+    with open(batch_file, 'w') as f:
+        f.write('\n'.join(all_commands))
+    
+    print(f"\n총 {len(all_commands)-1}개 명령어")
+    print("--- 배치 내용 (처음 20줄) ---")
+    for cmd in all_commands[:20]:
+        print(f"  {cmd}")
+    if len(all_commands) > 20:
+        print(f"  ... ({len(all_commands)-20}개 더)")
+    
+    # sftp 실행
+    print("\nSFTP 실행 중...")
+    result = subprocess.run([
+        'sftp',
+        '-b', batch_file,
+        '-i', SSH_KEY,
+        '-o', 'StrictHostKeyChecking=no',
+        f'{SSH_USER}@{SSH_HOST}'
+    ], capture_output=True, text=True)
+    
+    print("STDOUT:", result.stdout[-2000:] if len(result.stdout) > 2000 else result.stdout)
+    if result.stderr:
+        print("STDERR:", result.stderr[-1000:] if len(result.stderr) > 1000 else result.stderr)
+    
+    if result.returncode != 0:
+        print(f"\n❌ 실패 (exit code: {result.returncode})")
+        sys.exit(1)
+    else:
+        print("\n✅ 배포 완료!")
 
 if __name__ == '__main__':
     main()
