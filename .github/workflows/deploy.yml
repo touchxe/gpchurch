@@ -1,30 +1,33 @@
-name: 🚀 Cafe24 자동 배포 (SFTP)
+name: 🚀 Cafe24 자동 배포
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  deploy:
-    name: SFTP 배포 → Cafe24
+  ftp-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 코드 받기
         uses: actions/checkout@v4
 
-      - name: 🔑 SSH 키 설정
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.FTP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
-          echo "키 검증:"
-          ssh-keygen -l -f ~/.ssh/deploy_key && echo "OK" || echo "FAIL"
-
-      - name: 📤 SFTP 배포
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-        run: python3 scripts/ftp_deploy.py
+      - name: 📤 FTP 배포 → Cafe24
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          protocol: ftp
+          port: 21
+          local-dir: ./wp-content/themes/
+          server-dir: /www/wp-content/themes/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+          log-level: verbose
+          security: loose
