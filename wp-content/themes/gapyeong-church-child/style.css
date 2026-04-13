@@ -372,3 +372,61 @@ a.kboard-write-btn {
         font-size: 0.65rem !important;
     }
 }
+/* ── 교회일정 페이지네이션 수정 ─────────────────────────
+   .kboard-pagination > ul.kboard-pagination-pages > li 구조
+   ────────────────────────────────────────────────────── */
+.kboard-pagination {
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 2rem !important;
+}
+.kboard-pagination-pages {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 0.35rem !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-items: center !important;
+}
+.kboard-pagination-pages li {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+.kboard-pagination-pages li a,
+.kboard-pagination-pages li.active a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0 0.5rem !important;
+    border: 1px solid var(--border-color, #e2e8f0) !important;
+    border-radius: 8px !important;
+    font-size: 0.875rem !important;
+    color: var(--slate-600, #475569) !important;
+    text-decoration: none !important;
+    transition: all 0.2s !important;
+    background: #fff !important;
+}
+.kboard-pagination-pages li a:hover {
+    background: var(--primary-50, #f5f3ff) !important;
+    border-color: var(--primary-300, #c4b5fd) !important;
+    color: var(--primary-600, #7c3aed) !important;
+}
+.kboard-pagination-pages li.active a {
+    background: var(--primary-600, #7c3aed) !important;
+    border-color: var(--primary-600, #7c3aed) !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    pointer-events: none !important;
+}
+.kboard-pagination-pages li.next-page a,
+.kboard-pagination-pages li.last-page a,
+.kboard-pagination-pages li.prev-page a,
+.kboard-pagination-pages li.first-page a {
+    font-size: 0.8rem !important;
+    color: var(--primary-600, #7c3aed) !important;
+}
