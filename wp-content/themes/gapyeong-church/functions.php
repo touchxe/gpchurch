@@ -592,7 +592,9 @@ function gapyeong_get_submenu($group)
 
     );
 
-    return isset($menus[$group]) ? $menus[$group] : array();
+    $result = isset($menus[$group]) ? $menus[$group] : array();
+    // 자식 테마에서 서브메뉴를 그룹별로 오버라이드할 수 있도록 필터 적용
+    return apply_filters('gapyeong_submenu_' . $group, $result);
 }
 
 
