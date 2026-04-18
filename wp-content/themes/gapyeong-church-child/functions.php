@@ -82,8 +82,17 @@ add_filter('gapyeong_submenu_community', 'gapyeong_child_filter_community_submen
  * 로그인 페이지 전용: 커스텀 템플릿 자동 적용
  * 슬러그가 '로그인-화면'인 페이지에 카드 레이아웃 템플릿을 사용
  */
+function gpc_is_login_page() {
+    return is_page( '로그인-화면' )
+        || is_page( '%eb%a1%9c%ea%b7%b8%ec%9d%b8-%ed%99%94%eb%a9%b4' )
+        || is_page( 35 );
+}
+
+/**
+ * 로그인 페이지 전용: 커스텀 템플릿 자동 적용
+ */
 function gpc_login_page_template( $template ) {
-    if ( is_page( '로그인-화면' ) ) {
+    if ( gpc_is_login_page() ) {
         $login_tpl = get_stylesheet_directory() . '/page-templates/page-login.php';
         if ( file_exists( $login_tpl ) ) {
             return $login_tpl;
@@ -97,7 +106,7 @@ add_filter( 'template_include', 'gpc_login_page_template' );
  * 로그인 페이지 전용: CSS 조건부 로드
  */
 function gpc_login_page_assets() {
-    if ( ! is_page( '로그인-화면' ) ) {
+    if ( ! gpc_is_login_page() ) {
         return;
     }
     wp_enqueue_style(
@@ -110,7 +119,7 @@ function gpc_login_page_assets() {
 add_action( 'wp_enqueue_scripts', 'gpc_login_page_assets' );
 
 /**
- * WP-Members 로그인 폼 한글화
+ * WP-Members 로그인 폼 한글화 (필터로 변경 가능한 항목)
  */
 function gpc_wpmem_login_defaults( $defaults ) {
     $defaults['heading']     = '';
@@ -133,3 +142,23 @@ function gpc_wpmem_login_defaults( $defaults ) {
     return $defaults;
 }
 add_filter( 'wpmem_login_form_defaults', 'gpc_wpmem_login_defaults' );
+
+/**
+ * WP-Members 번역 보완 (gettext 도메인으로 출력되는 문자열)
+ */
+function gpc_wpmem_translate( $translated, $text, $domain ) {
+    if ( 'wp-members' !== $domain ) {
+        return $translated;
+    }
+    $map = array(
+        'Remember Me'        => '로그인 상태 유지',
+        'Forgot password?'   => '',
+        'Click here to reset' => '비밀번호 찾기',
+        'Existing Users Log In' => '',
+        'Username or Email'  => '이메일 주소',
+        'Password'           => '비밀번호',
+        'Log In'             => '로그인 →',
+    );
+    return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
+}
+add_filter( 'gettext', 'gpc_wpmem_translate', 10, 3 );
