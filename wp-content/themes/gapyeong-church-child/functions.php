@@ -76,3 +76,60 @@ function gapyeong_child_filter_community_submenu($items)
     );
 }
 add_filter('gapyeong_submenu_community', 'gapyeong_child_filter_community_submenu');
+
+
+/**
+ * 로그인 페이지 전용: 커스텀 템플릿 자동 적용
+ * 슬러그가 '로그인-화면'인 페이지에 카드 레이아웃 템플릿을 사용
+ */
+function gpc_login_page_template( $template ) {
+    if ( is_page( '로그인-화면' ) ) {
+        $login_tpl = get_stylesheet_directory() . '/page-templates/page-login.php';
+        if ( file_exists( $login_tpl ) ) {
+            return $login_tpl;
+        }
+    }
+    return $template;
+}
+add_filter( 'template_include', 'gpc_login_page_template' );
+
+/**
+ * 로그인 페이지 전용: CSS 조건부 로드
+ */
+function gpc_login_page_assets() {
+    if ( ! is_page( '로그인-화면' ) ) {
+        return;
+    }
+    wp_enqueue_style(
+        'gpc-login-css',
+        get_stylesheet_directory_uri() . '/wpmem-login.css',
+        array( 'gapyeong-child-style' ),
+        wp_get_theme()->get( 'Version' ) . '.login'
+    );
+}
+add_action( 'wp_enqueue_scripts', 'gpc_login_page_assets' );
+
+/**
+ * WP-Members 로그인 폼 한글화
+ */
+function gpc_wpmem_login_defaults( $defaults ) {
+    $defaults['heading']     = '';
+    $defaults['button_text'] = '로그인 →';
+    $defaults['txt']         = '로그인 상태 유지';
+    $defaults['forgot']      = ' ';
+    $defaults['forgot_link'] = '비밀번호 찾기';
+
+    if ( isset( $defaults['inputs'] ) && is_array( $defaults['inputs'] ) ) {
+        foreach ( $defaults['inputs'] as &$input ) {
+            if ( 'log' === $input['tag'] ) {
+                $input['name'] = '이메일 주소';
+            } elseif ( 'pwd' === $input['tag'] ) {
+                $input['name'] = '비밀번호';
+            }
+        }
+        unset( $input );
+    }
+
+    return $defaults;
+}
+add_filter( 'wpmem_login_form_defaults', 'gpc_wpmem_login_defaults' );
