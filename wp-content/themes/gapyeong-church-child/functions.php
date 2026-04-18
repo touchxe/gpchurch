@@ -213,7 +213,7 @@ function gpc_register_page_assets() {
         'gpc-register-css',
         get_stylesheet_directory_uri() . '/wpmem-register.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.reg2'
+        wp_get_theme()->get( 'Version' ) . '.reg3'
     );
 }
 add_action( 'wp_enqueue_scripts', 'gpc_register_page_assets', 99 );
@@ -311,14 +311,15 @@ function gpc_wpmem_register_form_rows( $rows, $tag ) {
         return $rows;
     }
 
-    $account_keys = array( 'username', 'password', 'confirm_password', 'password_confirm', 'user_email' );
+    /* 계정 블록: 1행 아이디|이메일, 2행 비밀번호|비밀번호 확인 */
+    $account_keys = array( 'username', 'user_email', 'password', 'confirm_password', 'password_confirm' );
 
     $preferred = array(
         'username',
+        'user_email',
         'password',
         'confirm_password',
         'password_confirm',
-        'user_email',
     );
 
     $reordered = array();
@@ -366,7 +367,7 @@ function gpc_wpmem_register_form_rows( $rows, $tag ) {
         $is_tos    = ( 'tos' === $key );
         $is_captcha = ( 'captcha' === $key );
 
-        $full = in_array( $key, array( 'confirm_password', 'password_confirm', 'user_email', 'tos', 'captcha' ), true )
+        $full = in_array( $key, array( 'tos', 'captcha' ), true )
             || 'textarea' === $type
             || ( $lt && false !== strpos( $lt, '가족' ) )
             || ( $lt && false !== strpos( $lt, '교적' ) );
