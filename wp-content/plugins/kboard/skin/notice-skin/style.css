@@ -1,0 +1,192 @@
+@charset "utf-8";
+/**
+ * KBoard Notice Skin - style.css
+ * 교회알림 > 공지사항 칸 전용 스킨
+ * 스크린샷 디자인 참고: 날짜 숫자 + 카테고리 태그 + 제목 + NEW 배지
+ */
+
+/* ==============================
+   공지사항 리스트 컨테이너
+============================== */
+#kboard-notice-latest {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#kboard-notice-latest .kboard-notice-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ==============================
+   각 공지사항 항목
+============================== */
+#kboard-notice-latest .kboard-notice-item {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    list-style: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#kboard-notice-latest .kboard-notice-item:first-child {
+    border-top: 1px solid #f0f0f0;
+}
+
+#kboard-notice-latest .kboard-notice-item::before,
+#kboard-notice-latest .kboard-notice-item::after {
+    display: none;
+}
+
+/* ==============================
+   링크 레이아웃 (가로 배치)
+============================== */
+#kboard-notice-latest .kboard-notice-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 4px;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+    border-radius: 6px;
+}
+
+#kboard-notice-latest .kboard-notice-link:hover {
+    background-color: #f8f9ff;
+    text-decoration: none;
+}
+
+/* ==============================
+   날짜 영역 (왼쪽)
+============================== */
+#kboard-notice-latest .kboard-notice-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 48px;
+    min-height: 48px;
+    text-align: center;
+    flex-shrink: 0;
+    padding-top: 1px;
+}
+
+#kboard-notice-latest .kboard-notice-day {
+    display: block;
+    font-size: 26px !important;
+    font-weight: 800;
+    line-height: 1;
+    color: #2a2d3a;
+    letter-spacing: -0.5px;
+}
+
+#kboard-notice-latest .kboard-notice-month {
+    display: block;
+    font-size: 10px;
+    color: #aaa;
+    font-weight: 400;
+    margin-top: 3px;
+    white-space: nowrap;
+}
+
+/* ==============================
+   내용 영역 (오른쪽)
+============================== */
+#kboard-notice-latest .kboard-notice-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+/* ==============================
+   카테고리 태그
+============================== */
+#kboard-notice-latest .kboard-notice-tag {
+    display: inline-block;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5b7fff;
+    background: transparent;
+    white-space: nowrap;
+}
+
+/* ==============================
+   제목
+============================== */
+#kboard-notice-latest .kboard-notice-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #2a2d3a;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+    transition: color 0.2s;
+}
+
+#kboard-notice-latest .kboard-notice-link:hover .kboard-notice-title {
+    color: #4f6ef7;
+}
+
+/* ==============================
+   NEW 배지
+============================== */
+#kboard-notice-latest .kboard-notice-new {
+    display: inline-block;
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #f61b5d;
+    padding: 2px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+}
+
+/* ==============================
+   빈 상태
+============================== */
+#kboard-notice-latest .kboard-notice-empty {
+    list-style: none;
+    padding: 24px 0;
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+}
+
+#kboard-notice-latest .kboard-notice-empty::before,
+#kboard-notice-latest .kboard-notice-empty::after {
+    display: none;
+}
+
+/* ==============================
+   반응형
+============================== */
+@media screen and (max-width: 768px) {
+    #kboard-notice-latest .kboard-notice-day {
+        font-size: 20px;
+    }
+
+    #kboard-notice-latest .kboard-notice-link {
+        gap: 10px;
+        padding: 10px 2px;
+    }
+
+    #kboard-notice-latest .kboard-notice-title {
+        font-size: 12.5px;
+    }
+}

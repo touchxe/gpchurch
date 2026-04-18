@@ -1,0 +1,171 @@
+/* ============================================================
+   KBoard Calendar Skin - style.css
+   교회일정 게시판 스타일
+   ============================================================ */
+
+/* ── 목록 ── */
+#kboard-calendar-list,
+#kboard-calendar-latest {
+    width: 100%;
+}
+
+.kboard-calendar-schedule-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kboard-calendar-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.kboard-calendar-item:last-child {
+    border-bottom: none;
+}
+
+.kboard-calendar-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 4px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.18s;
+    border-radius: 8px;
+}
+
+.kboard-calendar-link:hover {
+    background: rgba(99, 102, 241, 0.06);
+    color: #6366f1;
+}
+
+.kboard-calendar-date-col {
+    flex-shrink: 0;
+    min-width: 48px;
+}
+
+.kboard-calendar-date {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 6px;
+    padding: 2px 7px;
+    letter-spacing: 0.02em;
+}
+
+.kboard-calendar-info-col {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.kboard-calendar-title {
+    font-size: 0.9rem;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kboard-calendar-new {
+    flex-shrink: 0;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+    background: #ef4444;
+    border-radius: 4px;
+    padding: 1px 5px;
+}
+
+.kboard-calendar-empty {
+    padding: 20px 8px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* ── 에디터 ── */
+.calendar-event-date-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.calendar-event-date-row .attr-name {
+    min-width: 110px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.calendar-event-date-input {
+    width: 200px;
+    padding: 8px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.calendar-event-date-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.calendar-event-date-row .description {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+/* ── 상세 페이지 ── */
+.calendar-event-date-badge {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 8px;
+    padding: 4px 12px;
+}
+
+/* kboard 공통 재활용 */
+#kboard-calendar-list .kboard-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 8px;
+}
+
+#kboard-calendar-list .kboard-total-count {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+#kboard-calendar-list .kboard-pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#kboard-calendar-list .kboard-search {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+}
+
+#kboard-calendar-list .kboard-control {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+}

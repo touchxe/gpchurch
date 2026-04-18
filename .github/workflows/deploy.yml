@@ -1,0 +1,51 @@
+name: 🚀 Cafe24 자동 배포
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 코드 받기
+        uses: actions/checkout@v4
+
+      - name: 📤 gapyeong-church 테마 배포
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          protocol: ftp
+          port: 21
+          local-dir: ./wp-content/themes/gapyeong-church/
+          server-dir: /www/wp-content/themes/gapyeong-church/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+          log-level: verbose
+          security: loose
+
+      - name: 📤 gapyeong-church-child 테마 배포
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          protocol: ftp
+          port: 21
+          local-dir: ./wp-content/themes/gapyeong-church-child/
+          server-dir: /www/wp-content/themes/gapyeong-church-child/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+          log-level: verbose
+          security: loose
