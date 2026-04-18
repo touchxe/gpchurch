@@ -15,7 +15,10 @@
 </head>
 
 <body <?php body_class(); ?>>
-    <?php wp_body_open(); ?>
+    <?php
+    wp_body_open();
+    $gapyeong_login_url = esc_url( home_url( '/로그인-화면/' ) );
+    ?>
 
     <!-- Header -->
     <header class="header">
@@ -96,8 +99,8 @@
             </nav>
 
             <div class="header-actions">
-                <a href="/login" class="btn-text desktop-only">로그인</a>
-                <a href="/login" class="btn-icon mobile-only" aria-label="로그인">
+                <a href="<?php echo $gapyeong_login_url; ?>" class="btn-text desktop-only">로그인</a>
+                <a href="<?php echo $gapyeong_login_url; ?>" class="btn-icon mobile-only" aria-label="로그인">
                     <i data-lucide="user"></i>
                 </a>
                 <a href="/live" class="btn-live off-air desktop-only"><span class="live-dot"></span>OFF AIR</a>
@@ -191,7 +194,7 @@
             </nav>
             <div class="mobile-menu-bottom">
                 <div class="mobile-shortcuts">
-                    <a href="/login" class="mobile-shortcut-item">
+                    <a href="<?php echo $gapyeong_login_url; ?>" class="mobile-shortcut-item">
                         <i data-lucide="user"></i>
                         <span>로그인</span>
                     </a>
