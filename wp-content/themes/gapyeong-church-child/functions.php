@@ -112,8 +112,8 @@ function gpc_login_page_assets() {
     wp_enqueue_style(
         'gpc-login-css',
         get_stylesheet_directory_uri() . '/wpmem-login.css',
-        array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.login'
+        array( 'gapyeong-child-style', 'wp-members-css' ),
+        wp_get_theme()->get( 'Version' ) . '.login2'
     );
 }
 add_action( 'wp_enqueue_scripts', 'gpc_login_page_assets' );

@@ -50,7 +50,9 @@ main.gpc-login-page {
 
 /* ── WP-Members Form Reset ── */
 .gpc-login-form-wrap #wpmem_login {
+    width: 100%;
     margin: 0;
+    font-family: inherit;
 }
 
 .gpc-login-form-wrap #wpmem_login fieldset {
@@ -175,6 +177,8 @@ main.gpc-login-page {
 .gpc-login-form-wrap .button_div {
     font-size: 0;
     margin: 0;
+    padding: 0;
+    text-align: left;
 }
 
 .gpc-login-form-wrap .button_div input[type="submit"].buttons {
@@ -182,10 +186,10 @@ main.gpc-login-page {
     width: 100%;
     padding: 0.875rem;
     background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: #fff;
+    color: #fff !important;
     border: none;
     border-radius: 0.75rem;
-    font-size: 1rem;
+    font-size: 1rem !important;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
