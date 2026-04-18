@@ -49,3 +49,21 @@ jobs:
             **/.DS_Store
           log-level: verbose
           security: loose
+
+      - name: 📤 KBoard 스킨 배포
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          protocol: ftp
+          port: 21
+          local-dir: ./wp-content/plugins/kboard/skin/
+          server-dir: /www/wp-content/plugins/kboard/skin/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+          log-level: verbose
+          security: loose
