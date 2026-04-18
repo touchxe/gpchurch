@@ -110,10 +110,10 @@ async function loadComponents() {
         </nav>
 
         <div class="header-actions">
-            <a href="/pages/auth/login.html" class="btn-text desktop-only">로그인</a>
+            <a href="https://gpchurch.mycafe24.com/로그인-화면/" class="btn-text desktop-only">로그인</a>
             <span class="header-separator desktop-only"></span>
             <a href="/pages/auth/signup.html" class="btn-text desktop-only">회원가입</a>
-            <a href="/pages/auth/login.html" class="btn-icon mobile-only" aria-label="로그인">
+            <a href="https://gpchurch.mycafe24.com/로그인-화면/" class="btn-icon mobile-only" aria-label="로그인">
                 <i data-lucide="user"></i>
             </a>
             <a href="/live.html" class="btn-live desktop-only"><span class="live-dot"></span>LIVE</a>
