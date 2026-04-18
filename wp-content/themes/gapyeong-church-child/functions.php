@@ -158,7 +158,250 @@ function gpc_wpmem_translate( $translated, $text, $domain ) {
         'Username or Email'  => '이메일 주소',
         'Password'           => '비밀번호',
         'Log In'             => '로그인 →',
+        'New User Registration' => '',
+        'Register'           => '가입하기',
+        'Required field'     => '',
+        'Choose a Username'  => '이메일 (아이디)',
+        'Username'           => '아이디',
+        'Confirm Password'   => '비밀번호 확인',
+        'Email'              => '이메일',
     );
     return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
 }
 add_filter( 'gettext', 'gpc_wpmem_translate', 10, 3 );
+
+/**
+ * 회원가입 페이지 (WP-Members 등록 폼)
+ * 슬러그: 회원가입 — signup.html과 유사한 카드·2열·구역 구분 UI
+ */
+function gpc_is_register_page() {
+    if ( ! is_page() ) {
+        return false;
+    }
+    if ( is_page( '회원가입' ) ) {
+        return true;
+    }
+    // 일부 환경에서 인코딩된 슬러그로 매칭될 때
+    if ( is_page( '%ed%9a%8c%ec%9b%90%ea%b0%80%ec%9e%85' ) ) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 회원가입 전용 페이지 템플릿
+ */
+function gpc_register_page_template( $template ) {
+    if ( gpc_is_register_page() ) {
+        $register_tpl = get_stylesheet_directory() . '/page-templates/page-register.php';
+        if ( file_exists( $register_tpl ) ) {
+            return $register_tpl;
+        }
+    }
+    return $template;
+}
+add_filter( 'template_include', 'gpc_register_page_template', 11 );
+
+/**
+ * 회원가입 페이지 전용 CSS
+ */
+function gpc_register_page_assets() {
+    if ( ! gpc_is_register_page() ) {
+        return;
+    }
+    wp_enqueue_style(
+        'gpc-register-css',
+        get_stylesheet_directory_uri() . '/wpmem-register.css',
+        array( 'gapyeong-child-style' ),
+        wp_get_theme()->get( 'Version' ) . '.reg1'
+    );
+}
+add_action( 'wp_enqueue_scripts', 'gpc_register_page_assets', 99 );
+
+/**
+ * 등록 폼 기본값 (버튼 문구, 하단 필수 안내 숨김)
+ *
+ * @param array  $args 필터 인자 (WP-Members 3.x는 전체 defaults 배열).
+ * @param string $tag  new|edit
+ */
+function gpc_wpmem_register_form_args( $args, $tag, $id = '' ) {
+    if ( 'new' !== $tag || ! gpc_is_register_page() ) {
+        return $args;
+    }
+    $out = is_array( $args ) ? $args : array();
+    $out['submit_register']   = '가입하기';
+    $out['req_label']         = '';
+    $out['req_label_before']  = '';
+    $out['req_label_after']   = '';
+    return $out;
+}
+add_filter( 'wpmem_register_form_args', 'gpc_wpmem_register_form_args', 10, 3 );
+
+/**
+ * 등록 폼 상단 "New User Registration" 제거 (카드 헤더에서 제목 표시)
+ */
+function gpc_wpmem_register_heading( $heading, $tag ) {
+    if ( 'new' === $tag && gpc_is_register_page() ) {
+        return '';
+    }
+    return $heading;
+}
+add_filter( 'wpmem_register_heading', 'gpc_wpmem_register_heading', 10, 2 );
+
+/**
+ * 섹션 구분선 HTML
+ */
+function gpc_reg_divider_html( $label ) {
+    return '<div class="gpc-reg-divider" role="presentation"><span>' . esc_html( $label ) . '</span></div>';
+}
+
+/**
+ * 생년월일 옆 양력/음력 (교적용, user meta 저장)
+ */
+function gpc_reg_calendar_toggle_field() {
+    $posted = '';
+    if ( isset( $_POST['gpc_calendar_type'] ) ) {
+        $posted = sanitize_text_field( wp_unslash( $_POST['gpc_calendar_type'] ) );
+    }
+    $solar_checked  = ( '' === $posted || 'solar' === $posted ) ? ' checked' : '';
+    $lunar_checked  = ( 'lunar' === $posted ) ? ' checked' : '';
+    $legend         = esc_attr__( '생년월일 달력 구분', 'gapyeong-church-child' );
+
+    return '<fieldset class="gpc-calendar-toggle" aria-label="' . $legend . '">'
+        . '<label><input type="radio" name="gpc_calendar_type" value="solar"' . $solar_checked . '> '
+        . esc_html__( '양력', 'gapyeong-church-child' ) . '</label>'
+        . '<label><input type="radio" name="gpc_calendar_type" value="lunar"' . $lunar_checked . '> '
+        . esc_html__( '음력', 'gapyeong-church-child' ) . '</label>'
+        . '</fieldset>';
+}
+
+/**
+ * 필드 행에 래퍼·구역 구분·전체 너비 클래스 부여
+ *
+ * @param array  $rows
+ * @param string $tag new|edit
+ */
+function gpc_wpmem_register_form_rows( $rows, $tag ) {
+    if ( 'new' !== $tag || ! gpc_is_register_page() || ! is_array( $rows ) ) {
+        return $rows;
+    }
+
+    $account_keys = array( 'username', 'password', 'confirm_password', 'password_confirm', 'user_email' );
+
+    $preferred = array(
+        'username',
+        'password',
+        'confirm_password',
+        'password_confirm',
+        'user_email',
+    );
+
+    $reordered = array();
+    foreach ( $preferred as $key ) {
+        if ( isset( $rows[ $key ] ) ) {
+            $reordered[ $key ] = $rows[ $key ];
+            unset( $rows[ $key ] );
+        }
+    }
+    foreach ( $rows as $key => $row ) {
+        $reordered[ $key ] = $row;
+    }
+    $rows = $reordered;
+
+    $church_first = null;
+    foreach ( $rows as $key => $row ) {
+        $lt = isset( $row['label_text'] ) ? $row['label_text'] : '';
+        if ( $lt && false !== strpos( $lt, '교회' ) && false !== strpos( $lt, '직분' ) ) {
+            $church_first = $key;
+            break;
+        }
+    }
+    if ( ! $church_first ) {
+        foreach ( $rows as $key => $row ) {
+            $lt = isset( $row['label_text'] ) ? $row['label_text'] : '';
+            if ( $lt && false !== strpos( $lt, '직분' ) ) {
+                $church_first = $key;
+                break;
+            }
+        }
+    }
+
+    $personal_started = false;
+
+    foreach ( $rows as $key => &$row ) {
+        $lt = isset( $row['label_text'] ) ? $row['label_text'] : '';
+
+        $slug = sanitize_title( (string) $key );
+        if ( '' === $slug ) {
+            $slug = 'f' . substr( md5( (string) $key ), 0, 8 );
+        }
+
+        $classes   = array( 'gpc-reg-field', 'gpc-reg-field--' . $slug );
+        $type      = isset( $row['type'] ) ? $row['type'] : '';
+        $is_tos    = ( 'tos' === $key );
+        $is_captcha = ( 'captcha' === $key );
+
+        $full = in_array( $key, array( 'confirm_password', 'password_confirm', 'user_email', 'tos', 'captcha' ), true )
+            || 'textarea' === $type
+            || ( $lt && false !== strpos( $lt, '가족' ) )
+            || ( $lt && false !== strpos( $lt, '교적' ) );
+
+        if ( $full ) {
+            $classes[] = 'gpc-reg-field--full';
+        }
+
+        $divider = '';
+        if ( ! $personal_started && ! in_array( $key, $account_keys, true ) && ! $is_tos && ! $is_captcha ) {
+            $divider           = gpc_reg_divider_html( __( '개인 신상 정보', 'gapyeong-church-child' ) );
+            $personal_started = true;
+        }
+        if ( $church_first && $key === $church_first ) {
+            $divider = gpc_reg_divider_html( __( '교회 활동 정보', 'gapyeong-church-child' ) );
+        }
+
+        $extra_after = '';
+        if ( $lt && false !== strpos( $lt, '생년월일' ) ) {
+            $classes[]    = 'gpc-reg-field--dob';
+            $extra_after .= gpc_reg_calendar_toggle_field();
+        }
+
+        $open  = '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">';
+        $close = $extra_after . '</div>';
+
+        $row['row_before'] = $divider . $open . ( isset( $row['row_before'] ) ? $row['row_before'] : '' );
+        $row['row_after']  = ( isset( $row['row_after'] ) ? $row['row_after'] : '' ) . $close;
+    }
+    unset( $row );
+
+    return $rows;
+}
+add_filter( 'wpmem_register_form_rows', 'gpc_wpmem_register_form_rows', 10, 2 );
+
+/**
+ * 제출 버튼 영역 래퍼 (그리드 full span)
+ */
+function gpc_wpmem_register_form_buttons( $buttons, $tag, $button_html = null ) {
+    if ( 'new' !== $tag || ! gpc_is_register_page() ) {
+        return $buttons;
+    }
+    return '<div class="gpc-reg-submit-wrap">' . $buttons . '</div>';
+}
+add_filter( 'wpmem_register_form_buttons', 'gpc_wpmem_register_form_buttons', 10, 3 );
+
+/**
+ * 양력/음력 선택 저장 (WP-Members 등록 완료 시)
+ */
+function gpc_save_calendar_type_on_register( $user_id ) {
+    if ( empty( $_POST['gpc_calendar_type'] ) ) {
+        return;
+    }
+    if ( empty( $_POST['_wpmem_register_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpmem_register_nonce'] ) ), 'wpmem_longform_nonce' ) ) {
+        return;
+    }
+    $val = sanitize_text_field( wp_unslash( $_POST['gpc_calendar_type'] ) );
+    if ( ! in_array( $val, array( 'solar', 'lunar' ), true ) ) {
+        return;
+    }
+    update_user_meta( (int) $user_id, 'gpc_calendar_type', $val );
+}
+add_action( 'user_register', 'gpc_save_calendar_type_on_register', 15, 1 );
