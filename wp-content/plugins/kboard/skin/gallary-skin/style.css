@@ -1456,4 +1456,232 @@ button.kboard-thumbnail-button-small:active {
 		width: 100%;
 		text-align: left;
 	}
+}}
+
+/* =================================================================
+   📌 갤러리 상세 페이지 전용 CSS (notice와 동일한 디자인)
+================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+
+body #kboard-document {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    display: flex !important;
+    justify-content: center !important;
+    padding: 20px 16px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+body #kboard-document #kboard-thumbnail-document {
+    width: 100% !important; max-width: 900px !important;
+    margin: 0 !important; padding: 0 !important;
+}
+
+body #kboard-document .kboard-document-wrap {
+    background: #ffffff !important;
+    border: 1px solid #dde3f0 !important; border-radius: 14px !important;
+    box-shadow: 0 2px 12px rgba(99,102,241,0.08), 0 8px 24px rgba(59,130,246,0.06) !important;
+    overflow: hidden !important; float: none !important;
+    width: 100% !important; box-sizing: border-box !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-title {
+    background: linear-gradient(135deg, #eef2ff 0%, #ede9fe 50%, #dbeafe 100%) !important;
+    padding: 32px 36px 26px !important; position: relative !important;
+    overflow: hidden !important; border: none !important;
+    float: none !important; width: auto !important; box-sizing: border-box !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-title::before {
+    content: '' !important; position: absolute !important;
+    top: -16px !important; right: 72px !important;
+    width: 56px !important; height: 56px !important;
+    background: rgba(251,191,36,0.5) !important; border-radius: 50% !important; pointer-events: none !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-title::after {
+    content: '' !important; position: absolute !important;
+    bottom: -8px !important; right: 148px !important;
+    width: 20px !important; height: 20px !important;
+    background: rgba(99,102,241,0.3) !important; border-radius: 3px !important;
+    transform: rotate(45deg) !important; pointer-events: none !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-title h1 {
+    font-size: 22px !important; font-weight: 700 !important; color: #1e293b !important;
+    line-height: 1.45 !important; margin: 0 0 18px !important; padding: 0 !important;
+    letter-spacing: -0.3px !important; position: relative !important; z-index: 1 !important;
+    text-align: left !important; text-shadow: none !important; background: none !important; border: none !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-detail {
+    display: flex !important; flex-wrap: wrap !important; align-items: center !important;
+    gap: 0 !important; padding: 0 !important; margin: 0 !important;
+    background: transparent !important; border: none !important;
+    float: none !important; width: auto !important;
+    position: relative !important; z-index: 1 !important; font-size: 13px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-attr {
+    display: inline-flex !important; align-items: center !important; gap: 4px !important;
+    padding: 0 !important; margin: 0 !important; float: none !important;
+    line-height: 1.5 !important; border: none !important; color: #64748b !important; font-size: 13px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-attr + .detail-attr::before {
+    content: '·' !important; margin: 0 8px !important; color: #cbd5e1 !important; font-size: 14px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-name {
+    font-weight: 500 !important; color: #94a3b8 !important; font-size: 12px !important;
+    float: none !important; padding: 0 !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-name::after { content: '' !important; }
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-value {
+    color: #475569 !important; font-size: 13px !important; font-weight: 600 !important;
+    float: none !important; padding: 0 !important;
+}
+
+body #kboard-document .kboard-document-wrap .detail-category1,
+body #kboard-document .kboard-document-wrap .detail-category2 {
+    padding: 3px 12px !important; background: rgba(99,102,241,0.12) !important;
+    color: #6366f1 !important; border-radius: 20px !important; font-size: 11px !important;
+    font-weight: 700 !important; border: none !important; float: none !important; line-height: 1.6 !important;
+}
+body #kboard-document .kboard-document-wrap .detail-category1 .detail-name,
+body #kboard-document .kboard-document-wrap .detail-category2 .detail-name { display: none !important; }
+body #kboard-document .kboard-document-wrap .detail-category1 .detail-name::after,
+body #kboard-document .kboard-document-wrap .detail-category2 .detail-name::after { content: '' !important; }
+
+body #kboard-document .kboard-document-wrap .kboard-content {
+    padding: 32px 36px !important; border-top: 1px solid #e8edf5 !important;
+    border-bottom: 1px solid #e8edf5 !important; background: #ffffff !important;
+    clear: both !important; float: none !important;
+    min-height: auto !important; width: auto !important; box-sizing: border-box !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-content .content-view {
+    font-size: 15px !important; line-height: 1.85 !important; color: #334155 !important;
+    word-break: keep-all !important; margin: 0 !important; padding: 0 !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-content .content-view p { margin: 0 0 1.1em !important; }
+body #kboard-document .kboard-document-wrap .kboard-content .content-view img {
+    max-width: 100% !important; border-radius: 12px !important; height: auto !important;
+    display: block !important; margin: 12px auto !important;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.1) !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-document-action {
+    display: flex !important; justify-content: space-between !important;
+    align-items: center !important; padding: 12px 36px !important;
+    background: #f8fafc !important; border-bottom: 1px solid #e8edf5 !important;
+    overflow: visible !important; float: none !important; line-height: 1 !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-document-action .left,
+body #kboard-document .kboard-document-wrap .kboard-document-action .right {
+    position: static !important; float: none !important; display: flex !important; gap: 8px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-button-action {
+    display: inline-flex !important; align-items: center !important; gap: 5px !important;
+    padding: 8px 16px !important; height: auto !important; line-height: 1 !important;
+    border-radius: 9px !important; font-size: 13px !important; font-weight: 500 !important;
+    cursor: pointer !important; border: 1.5px solid #e2e8f0 !important;
+    background: #ffffff !important; color: #64748b !important;
+    box-shadow: none !important; transition: all 0.2s !important;
+    font-family: inherit !important; opacity: 1 !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-button-like:hover { border-color: #fca5a5 !important; color: #ef4444 !important; background: #fff5f5 !important; opacity: 1 !important; }
+body #kboard-document .kboard-document-wrap .kboard-button-unlike:hover { border-color: #fca5a5 !important; color: #f97316 !important; background: #fff7ed !important; opacity: 1 !important; }
+body #kboard-document .kboard-document-wrap .kboard-button-print:hover { border-color: #93c5fd !important; color: #3b82f6 !important; background: #eff6ff !important; opacity: 1 !important; }
+
+body #kboard-document .kboard-document-wrap .kboard-attach {
+    padding: 12px 36px !important; background: #f8fafc !important;
+    border-bottom: 1px solid #e8edf5 !important; display: flex !important;
+    flex-wrap: wrap !important; gap: 8px !important;
+    float: none !important; width: auto !important; box-sizing: border-box !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-button-download {
+    display: inline-flex !important; align-items: center !important; gap: 6px !important;
+    padding: 8px 16px !important; height: auto !important; line-height: 1 !important;
+    background: #ffffff !important; border: 1.5px solid #6366f1 !important;
+    color: #6366f1 !important; border-radius: 9px !important;
+    font-size: 13px !important; font-weight: 500 !important;
+    cursor: pointer !important; transition: all 0.2s !important; opacity: 1 !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-button-download::before { content: '📎' !important; font-size: 14px !important; }
+body #kboard-document .kboard-document-wrap .kboard-button-download:hover { background: #6366f1 !important; color: #fff !important; opacity: 1 !important; }
+
+body #kboard-document .kboard-document-navi { overflow: hidden !important; }
+body #kboard-document .kboard-document-wrap .kboard-prev-document,
+body #kboard-document .kboard-document-wrap .kboard-next-document { border-bottom: 1px solid #e8edf5 !important; }
+body #kboard-document .kboard-document-wrap .kboard-prev-document:last-child { border-bottom: none !important; }
+
+body #kboard-document .kboard-document-wrap .kboard-prev-document a,
+body #kboard-document .kboard-document-wrap .kboard-next-document a {
+    display: flex !important; align-items: center !important; gap: 12px !important;
+    padding: 12px 36px !important; text-decoration: none !important;
+    color: #64748b !important; font-size: 14px !important;
+    transition: all 0.2s !important; border: none !important; box-shadow: none !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-prev-document a:hover,
+body #kboard-document .kboard-document-wrap .kboard-next-document a:hover {
+    background: rgba(238,242,255,0.6) !important; color: #6366f1 !important;
+}
+
+body #kboard-document .kboard-document-wrap .navi-arrow {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    min-width: 28px !important; width: 28px !important; height: 28px !important;
+    background: #e8edf5 !important; border-radius: 50% !important;
+    font-size: 13px !important; color: #64748b !important;
+    flex-shrink: 0 !important; transition: all 0.2s !important; font-weight: bold !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-prev-document a:hover .navi-arrow,
+body #kboard-document .kboard-document-wrap .kboard-next-document a:hover .navi-arrow {
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important; color: #fff !important;
+}
+body #kboard-document .kboard-document-wrap .navi-document-title {
+    flex: 1 !important; overflow: hidden !important;
+    text-overflow: ellipsis !important; white-space: nowrap !important; width: auto !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-control {
+    display: flex !important; justify-content: space-between !important;
+    align-items: center !important; padding: 16px 36px !important;
+    float: none !important; width: auto !important; box-sizing: border-box !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-control .left,
+body #kboard-document .kboard-document-wrap .kboard-control .right {
+    position: static !important; float: none !important;
+    display: flex !important; gap: 8px !important; width: auto !important; text-align: left !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-control a.kboard-thumbnail-button-small,
+body #kboard-document .kboard-document-wrap .kboard-control button.kboard-thumbnail-button-small {
+    display: inline-flex !important; align-items: center !important;
+    height: auto !important; line-height: 1 !important;
+    padding: 9px 22px !important; border-radius: 9px !important;
+    font-size: 14px !important; font-weight: 600 !important;
+    background: #ffffff !important; border: 1.5px solid #d1d5db !important;
+    color: #374151 !important; text-decoration: none !important;
+    cursor: pointer !important; transition: all 0.2s !important;
+    box-shadow: none !important; opacity: 1 !important;
+    letter-spacing: 0 !important; font-family: inherit !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-control a.kboard-thumbnail-button-small:hover,
+body #kboard-document .kboard-document-wrap .kboard-control button.kboard-thumbnail-button-small:hover {
+    background: #f1f5f9 !important; border-color: #9ca3af !important; opacity: 1 !important;
+}
+
+body #kboard-document .kboard-thumbnail-poweredby { display: none !important; }
+
+@media (max-width: 768px) {
+    body #kboard-document { padding: 12px 10px !important; }
+    body #kboard-document .kboard-document-wrap .kboard-title { padding: 22px 20px 18px !important; }
+    body #kboard-document .kboard-document-wrap .kboard-title h1 { font-size: 18px !important; }
+    body #kboard-document .kboard-document-wrap .kboard-content { padding: 22px 20px !important; }
+    body #kboard-document .kboard-document-wrap .kboard-document-action,
+    body #kboard-document .kboard-document-wrap .kboard-attach,
+    body #kboard-document .kboard-document-wrap .kboard-control { padding: 12px 20px !important; }
+    body #kboard-document .kboard-document-wrap .kboard-prev-document a,
+    body #kboard-document .kboard-document-wrap .kboard-next-document a { padding: 11px 20px !important; }
 }
