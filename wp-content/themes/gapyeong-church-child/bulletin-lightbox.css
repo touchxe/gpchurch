@@ -1,0 +1,108 @@
+/* =====================================================
+   가평교회 – 주보 라이트박스 스타일
+   자식 테마에서만 로드 (bulletin 페이지 한정)
+   ===================================================== */
+
+/* ── 오버레이 ── */
+#gpc-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+}
+#gpc-lightbox.gpc-lb-open {
+    display: flex;
+}
+
+/* ── 배경 ── */
+#gpc-lb-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: gpcFadeIn 0.25s ease;
+}
+
+/* ── 컨테이너 ── */
+#gpc-lb-container {
+    position: relative;
+    z-index: 1;
+    max-width: 90vw;
+    max-height: 90dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: gpcScaleIn 0.25s ease;
+}
+
+/* ── 이미지 ── */
+#gpc-lb-img {
+    max-width: 100%;
+    max-height: 82dvh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    /* 핀치 줌 허용 */
+    touch-action: pinch-zoom;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ── 캡션 ── */
+#gpc-lb-caption {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+    text-align: center;
+    max-width: 80vw;
+}
+
+/* ── 닫기 버튼 ── */
+#gpc-lb-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #ffffff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    z-index: 2;
+}
+#gpc-lb-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── 애니메이션 ── */
+@keyframes gpcFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes gpcScaleIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ── 모바일 스와이프 힌트 ── */
+@media (max-width: 768px) {
+    #gpc-lb-container::after {
+        content: '↓ 아래로 스와이프하면 닫혀요';
+        display: block;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 0.5rem;
+    }
+    #gpc-lb-img {
+        max-height: 75dvh;
+    }
+}

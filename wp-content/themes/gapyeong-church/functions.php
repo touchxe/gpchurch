@@ -592,7 +592,9 @@ function gapyeong_get_submenu($group)
 
     );
 
-    return isset($menus[$group]) ? $menus[$group] : array();
+    $result = isset($menus[$group]) ? $menus[$group] : array();
+    // 자식 테마에서 서브메뉴를 그룹별로 오버라이드할 수 있도록 필터 적용
+    return apply_filters('gapyeong_submenu_' . $group, $result);
 }
 
 
@@ -661,11 +663,13 @@ function gapyeong_get_page_context()
         }
     }
 
-    $current_path = '/' . $group . '/' . $post->post_name; // 예: /intro/greeting
+    // post_name이 URL인코딩된 경우(한글 슬러그 등) 디코딩하여 비교
+    $current_path = '/' . $group . '/' . urldecode($post->post_name); // 예: /community/교회일정
     $page_label = get_the_title();
 
     foreach ($items as $item) {
-        if ($item['href'] === $current_path) {
+        // href도 urldecode 후 비교하여 인코딩 불일치 방지
+        if (urldecode($item['href']) === $current_path) {
             $page_label = $item['label'];
             break;
         }
