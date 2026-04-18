@@ -213,7 +213,7 @@ function gpc_register_page_assets() {
         'gpc-register-css',
         get_stylesheet_directory_uri() . '/wpmem-register.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.reg3'
+        wp_get_theme()->get( 'Version' ) . '.reg4'
     );
 }
 add_action( 'wp_enqueue_scripts', 'gpc_register_page_assets', 99 );

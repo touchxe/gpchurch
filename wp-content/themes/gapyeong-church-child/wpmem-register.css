@@ -226,6 +226,47 @@ main.gpc-register-page {
     line-height: 1.4;
 }
 
+/*
+ * WP-Members는 select에 class="dropdown"을 붙이는데,
+ * 부모 테마 style.css의 네비용 .dropdown(absolute, opacity:0, visibility:hidden)과 충돌한다.
+ */
+.gpc-register-form-wrap #wpmem_reg select.dropdown,
+.gpc-register-form-wrap #wpmem_reg select.multiselect {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0.75rem 2rem 0.75rem 0.875rem !important;
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: auto !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: 1px solid var(--border-color, #e5e7eb) !important;
+    border-radius: 0.5rem !important;
+    z-index: auto !important;
+    cursor: pointer !important;
+    display: block !important;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.gpc-register-form-wrap #wpmem_reg select.dropdown::before,
+.gpc-register-form-wrap #wpmem_reg select.multiselect::before {
+    content: none !important;
+    display: none !important;
+}
+
 /* :has 미지원 브라우저용 */
 .gpc-register-form-wrap #wpmem_reg select.textbox,
 .gpc-register-form-wrap #wpmem_reg select.text {
