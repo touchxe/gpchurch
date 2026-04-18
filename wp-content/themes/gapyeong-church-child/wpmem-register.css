@@ -14,7 +14,8 @@ main.gpc-register-page {
 
 .gpc-register-card {
     width: 100%;
-    max-width: 640px;
+    /* 기존 640px 대비 가로 약 50% 확대 */
+    max-width: 960px;
     background: #fff;
     border-radius: var(--radius-xl, 1rem);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
@@ -72,9 +73,11 @@ main.gpc-register-page {
     padding: 0;
     margin: 0;
     min-width: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem 1.25rem;
+    /* fieldset + grid 조합은 일부 브라우저에서 select가 보이지 않는 문제가 있어 flex로 배치 */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    align-content: flex-start;
 }
 
 .gpc-register-form-wrap #wpmem_reg legend {
@@ -88,7 +91,8 @@ main.gpc-register-page {
 
 /* ── Section divider ── */
 .gpc-reg-divider {
-    grid-column: 1 / -1;
+    flex: 1 1 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -114,10 +118,14 @@ main.gpc-register-page {
 /* ── Field wrapper (from PHP filter) ── */
 .gpc-reg-field {
     min-width: 0;
+    flex: 1 1 calc(50% - 0.625rem);
+    max-width: calc(50% - 0.625rem);
+    box-sizing: border-box;
 }
 
 .gpc-reg-field--full {
-    grid-column: 1 / -1;
+    flex: 1 1 100%;
+    max-width: 100%;
 }
 
 .gpc-register-form-wrap #wpmem_reg label {
@@ -182,11 +190,16 @@ main.gpc-register-page {
 }
 
 .gpc-register-form-wrap #wpmem_reg select {
-    color: #374151;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #111827;
+    background-color: #fff !important;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     padding-right: 2rem;
+    line-height: 1.4;
 }
 
 /* 생년월일 + 양력/음력 */
@@ -271,8 +284,12 @@ main.gpc-register-page {
 
 /* 제출 */
 .gpc-reg-submit-wrap {
-    grid-column: 1 / -1;
+    flex: 1 1 100%;
+    width: 100%;
     margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .gpc-register-form-wrap #wpmem_reg .button_div,
@@ -281,10 +298,18 @@ main.gpc-register-page {
     padding: 0;
 }
 
+.gpc-reg-submit-wrap .button_div {
+    width: 100%;
+    max-width: 22rem;
+    margin: 0;
+}
+
 .gpc-register-form-wrap #wpmem_reg input[type="submit"].buttons,
 .gpc-register-form-wrap #wpmem_reg input.buttons[type="submit"] {
     display: block;
     width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 0.9rem 3rem 0.9rem 1rem;
     background-color: #2563eb;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"),
@@ -316,7 +341,8 @@ main.gpc-register-page {
 /* 메시지 */
 .gpc-register-form-wrap .wpmem_msg,
 .gpc-register-form-wrap div[align="center"] {
-    grid-column: 1 / -1;
+    flex: 1 1 100%;
+    width: 100%;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
@@ -348,15 +374,9 @@ main.gpc-register-page {
         border-radius: 1rem;
     }
 
-    .gpc-register-form-wrap #wpmem_reg fieldset {
-        grid-template-columns: 1fr;
-    }
-
-    .gpc-reg-field--username,
-    .gpc-reg-field--password,
-    .gpc-reg-field--confirm_password,
-    .gpc-reg-field--password_confirm {
-        grid-column: 1;
+    .gpc-reg-field:not(.gpc-reg-field--full) {
+        flex: 1 1 100%;
+        max-width: 100%;
     }
 
     .gpc-register-heading-text {

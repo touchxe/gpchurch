@@ -213,10 +213,35 @@ function gpc_register_page_assets() {
         'gpc-register-css',
         get_stylesheet_directory_uri() . '/wpmem-register.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.reg1'
+        wp_get_theme()->get( 'Version' ) . '.reg2'
     );
 }
 add_action( 'wp_enqueue_scripts', 'gpc_register_page_assets', 99 );
+
+/**
+ * 회원가입 페이지 본문: 에디터에 넣은 거대 제목(h1)·중복 부제 문단 제거
+ * (템플릿 헤더와 겹치는 "가평 제칠일…" 블록 등)
+ */
+function gpc_register_page_the_content( $content ) {
+    if ( ! is_page() || ! gpc_is_register_page() ) {
+        return $content;
+    }
+    $content = preg_replace(
+        '/<h1\b[^>]*>[\s\S]*?(?:제칠일|예수재림교회)[\s\S]*?<\/h1>/iu',
+        '',
+        $content,
+        4
+    );
+    $subtitle = '가평교회 교적 등록을 위한 정보를 입력해주세요.';
+    $content    = preg_replace(
+        '/<p[^>]*>\s*' . preg_quote( $subtitle, '/' ) . '\s*<\/p>/iu',
+        '',
+        $content,
+        3
+    );
+    return $content;
+}
+add_filter( 'the_content', 'gpc_register_page_the_content', 18 );
 
 /**
  * 등록 폼 기본값 (버튼 문구, 하단 필수 안내 숨김)
