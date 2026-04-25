@@ -11,7 +11,10 @@ $a = isset( $_GET['a'] ) ? sanitize_key( wp_unslash( $_GET['a'] ) ) : '';
 if ( 'pwdreset' === $a ) {
     $gpc_shell_title    = '비밀번호 찾기';
     $gpc_shell_subtitle = '가입하신 이메일로 비밀번호 재설정 안내를 보내드립니다.';
-} elseif ( in_array( $a, array( 'pwdchange', 'set_password_from_key' ), true ) ) {
+} elseif ( 'pwdchange' === $a ) {
+    $gpc_shell_title    = '새 비밀번호 설정';
+    $gpc_shell_subtitle = '기존 비밀번호 확인 후 새 비밀번호를 입력해 주세요.';
+} elseif ( 'set_password_from_key' === $a ) {
     $gpc_shell_title    = '새 비밀번호 설정';
     $gpc_shell_subtitle = '새 비밀번호를 입력한 뒤 저장해 주세요.';
 } else {
@@ -42,7 +45,7 @@ if ( 'pwdreset' === $a ) {
         </div>
 
         <p class="gpc-login-back">
-            <a href="<?php echo esc_url( home_url( '/로그인-화면/' ) ); ?>">로그인으로 돌아가기</a>
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>">홈으로 돌아가기</a>
         </p>
     </div>
 </main>
@@ -52,6 +55,10 @@ if ( 'pwdreset' === $a ) {
     var u = document.getElementById('user');
     if (u) {
         u.placeholder = '이메일 주소를 입력하세요';
+    }
+    var p0 = document.getElementById('pass0');
+    if (p0) {
+        p0.placeholder = '현재 비밀번호를 입력하세요';
     }
     var p1 = document.getElementById('pass1');
     var p2 = document.getElementById('pass2');
