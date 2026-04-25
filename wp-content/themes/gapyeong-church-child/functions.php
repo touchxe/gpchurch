@@ -103,20 +103,96 @@ function gpc_login_page_template( $template ) {
 add_filter( 'template_include', 'gpc_login_page_template' );
 
 /**
- * 로그인 페이지 전용: CSS 조건부 로드
+ * 마이페이지에서 WP-Members 비밀번호·키 기반 재설정 폼이 뜨는 경우
+ * (실제 URL: /마이페이지/?a=pwdreset 등 — http://sdagp.kr/마이페이지/?a=pwdreset )
+ */
+function gpc_is_mypage_password_shell() {
+    if ( ! is_page() ) {
+        return false;
+    }
+    $is_mypage = is_page( '마이페이지' )
+        || is_page( '%eb%a7%88%ec%9d%b4%ed%8e%98%ec%9d%b4%ec%a7%80' );
+    if ( ! $is_mypage ) {
+        return false;
+    }
+    $a = isset( $_GET['a'] ) ? sanitize_key( wp_unslash( $_GET['a'] ) ) : '';
+    return in_array( $a, array( 'pwdreset', 'pwdchange', 'set_password_from_key' ), true );
+}
+
+/**
+ * 위 URL일 때만 로그인과 동일한 카드 셸로 감쌈 (본문 숏코드·플러그인 출력 유지)
+ */
+function gpc_mypage_password_shell_template( $template ) {
+    if ( ! gpc_is_mypage_password_shell() ) {
+        return $template;
+    }
+    $shell = get_stylesheet_directory() . '/page-templates/page-mypage-password-shell.php';
+    return file_exists( $shell ) ? $shell : $template;
+}
+add_filter( 'template_include', 'gpc_mypage_password_shell_template', 13 );
+
+/**
+ * 로그인 페이지 + 마이페이지 비밀번호 구간: WP-Members 카드 폼 스타일
  */
 function gpc_login_page_assets() {
-    if ( ! gpc_is_login_page() ) {
+    if ( ! gpc_is_login_page() && ! gpc_is_mypage_password_shell() ) {
         return;
     }
     wp_enqueue_style(
         'gpc-login-css',
         get_stylesheet_directory_uri() . '/wpmem-login.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.login3'
+        wp_get_theme()->get( 'Version' ) . '.login5'
     );
 }
 add_action( 'wp_enqueue_scripts', 'gpc_login_page_assets', 99 );
+
+/**
+ * 마이페이지 비밀번호 재설정 요청 폼 문구
+ */
+function gpc_wpmem_resetpassword_form_defaults( $arr, $form ) {
+    if ( 'resetpassword' !== $form || ! gpc_is_mypage_password_shell() ) {
+        return $arr;
+    }
+    $arr['heading']     = '';
+    $arr['button_text'] = '재설정 메일 보내기';
+    if ( ! empty( $arr['inputs'] ) && is_array( $arr['inputs'] ) ) {
+        foreach ( $arr['inputs'] as &$input ) {
+            if ( isset( $input['tag'] ) && 'user' === $input['tag'] ) {
+                $input['name'] = '이메일 주소';
+            }
+        }
+        unset( $input );
+    }
+    return $arr;
+}
+add_filter( 'wpmem_resetpassword_form_defaults', 'gpc_wpmem_resetpassword_form_defaults', 10, 2 );
+
+/**
+ * 메일 링크 이후 새 비밀번호 입력 폼 (같은 마이페이지에서 a=pwdchange 등)
+ */
+function gpc_wpmem_changepassword_form_defaults( $arr, $form ) {
+    if ( 'changepassword' !== $form || ! gpc_is_mypage_password_shell() ) {
+        return $arr;
+    }
+    $arr['heading']     = '';
+    $arr['button_text'] = '새 비밀번호 저장';
+    if ( ! empty( $arr['inputs'] ) && is_array( $arr['inputs'] ) ) {
+        foreach ( $arr['inputs'] as &$input ) {
+            if ( ! isset( $input['tag'] ) ) {
+                continue;
+            }
+            if ( 'pass1' === $input['tag'] ) {
+                $input['name'] = '새 비밀번호';
+            } elseif ( 'pass2' === $input['tag'] ) {
+                $input['name'] = '새 비밀번호 확인';
+            }
+        }
+        unset( $input );
+    }
+    return $arr;
+}
+add_filter( 'wpmem_changepassword_form_defaults', 'gpc_wpmem_changepassword_form_defaults', 10, 2 );
 
 /**
  * WP-Members 로그인 폼 한글화 (필터로 변경 가능한 항목)
@@ -165,6 +241,16 @@ function gpc_wpmem_translate( $translated, $text, $domain ) {
         'Username'           => '아이디',
         'Confirm Password'   => '비밀번호 확인',
         'Email'              => '이메일',
+        'New password'       => '새 비밀번호',
+        'Confirm new password' => '새 비밀번호 확인',
+        'Update Password'    => '새 비밀번호 저장',
+        'Reset Password'     => '재설정 메일 보내기',
+        'Change Password'    => '비밀번호 변경',
+        'Password successfully changed.' => '비밀번호가 변경되었습니다.',
+        'Password successfully changed!' => '비밀번호가 변경되었습니다.',
+        'Invalid username or email address.' => '이메일 주소를 확인할 수 없습니다.',
+        'Reset Forgotten Password' => '',
+        'Forgot username?' => '아이디를 잊으셨나요?',
     );
     return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
 }
