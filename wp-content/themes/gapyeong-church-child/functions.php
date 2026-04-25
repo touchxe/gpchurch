@@ -202,7 +202,7 @@ function gpc_login_page_assets() {
             'gpc-register-css',
             get_stylesheet_directory_uri() . '/wpmem-register.css',
             array( 'gapyeong-child-style' ),
-            wp_get_theme()->get( 'Version' ) . '.reg4'
+            wp_get_theme()->get( 'Version' ) . '.reg5'
         );
     }
 }
@@ -319,6 +319,86 @@ function gpc_wpmem_login_defaults( $defaults ) {
 add_filter( 'wpmem_login_form_defaults', 'gpc_wpmem_login_defaults' );
 
 /**
+ * WP-Members 로그인 성공 시 홈으로 이동 (redirect_to 가 있으면 그대로 사용)
+ */
+function gpc_wpmem_login_redirect( $redirect_to, $user_id ) {
+    $req = '';
+    if ( ! empty( $_POST['redirect_to'] ) ) {
+        $req = wp_unslash( $_POST['redirect_to'] );
+    } elseif ( ! empty( $_GET['redirect_to'] ) ) {
+        $req = wp_unslash( $_GET['redirect_to'] );
+    }
+    if ( $req ) {
+        $safe = wp_validate_redirect( $req, false );
+        if ( $safe ) {
+            return $safe;
+        }
+    }
+    return home_url( '/' );
+}
+add_filter( 'wpmem_login_redirect', 'gpc_wpmem_login_redirect', 10, 2 );
+
+/**
+ * 로그인 페이지에 이미 로그인된 경우 카드 대신 홈으로 보냄
+ */
+function gpc_redirect_logged_in_from_login_page() {
+    if ( is_customize_preview() ) {
+        return;
+    }
+    if ( ! is_page() || ! gpc_is_login_page() || ! is_user_logged_in() ) {
+        return;
+    }
+    wp_safe_redirect( home_url( '/' ) );
+    exit;
+}
+add_action( 'template_redirect', 'gpc_redirect_logged_in_from_login_page', 5 );
+
+/**
+ * WP-Members 회원정보 수정(?a=edit) 폼만 레이아웃 보정 대상
+ */
+function gpc_is_profile_edit_shell_context() {
+    if ( ! is_user_logged_in() || ! is_page() || ! function_exists( 'wpmem_profile_url' ) ) {
+        return false;
+    }
+    $here = trailingslashit( get_permalink( get_queried_object_id() ) );
+    $prof = trailingslashit( wpmem_profile_url() );
+    if ( $here !== $prof ) {
+        return false;
+    }
+    return 'edit' === gpc_mypage_action();
+}
+
+/**
+ * 회원정보 수정: 각 행을 .gpc-reg-field 로 감싸 fieldset flex 가 라벨·입력을 갈라 놓는 문제 방지
+ *
+ * @param array $rows
+ * @return array
+ */
+function gpc_wrap_wpmem_profile_edit_rows( $rows ) {
+    foreach ( $rows as $key => &$row ) {
+        if ( ! is_array( $row ) ) {
+            continue;
+        }
+        $slug = sanitize_title( (string) $key );
+        if ( '' === $slug ) {
+            $slug = 'f' . substr( md5( (string) $key ), 0, 8 );
+        }
+        $classes = array(
+            'gpc-reg-field',
+            'gpc-reg-field--full',
+            'gpc-reg-field--edit',
+            'gpc-reg-field--' . $slug,
+        );
+        $open  = '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">';
+        $close = '</div>';
+        $row['row_before'] = $open . ( isset( $row['row_before'] ) ? $row['row_before'] : '' );
+        $row['row_after']  = ( isset( $row['row_after'] ) ? $row['row_after'] : '' ) . $close;
+    }
+    unset( $row );
+    return $rows;
+}
+
+/**
  * WP-Members 번역 보완 (gettext 도메인으로 출력되는 문자열)
  */
 function gpc_wpmem_translate( $translated, $text, $domain ) {
@@ -350,7 +430,8 @@ function gpc_wpmem_translate( $translated, $text, $domain ) {
         'Invalid username or email address.' => '이메일 주소를 확인할 수 없습니다.',
         'Reset Forgotten Password' => '',
         'Forgot username?' => '아이디를 잊으셨나요?',
-        'Edit My Information' => '내 정보 수정',
+        'Edit My Information' => '회원 정보 수정',
+        'Update Profile'     => '저장하기',
     );
     return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
 }
@@ -399,7 +480,7 @@ function gpc_register_page_assets() {
         'gpc-register-css',
         get_stylesheet_directory_uri() . '/wpmem-register.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.reg4'
+        wp_get_theme()->get( 'Version' ) . '.reg5'
     );
 }
 add_action( 'wp_enqueue_scripts', 'gpc_register_page_assets', 99 );
@@ -436,15 +517,19 @@ add_filter( 'the_content', 'gpc_register_page_the_content', 18 );
  * @param string $tag  new|edit
  */
 function gpc_wpmem_register_form_args( $args, $tag, $id = '' ) {
-    if ( 'new' !== $tag || ! gpc_is_register_page() ) {
-        return $args;
-    }
     $out = is_array( $args ) ? $args : array();
-    $out['submit_register']   = '가입하기';
-    $out['req_label']         = '';
-    $out['req_label_before']  = '';
-    $out['req_label_after']   = '';
-    return $out;
+    if ( 'new' === $tag && gpc_is_register_page() ) {
+        $out['submit_register']  = '가입하기';
+        $out['req_label']        = '';
+        $out['req_label_before'] = '';
+        $out['req_label_after']  = '';
+        return $out;
+    }
+    if ( 'edit' === $tag && gpc_is_profile_edit_shell_context() ) {
+        $out['submit_update'] = '저장하기';
+        return $out;
+    }
+    return $args;
 }
 add_filter( 'wpmem_register_form_args', 'gpc_wpmem_register_form_args', 10, 3 );
 
@@ -453,6 +538,9 @@ add_filter( 'wpmem_register_form_args', 'gpc_wpmem_register_form_args', 10, 3 );
  */
 function gpc_wpmem_register_heading( $heading, $tag ) {
     if ( 'new' === $tag && gpc_is_register_page() ) {
+        return '';
+    }
+    if ( 'edit' === $tag && gpc_is_profile_edit_shell_context() ) {
         return '';
     }
     return $heading;
@@ -493,7 +581,13 @@ function gpc_reg_calendar_toggle_field() {
  * @param string $tag new|edit
  */
 function gpc_wpmem_register_form_rows( $rows, $tag ) {
-    if ( 'new' !== $tag || ! gpc_is_register_page() || ! is_array( $rows ) ) {
+    if ( ! is_array( $rows ) ) {
+        return $rows;
+    }
+    if ( 'edit' === $tag && gpc_is_profile_edit_shell_context() ) {
+        return gpc_wrap_wpmem_profile_edit_rows( $rows );
+    }
+    if ( 'new' !== $tag || ! gpc_is_register_page() ) {
         return $rows;
     }
 
@@ -593,10 +687,13 @@ add_filter( 'wpmem_register_form_rows', 'gpc_wpmem_register_form_rows', 10, 2 );
  * 제출 버튼 영역 래퍼 (그리드 full span)
  */
 function gpc_wpmem_register_form_buttons( $buttons, $tag, $button_html = null ) {
-    if ( 'new' !== $tag || ! gpc_is_register_page() ) {
-        return $buttons;
+    if ( 'new' === $tag && gpc_is_register_page() ) {
+        return '<div class="gpc-reg-submit-wrap">' . $buttons . '</div>';
     }
-    return '<div class="gpc-reg-submit-wrap">' . $buttons . '</div>';
+    if ( 'edit' === $tag && gpc_is_profile_edit_shell_context() ) {
+        return '<div class="gpc-reg-submit-wrap">' . $buttons . '</div>';
+    }
+    return $buttons;
 }
 add_filter( 'wpmem_register_form_buttons', 'gpc_wpmem_register_form_buttons', 10, 3 );
 
