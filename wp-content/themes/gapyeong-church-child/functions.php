@@ -216,7 +216,7 @@ function gpc_login_page_assets() {
         'gpc-login-css',
         get_stylesheet_directory_uri() . '/wpmem-login.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.login8'
+        wp_get_theme()->get( 'Version' ) . '.login9'
     );
 
     if ( gpc_is_mypage_profile_shell() && 'edit' === gpc_mypage_action() ) {
@@ -351,34 +351,55 @@ function gpc_wpmem_changepassword_form_defaults( $arr, $form ) {
 add_filter( 'wpmem_changepassword_form_defaults', 'gpc_wpmem_changepassword_form_defaults', 10, 2 );
 
 /**
+ * 로그인 상태에서 WP-Members 비밀번호 변경 폼 POST 인지 (URL에 a= 가 없어도 nonce·필드로 판별)
+ */
+function gpc_is_wpmem_logged_in_pwdchange_post() {
+    if ( ! is_user_logged_in() ) {
+        return false;
+    }
+    if ( empty( $_POST['formsubmit'] ) || empty( $_POST['_wpmem_pwdchange_nonce'] ) ) {
+        return false;
+    }
+    if ( ! isset( $_POST['pass1'], $_POST['pass2'] ) ) {
+        return false;
+    }
+    $a_req = function_exists( 'wpmem_get' ) ? wpmem_get( 'a', '', 'request' ) : '';
+    if ( 'set_password_from_key' === $a_req ) {
+        return false;
+    }
+    return true;
+}
+
+/**
  * 비밀번호 변경 시 기존 비밀번호 확인 (메일 키 재설정 제외)
  */
 function gpc_wpmem_pwd_change_error( $is_error, $user_id, $pass1 ) {
     if ( $is_error ) {
         return $is_error;
     }
-    $a_req = function_exists( 'wpmem_get' ) ? wpmem_get( 'a', '', 'request' ) : '';
-    if ( 'set_password_from_key' === $a_req ) {
+    if ( ! gpc_is_wpmem_logged_in_pwdchange_post() ) {
         return $is_error;
     }
-    if ( ! is_user_logged_in() ) {
-        return $is_error;
+
+    $uid = (int) $user_id;
+    if ( $uid <= 0 ) {
+        $uid = get_current_user_id();
     }
-    if ( ! gpc_is_mypage_password_shell() && 'pwdchange' !== $a_req ) {
-        return $is_error;
+    if ( $uid <= 0 ) {
+        return 'gpc_curpwd_bad';
     }
 
     $cur = isset( $_POST['pass0'] ) ? (string) wp_unslash( $_POST['pass0'] ) : '';
     if ( '' === trim( $cur ) ) {
         return 'gpc_curpwd_empty';
     }
-    $user = get_userdata( $user_id );
-    if ( ! $user || ! wp_check_password( $cur, $user->user_pass, $user_id ) ) {
+    $user = get_userdata( $uid );
+    if ( ! $user || ! wp_check_password( $cur, $user->user_pass, $uid ) ) {
         return 'gpc_curpwd_bad';
     }
     return $is_error;
 }
-add_filter( 'wpmem_pwd_change_error', 'gpc_wpmem_pwd_change_error', 5, 3 );
+add_filter( 'wpmem_pwd_change_error', 'gpc_wpmem_pwd_change_error', 99, 3 );
 
 /**
  * 기존 비밀번호 검증 실패 메시지
