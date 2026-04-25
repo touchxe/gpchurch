@@ -194,7 +194,7 @@ function gpc_login_page_assets() {
         'gpc-login-css',
         get_stylesheet_directory_uri() . '/wpmem-login.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.login6'
+        wp_get_theme()->get( 'Version' ) . '.login7'
     );
 
     if ( gpc_is_mypage_profile_shell() && 'edit' === gpc_mypage_action() ) {
@@ -276,22 +276,100 @@ function gpc_wpmem_changepassword_form_defaults( $arr, $form ) {
     }
     $arr['heading']     = '';
     $arr['button_text'] = '새 비밀번호 저장';
-    if ( ! empty( $arr['inputs'] ) && is_array( $arr['inputs'] ) ) {
-        foreach ( $arr['inputs'] as &$input ) {
-            if ( ! isset( $input['tag'] ) ) {
-                continue;
+
+    $a_req = function_exists( 'wpmem_get' ) ? wpmem_get( 'a', '', 'request' ) : '';
+    if ( 'set_password_from_key' === $a_req ) {
+        if ( ! empty( $arr['inputs'] ) && is_array( $arr['inputs'] ) ) {
+            foreach ( $arr['inputs'] as &$input ) {
+                if ( ! isset( $input['tag'] ) ) {
+                    continue;
+                }
+                if ( 'pass1' === $input['tag'] ) {
+                    $input['name'] = '새 비밀번호';
+                } elseif ( 'pass2' === $input['tag'] ) {
+                    $input['name'] = '새 비밀번호 확인';
+                }
             }
-            if ( 'pass1' === $input['tag'] ) {
-                $input['name'] = '새 비밀번호';
-            } elseif ( 'pass2' === $input['tag'] ) {
-                $input['name'] = '새 비밀번호 확인';
-            }
+            unset( $input );
         }
-        unset( $input );
+        return $arr;
     }
+
+    $pass0 = array(
+        'name'  => '기존 비밀번호',
+        'type'  => 'password',
+        'tag'   => 'pass0',
+        'class' => 'password',
+        'div'   => 'div_text',
+    );
+
+    $inputs = ( ! empty( $arr['inputs'] ) && is_array( $arr['inputs'] ) ) ? $arr['inputs'] : array();
+    $filtered = array();
+    foreach ( $inputs as $input ) {
+        if ( isset( $input['tag'] ) && 'pass0' === $input['tag'] ) {
+            continue;
+        }
+        $filtered[] = $input;
+    }
+    foreach ( $filtered as &$input ) {
+        if ( ! isset( $input['tag'] ) ) {
+            continue;
+        }
+        if ( 'pass1' === $input['tag'] ) {
+            $input['name'] = '새 비밀번호';
+        } elseif ( 'pass2' === $input['tag'] ) {
+            $input['name'] = '새 비밀번호 확인';
+        }
+    }
+    unset( $input );
+
+    $arr['inputs'] = array_merge( array( $pass0 ), $filtered );
     return $arr;
 }
 add_filter( 'wpmem_changepassword_form_defaults', 'gpc_wpmem_changepassword_form_defaults', 10, 2 );
+
+/**
+ * 비밀번호 변경 시 기존 비밀번호 확인 (메일 키 재설정 제외)
+ */
+function gpc_wpmem_pwd_change_error( $is_error, $user_id, $pass1 ) {
+    if ( $is_error ) {
+        return $is_error;
+    }
+    $a_req = function_exists( 'wpmem_get' ) ? wpmem_get( 'a', '', 'request' ) : '';
+    if ( 'set_password_from_key' === $a_req ) {
+        return $is_error;
+    }
+    if ( ! is_user_logged_in() ) {
+        return $is_error;
+    }
+    if ( ! gpc_is_mypage_password_shell() || 'pwdchange' !== gpc_mypage_action() ) {
+        return $is_error;
+    }
+
+    $cur = isset( $_POST['pass0'] ) ? (string) wp_unslash( $_POST['pass0'] ) : '';
+    if ( '' === trim( $cur ) ) {
+        return 'gpc_curpwd_empty';
+    }
+    $user = get_userdata( $user_id );
+    if ( ! $user || ! wp_check_password( $cur, $user->user_pass, $user_id ) ) {
+        return 'gpc_curpwd_bad';
+    }
+    return $is_error;
+}
+add_filter( 'wpmem_pwd_change_error', 'gpc_wpmem_pwd_change_error', 5, 3 );
+
+/**
+ * 기존 비밀번호 검증 실패 메시지
+ */
+function gpc_wpmem_msg_defaults_curpwd( $defaults, $tag, $dialogs ) {
+    if ( 'gpc_curpwd_empty' === $tag ) {
+        $defaults['msg'] = '기존 비밀번호를 입력해 주세요.';
+    } elseif ( 'gpc_curpwd_bad' === $tag ) {
+        $defaults['msg'] = '기존 비밀번호가 일치하지 않습니다.';
+    }
+    return $defaults;
+}
+add_filter( 'wpmem_msg_defaults', 'gpc_wpmem_msg_defaults_curpwd', 10, 3 );
 
 /**
  * WP-Members 로그인 폼 한글화 (필터로 변경 가능한 항목)
