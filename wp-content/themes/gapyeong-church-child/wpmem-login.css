@@ -319,6 +319,53 @@ main.gpc-login-page {
     text-align: center;
 }
 
+/* ── 프로필 허브 메뉴 (WP-Members member 링크) ── */
+.gpc-login-form-wrap .gpc-profile-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 0.75rem;
+    background: #f8fafc;
+    color: var(--text-color, #1a1a1a);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    text-align: center;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item a:hover {
+    border-color: var(--primary, #3b82f6);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item--logout a {
+    background: #fff;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item--logout a:hover {
+    border-color: #ef4444;
+    background: #fef2f2;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
 /* ── Mobile ── */
 @media (max-width: 480px) {
     main.gpc-login-page {

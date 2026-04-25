@@ -103,24 +103,64 @@ function gpc_login_page_template( $template ) {
 add_filter( 'template_include', 'gpc_login_page_template' );
 
 /**
- * 마이페이지에서 WP-Members 비밀번호·키 기반 재설정 폼이 뜨는 경우
- * (실제 URL: /마이페이지/?a=pwdreset 등 — http://sdagp.kr/마이페이지/?a=pwdreset )
+ * 슬러그 기준 마이페이지 (비밀번호 재설정 URL 등)
  */
-function gpc_is_mypage_password_shell() {
+function gpc_is_mypage() {
     if ( ! is_page() ) {
         return false;
     }
-    $is_mypage = is_page( '마이페이지' )
+    return is_page( '마이페이지' )
         || is_page( '%eb%a7%88%ec%9d%b4%ed%8e%98%ec%9d%b4%ec%a7%80' );
-    if ( ! $is_mypage ) {
-        return false;
-    }
-    $a = isset( $_GET['a'] ) ? sanitize_key( wp_unslash( $_GET['a'] ) ) : '';
-    return in_array( $a, array( 'pwdreset', 'pwdchange', 'set_password_from_key' ), true );
 }
 
 /**
- * 위 URL일 때만 로그인과 동일한 카드 셸로 감쌈 (본문 숏코드·플러그인 출력 유지)
+ * WP-Members `a` 쿼리 (마이페이지 등)
+ */
+function gpc_mypage_action() {
+    return isset( $_GET['a'] ) ? sanitize_key( wp_unslash( $_GET['a'] ) ) : '';
+}
+
+/**
+ * 마이페이지에서 비밀번호·키 기반 재설정 폼 (로그아웃 상태 포함)
+ */
+function gpc_is_mypage_password_shell() {
+    if ( ! gpc_is_mypage() ) {
+        return false;
+    }
+    return in_array(
+        gpc_mypage_action(),
+        array( 'pwdreset', 'pwdchange', 'set_password_from_key' ),
+        true
+    );
+}
+
+/**
+ * WP-Members에 설정된 프로필 페이지인지 (슬러그 변경에도 대응)
+ */
+function gpc_is_wp_members_profile_page() {
+    if ( ! is_page() || ! function_exists( 'wpmem_profile_url' ) ) {
+        return false;
+    }
+    $current = trailingslashit( get_permalink( get_queried_object_id() ) );
+    $profile = trailingslashit( wpmem_profile_url() );
+    return $current === $profile;
+}
+
+/**
+ * 로그인한 사용자 프로필(대시보드·정보 수정 등) 카드 셸 — 비밀번호 재설정 전용 셸과 제외 관계
+ */
+function gpc_is_mypage_profile_shell() {
+    if ( ! is_user_logged_in() || ! is_page() ) {
+        return false;
+    }
+    if ( gpc_is_mypage_password_shell() ) {
+        return false;
+    }
+    return gpc_is_wp_members_profile_page();
+}
+
+/**
+ * 비밀번호 재설정 등: 마이페이지 + a= 쿼리
  */
 function gpc_mypage_password_shell_template( $template ) {
     if ( ! gpc_is_mypage_password_shell() ) {
@@ -132,20 +172,79 @@ function gpc_mypage_password_shell_template( $template ) {
 add_filter( 'template_include', 'gpc_mypage_password_shell_template', 13 );
 
 /**
- * 로그인 페이지 + 마이페이지 비밀번호 구간: WP-Members 카드 폼 스타일
+ * 프로필 페이지: 로그인·비밀번호 찾기와 동일 카드 셸
+ */
+function gpc_mypage_profile_shell_template( $template ) {
+    if ( ! gpc_is_mypage_profile_shell() ) {
+        return $template;
+    }
+    $shell = get_stylesheet_directory() . '/page-templates/page-mypage-profile-shell.php';
+    return file_exists( $shell ) ? $shell : $template;
+}
+add_filter( 'template_include', 'gpc_mypage_profile_shell_template', 14 );
+
+/**
+ * 로그인·마이페이지 비밀번호·프로필: WP-Members 카드 폼 스타일
  */
 function gpc_login_page_assets() {
-    if ( ! gpc_is_login_page() && ! gpc_is_mypage_password_shell() ) {
+    if ( ! gpc_is_login_page() && ! gpc_is_mypage_password_shell() && ! gpc_is_mypage_profile_shell() ) {
         return;
     }
     wp_enqueue_style(
         'gpc-login-css',
         get_stylesheet_directory_uri() . '/wpmem-login.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.login5'
+        wp_get_theme()->get( 'Version' ) . '.login6'
     );
+
+    if ( gpc_is_mypage_profile_shell() && 'edit' === gpc_mypage_action() ) {
+        wp_enqueue_style(
+            'gpc-register-css',
+            get_stylesheet_directory_uri() . '/wpmem-register.css',
+            array( 'gapyeong-child-style' ),
+            wp_get_theme()->get( 'Version' ) . '.reg4'
+        );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'gpc_login_page_assets', 99 );
+
+/**
+ * 프로필 허브 링크에 로그아웃 추가 + 카드형 목록 마크업
+ */
+function gpc_wpmem_member_links_args( $arr ) {
+    if ( ! is_user_logged_in() || ! gpc_is_wp_members_profile_page() ) {
+        return $arr;
+    }
+    if ( gpc_is_mypage_password_shell() ) {
+        return $arr;
+    }
+
+    $arr['wrapper_before'] = '<ul class="gpc-profile-menu">';
+    $arr['wrapper_after']  = '</ul>';
+
+    if ( ! empty( $arr['rows'] ) && is_array( $arr['rows'] ) ) {
+        foreach ( $arr['rows'] as $i => $row ) {
+            if ( ! is_string( $row ) || '' === trim( $row ) ) {
+                continue;
+            }
+            if ( false !== strpos( $row, 'gpc-profile-menu__item' ) ) {
+                continue;
+            }
+            $arr['rows'][ $i ] = preg_replace( '/<li>/', '<li class="gpc-profile-menu__item">', $row, 1 );
+        }
+    }
+
+    if ( function_exists( 'wpmem_logout_link' ) ) {
+        $logout_href = wpmem_logout_link();
+    } else {
+        $logout_href = wp_logout_url( home_url( '/' ) );
+    }
+    $arr['rows'][] = '<li class="gpc-profile-menu__item gpc-profile-menu__item--logout"><a href="'
+        . esc_url( $logout_href ) . '">' . esc_html__( '로그아웃', 'gapyeong-church-child' ) . '</a></li>';
+
+    return $arr;
+}
+add_filter( 'wpmem_member_links_args', 'gpc_wpmem_member_links_args', 10, 1 );
 
 /**
  * 마이페이지 비밀번호 재설정 요청 폼 문구
@@ -251,6 +350,7 @@ function gpc_wpmem_translate( $translated, $text, $domain ) {
         'Invalid username or email address.' => '이메일 주소를 확인할 수 없습니다.',
         'Reset Forgotten Password' => '',
         'Forgot username?' => '아이디를 잊으셨나요?',
+        'Edit My Information' => '내 정보 수정',
     );
     return isset( $map[ $text ] ) ? $map[ $text ] : $translated;
 }
