@@ -1515,8 +1515,8 @@ body #kboard-document .kboard-document-wrap .kboard-title h1 {
 }
 
 body #kboard-document .kboard-document-wrap .kboard-detail {
-    display: flex !important; flex-wrap: wrap !important; align-items: center !important;
-    gap: 0 !important; padding: 0 !important; margin: 0 !important;
+    display: flex !important; flex-wrap: nowrap !important; align-items: center !important;
+    justify-content: space-between !important; padding: 0 !important; margin: 0 !important;
     background: transparent !important; border: none !important;
     float: none !important; width: auto !important;
     position: relative !important; z-index: 1 !important; font-size: 13px !important;
@@ -1528,8 +1528,18 @@ body #kboard-document .kboard-document-wrap .kboard-detail .detail-attr {
     line-height: 1.5 !important; border: none !important; color: #64748b !important; font-size: 13px !important;
 }
 
-body #kboard-document .kboard-document-wrap .kboard-detail .detail-attr + .detail-attr::before {
+/* 작성자: 왼쪽 / 작성일·조회: 오른쪽 */
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-date {
+    margin-left: auto !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-date::before {
+    content: none !important; margin: 0 !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-view::before {
     content: '·' !important; margin: 0 8px !important; color: #cbd5e1 !important; font-size: 14px !important;
+}
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-attr + .detail-attr::before {
+    content: none !important;
 }
 
 body #kboard-document .kboard-document-wrap .kboard-detail .detail-name {

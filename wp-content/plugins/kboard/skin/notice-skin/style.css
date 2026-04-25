@@ -209,30 +209,39 @@ body #kboard-document .kboard-document-wrap .kboard-title h1 {
 
 /* ─── 2. 메타 정보 (자연스러운 스타일) ─── */
 body #kboard-document .kboard-document-wrap .kboard-detail {
-    display: flex !important;
-    flex-wrap: wrap !important;
+    display: flex !important; flex-wrap: nowrap !important;
     align-items: center !important;
-    gap: 0 !important;
+    justify-content: space-between !important;
     padding: 0 !important; margin: 0 !important;
     background: transparent !important; border: none !important;
     float: none !important; width: auto !important;
-    position: relative !important; z-index: 1 !important;
-    font-size: 13px !important;
+    position: relative !important; z-index: 1 !important; font-size: 13px !important;
 }
 
 body #kboard-document .kboard-document-wrap .kboard-detail .detail-attr {
     display: inline-flex !important; align-items: center !important;
     gap: 4px !important; padding: 0 !important; margin: 0 !important;
-    float: none !important; line-height: 1.5 !important; border: none !important;
-    color: #64748b !important; font-size: 13px !important;
+    float: none !important; line-height: 1.5 !important;
+    border: none !important; color: #64748b !important; font-size: 13px !important;
 }
 
-/* 구분선: 각 항목 사이에 · 추가 */
+/* 작성자: 왼쪽 / 작성일·조회: 오른쪽 */
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-date {
+    margin-left: auto !important;
+}
+
+/* 날짜 앞 · 제거 (공백으로 구분됨) */
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-date::before {
+    content: none !important; margin: 0 !important;
+}
+
+/* 조회수 앞 · 유지 */
+body #kboard-document .kboard-document-wrap .kboard-detail .detail-view::before {
+    content: '·' !important; margin: 0 8px !important; color: #cbd5e1 !important; font-size: 14px !important;
+}
+
 body #kboard-document .kboard-document-wrap .kboard-detail .detail-attr + .detail-attr::before {
-    content: '·' !important;
-    margin: 0 8px !important;
-    color: #cbd5e1 !important;
-    font-size: 14px !important;
+    content: none !important;
 }
 
 body #kboard-document .kboard-document-wrap .kboard-detail .detail-name {
@@ -273,7 +282,7 @@ body #kboard-document .kboard-document-wrap .detail-category2 + .detail-attr::be
 
 /* ─── 본문 ─── */
 body #kboard-document .kboard-document-wrap .kboard-content {
-    padding: 32px 36px !important;
+    padding: 28px 20px !important;
     border-top: 1px solid #e8edf5 !important;
     border-bottom: 1px solid #e8edf5 !important;
     background: #ffffff !important;

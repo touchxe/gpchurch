@@ -556,7 +556,7 @@ $theme_uri = get_template_directory_uri();
                         <a href="/community/bulletin" class="more-link">더보기 <i data-lucide="chevron-right"></i></a>
                     </div>
                     <?php
-                    $b_img = get_option('gpc_bulletin_image', esc_url($theme_uri) . '/assets/images/bulletin-cover.png');
+                    $b_img = esc_url($theme_uri) . '/assets/images/bulletin-cover.png';
                     $b_title = get_option('gpc_bulletin_title', '주보를 등록해 주세요');
                     $b_date = get_option('gpc_bulletin_date', '');
                     $b_link = get_option('gpc_bulletin_link', '/community/bulletin');
