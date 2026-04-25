@@ -1,0 +1,384 @@
+/* ======================================
+   가평교회 - 로그인 페이지 전용 스타일
+   WP-Members 폼 + 카드 UI
+   ====================================== */
+
+/* ── Page Layout ── */
+main.gpc-login-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 80px);
+    padding: 4rem 1rem;
+    background: var(--bg-color, #f8f9fa);
+}
+
+/* ── Card ── */
+.gpc-login-card {
+    width: 100%;
+    max-width: 460px;
+    background: #fff;
+    border-radius: var(--radius-xl, 1.5rem);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem 2rem;
+}
+
+/* ── Header ── */
+.gpc-login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.gpc-login-logo {
+    width: 48px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.gpc-login-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color, #1a1a1a);
+    margin: 0 0 0.5rem;
+}
+
+.gpc-login-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted, #6b7280);
+    margin: 0;
+}
+
+/* ── WP-Members Form Reset ── */
+.gpc-login-form-wrap #wpmem_login {
+    width: 100%;
+    margin: 0;
+    font-family: inherit;
+}
+
+.gpc-login-form-wrap #wpmem_login fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+
+.gpc-login-form-wrap #wpmem_login legend {
+    display: none;
+}
+
+/* ── Field Labels ── */
+.gpc-login-form-wrap label[for="log"],
+.gpc-login-form-wrap label[for="pwd"],
+.gpc-login-form-wrap label[for="user"],
+.gpc-login-form-wrap label[for="pass1"],
+.gpc-login-form-wrap label[for="pass2"] {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color, #1a1a1a);
+    margin-bottom: 0.5rem;
+}
+
+/* ── Input Wrappers ── */
+.gpc-login-form-wrap .div_text {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+
+.gpc-login-form-wrap .div_text input[type="text"],
+.gpc-login-form-wrap .div_text input[type="password"] {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.75rem !important;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 0.75rem;
+    background: #f8fafc;
+    font-size: 0.9375rem;
+    color: var(--text-color, #1a1a1a);
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+}
+
+.gpc-login-form-wrap .div_text input:focus {
+    outline: none;
+    border-color: var(--primary, #3b82f6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    background: #fff;
+}
+
+.gpc-login-form-wrap .div_text input::placeholder {
+    color: #9ca3af;
+}
+
+/* ── Input Icons (via ::before on wrapper) ── */
+.gpc-login-form-wrap .div_text::before {
+    content: '';
+    position: absolute;
+    left: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.45;
+}
+
+.gpc-login-form-wrap .div_text:has(.username)::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='20' height='16' x='2' y='4' rx='2'/%3E%3Cpath d='m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7'/%3E%3C/svg%3E");
+}
+
+.gpc-login-form-wrap .div_text:has(.password)::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='11' x='3' y='11' rx='2' ry='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+}
+
+/* ── Remember Me + Forgot Password Row (JS-restructured) ── */
+.gpc-remember-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.gpc-remember-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary, #3b82f6);
+    cursor: pointer;
+    margin: 0 0.375rem 0 0;
+    flex-shrink: 0;
+}
+
+.gpc-remember-row label[for="rememberme"] {
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6b7280);
+    cursor: pointer;
+}
+
+.gpc-remember-row .link-text {
+    margin-left: auto;
+    margin-bottom: 0;
+}
+
+.gpc-remember-row .link-text-forgot {
+    font-size: 0;
+}
+
+.gpc-remember-row .link-text-forgot a {
+    font-size: 0.8125rem;
+    color: var(--primary, #3b82f6);
+    text-decoration: none;
+}
+
+.gpc-remember-row .link-text-forgot a:hover {
+    text-decoration: underline;
+}
+
+/* ── Submit Button ── */
+.gpc-login-form-wrap .button_div {
+    font-size: 0;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.gpc-login-form-wrap .button_div input[type="submit"].buttons {
+    display: block;
+    width: 100%;
+    padding: 0.875rem;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff !important;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1rem !important;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    -webkit-appearance: none;
+}
+
+.gpc-login-form-wrap .button_div input[type="submit"].buttons:hover {
+    opacity: 0.92;
+}
+
+.gpc-login-form-wrap .button_div input[type="submit"].buttons:active {
+    transform: scale(0.98);
+}
+
+/* ── Divider ── */
+.gpc-login-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.75rem 0;
+    color: var(--text-muted, #6b7280);
+    font-size: 0.8125rem;
+}
+
+.gpc-login-divider::before,
+.gpc-login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color, #e2e8f0);
+}
+
+/* ── Social Login Buttons ── */
+.gpc-social-login {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.gpc-social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 48px;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 0.75rem;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    text-decoration: none;
+}
+
+.gpc-social-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.gpc-social-btn svg {
+    display: block;
+}
+
+/* ── Signup Link ── */
+.gpc-login-signup {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6b7280);
+    margin: 0;
+}
+
+.gpc-login-signup a {
+    color: var(--primary, #3b82f6);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.gpc-login-signup a:hover {
+    text-decoration: underline;
+}
+
+.gpc-login-back {
+    text-align: center;
+    margin: 1.25rem 0 0;
+    font-size: 0.8125rem;
+}
+
+.gpc-login-back a {
+    color: var(--primary, #3b82f6);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.gpc-login-back a:hover {
+    text-decoration: underline;
+}
+
+/* 마이페이지 비밀번호 폼 하단 (아이디 찾기 등, 로그인 폼의 .gpc-remember-row 와 구분) */
+.gpc-login-form-wrap #wpmem_login form ~ .link-text {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6b7280);
+}
+
+.gpc-login-form-wrap #wpmem_login form ~ .link-text a {
+    color: var(--primary, #3b82f6);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.gpc-login-form-wrap #wpmem_login form ~ .link-text a:hover {
+    text-decoration: underline;
+}
+
+/* ── Error / Status Messages ── */
+.gpc-login-form-wrap div[align="center"],
+.gpc-login-form-wrap .wpmem_msg {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* ── 프로필 허브 메뉴 (WP-Members member 링크) ── */
+.gpc-login-form-wrap .gpc-profile-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 0.75rem;
+    background: #f8fafc;
+    color: var(--text-color, #1a1a1a);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    text-align: center;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item a:hover {
+    border-color: var(--primary, #3b82f6);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item--logout a {
+    background: #fff;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+.gpc-login-form-wrap .gpc-profile-menu__item--logout a:hover {
+    border-color: #ef4444;
+    background: #fef2f2;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+    main.gpc-login-page {
+        padding: 1.5rem 1rem;
+    }
+
+    .gpc-login-card {
+        padding: 2rem 1.25rem;
+        border-radius: 1rem;
+    }
+
+    .gpc-social-btn {
+        width: 48px;
+        height: 44px;
+    }
+}

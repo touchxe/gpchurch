@@ -1,0 +1,77 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1777106307476,
+    "data": [
+        {
+            "type": "file",
+            "name": "bulletin-lightbox.css",
+            "size": 2491,
+            "hash": "a1bcb5779d972b6aaf0455bf9a46d6de7f472183f82ac1b519b9fd942709ba4b"
+        },
+        {
+            "type": "file",
+            "name": "bulletin-lightbox.js",
+            "size": 5224,
+            "hash": "2bc105bef4b04c7d7bcf7dbd28d9378a07b9fe603f7772fb6776b3031c2daaa7"
+        },
+        {
+            "type": "file",
+            "name": "functions.php",
+            "size": 20953,
+            "hash": "a9909df4b22a650d0da386c16b5ff4f7b7585144faa9bbe544fa9533d4e12524"
+        },
+        {
+            "type": "folder",
+            "name": "page-templates"
+        },
+        {
+            "type": "file",
+            "name": "screenshot.png",
+            "size": 79314,
+            "hash": "319f41829da4d3e394add45721201452772781529a52eb2e30a6bd488b3de8f0"
+        },
+        {
+            "type": "file",
+            "name": "style.css",
+            "size": 19017,
+            "hash": "58797076231dc8ce65eda6443c73de21cb5bb13ba00913c44e6ecdc77cd30308"
+        },
+        {
+            "type": "file",
+            "name": "wpmem-login.css",
+            "size": 9259,
+            "hash": "fecdb27b97f363e030ebf31de88e7789683fa98187cfeba8edd32326764ed4a5"
+        },
+        {
+            "type": "file",
+            "name": "wpmem-register.css",
+            "size": 12392,
+            "hash": "ccbf9bed54097cde79fa3ec51f1338e47929f053e3da4975b4417d0045813b3b"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-login.php",
+            "size": 3713,
+            "hash": "4b2072edfaeb2942d2722bd586027d039f3a17d61970accf75e91c9723c2ac6c"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-mypage-password-shell.php",
+            "size": 2274,
+            "hash": "285d859492f75b387036c3b81c297650ab720bb885a9623fe5aa783f88c9ceb7"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-mypage-profile-shell.php",
+            "size": 1756,
+            "hash": "3c040d6c2dcd56b9617ee1c3fa26148e392b9b7c9e4db0c2178b1aa85608d459"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-register.php",
+            "size": 3142,
+            "hash": "84a366554b7cef262d1b58dd1c717773248ab7ffcf9e9d6b93cd08372e03296f"
+        }
+    ]
+}
