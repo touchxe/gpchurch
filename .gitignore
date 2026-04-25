@@ -49,3 +49,6 @@ Thumbs.db
 .agent/
 *.swp
 *.swo
+
+# SSH 키
+*.pem
