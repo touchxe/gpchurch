@@ -1,0 +1,527 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1777106301780,
+    "data": [
+        {
+            "type": "folder",
+            "name": "assets"
+        },
+        {
+            "type": "file",
+            "name": "footer.php",
+            "size": 3875,
+            "hash": "b81d2b84c4d7219b8cc62c25442caee19f3321d06c607ee5a7f8419c792556d5"
+        },
+        {
+            "type": "file",
+            "name": "front-page.php",
+            "size": 52383,
+            "hash": "e00a2aa49a0dda00f6b8cab3d411c9812b8edca54035241c4390f88695f23c8a"
+        },
+        {
+            "type": "file",
+            "name": "functions.php",
+            "size": 29956,
+            "hash": "8a9f7b177b3b21bbe51b4ff04f6b2ee308d12249d806d2d670a0d06f9e395197"
+        },
+        {
+            "type": "file",
+            "name": "header.php",
+            "size": 12245,
+            "hash": "d5a6a2570305e36b8518e111b9a5251d38b32ede6df6b0a27c15bb713a4a742e"
+        },
+        {
+            "type": "folder",
+            "name": "inc"
+        },
+        {
+            "type": "file",
+            "name": "index.php",
+            "size": 441,
+            "hash": "73766fcf6d86fff7642d16b61ef8563239a94f8475f84487b8dbc5dfcf6b54a2"
+        },
+        {
+            "type": "folder",
+            "name": "page-templates"
+        },
+        {
+            "type": "file",
+            "name": "page.php",
+            "size": 2351,
+            "hash": "2b39826f33f51455f5a93998185a475462450acd220a685c27183f46ef974bec"
+        },
+        {
+            "type": "file",
+            "name": "screenshot.png",
+            "size": 79314,
+            "hash": "319f41829da4d3e394add45721201452772781529a52eb2e30a6bd488b3de8f0"
+        },
+        {
+            "type": "file",
+            "name": "style.css",
+            "size": 230,
+            "hash": "4e5895aeebc50f6c67e52855398e937a303b4dfb61acdd1adaf95f728171ebd3"
+        },
+        {
+            "type": "folder",
+            "name": "template-parts"
+        },
+        {
+            "type": "folder",
+            "name": "assets/css"
+        },
+        {
+            "type": "folder",
+            "name": "assets/images"
+        },
+        {
+            "type": "folder",
+            "name": "assets/js"
+        },
+        {
+            "type": "file",
+            "name": "inc/class-desktop-nav-walker.php",
+            "size": 2390,
+            "hash": "0074a8f0006d2c5cd8264bb15abe51f40df50f9b952622a7c8a296cedb54b4d9"
+        },
+        {
+            "type": "file",
+            "name": "inc/class-footer-nav-walker.php",
+            "size": 1901,
+            "hash": "387a5a571de7d251191aec3f9812cfdc1b58ba821cb86490a9a3399a33159742"
+        },
+        {
+            "type": "file",
+            "name": "inc/class-mobile-nav-walker.php",
+            "size": 3129,
+            "hash": "fda1c43317756400b82f11db4eb05816f98b0d5a7e692824985badd0d561ec22"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-bulletin.php",
+            "size": 7651,
+            "hash": "dc4cf518c9d51aed6f5ab0ab42ce1020456086092bc492faae94fbd0fd556bf8"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-children.php",
+            "size": 3315,
+            "hash": "baf89b3b18ba7bbcdfea045e56d79f83167556f86556d41d08391af854b9a9b0"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-choir.php",
+            "size": 3231,
+            "hash": "cab44595438ecc9c1d9d81422f354682caddadf8b547da585272927acf9f11ce"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-clerk.php",
+            "size": 3164,
+            "hash": "11c4e2d279b1e0c004a2c68d641cc5ddc001e831156134b547a0758620e9e3c2"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-community-service.php",
+            "size": 3291,
+            "hash": "ec46de877c68c41ab445b5c69be15bad3224adbe672a31ccb35e7e806c411395"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-deacons.php",
+            "size": 3838,
+            "hash": "de679cf2540a586e410e715eccd5d4998675b5a02d768c8ca79a6959d0ff4f99"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-digital-media.php",
+            "size": 2725,
+            "hash": "75e70ae6d19a7de629fdcc97aab81cbcaaf6f8b25d676df2e16a8b522c94b7b9"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-elders.php",
+            "size": 3267,
+            "hash": "4bd05a4d6e83b5f219883a2507b0600938fa947a141c61635a16619f7e50a8a2"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-health-welfare.php",
+            "size": 3243,
+            "hash": "535a0f3b944fc84925d3e4c227396855ee71161ad49d4f800eabccb9be64d2a1"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-ministry.php",
+            "size": 3020,
+            "hash": "1ad5d47a815a074a214828ae0aeb3d584806ac09614d58014ac680034c2163f7"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-mission.php",
+            "size": 4603,
+            "hash": "253a5a460c8a3972674c5b1e4d2afefac5fa20fe712bf1d7277af2dab15281cd"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-pathfinder.php",
+            "size": 3619,
+            "hash": "5ddc17ba8c63ed554c83acca52349ea1fabde4f387a11dd49931888dca3fe98a"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-sabbath-school.php",
+            "size": 3311,
+            "hash": "1096c4c84fd95b41a901dc573d75f4ebccd85de5080654f7fc67fa9fec65ef70"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-treasury.php",
+            "size": 3671,
+            "hash": "c9b0543da50960833b4d6c3cc5a84c8dc6627f0261f01faf43006b1f374e5645"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-dept-youth-student.php",
+            "size": 3575,
+            "hash": "ea06563a7c822a8d2a305455321354dd61f75ca6fc160b3b4231801a7dd09572"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-greeting.php",
+            "size": 5941,
+            "hash": "a9436ffd6bbc4feb9846b98d0647b2ce7d138cac835cf8f1d7d7cfd252979b49"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-history.php",
+            "size": 29655,
+            "hash": "66672399409ad455b407a5c26cb92e5a3f32eb2de9d1a28e7f62e142ff8bc41c"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-location.php",
+            "size": 8524,
+            "hash": "662f41714c1e07133ac1c936e45d64d797c71feb65602611d6cf110ff7015dcd"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-organization.php",
+            "size": 9925,
+            "hash": "354ace48c316456bd447b6932aca6f2919e1d24d9fe90c0bf87334e42882abec"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-pathfinder.php",
+            "size": 8759,
+            "hash": "e31735f11810a878f68c68e203e55d19fefb6e4e0bfbde488e035fcde82019cf"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-sabbath.php",
+            "size": 8292,
+            "hash": "2173619dba14014761d9d59b22a3f1ead3514ddad86cd3d92361dc2802a4d8cc"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-smallgroup.php",
+            "size": 7460,
+            "hash": "0c1d8ecd11cb3851f43c734acdd5a01defb38d14384a6c1baecbba20cab82865"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-vision.php",
+            "size": 6111,
+            "hash": "d6373f019bd439350ade0680a069e0a45e43a24bdee08edcd5184bda526c3696"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-worship.php",
+            "size": 7055,
+            "hash": "5dda252fa39d807e60ada09bb3b29464e16c8745e807fcbbb155ce620a45af7d"
+        },
+        {
+            "type": "file",
+            "name": "page-templates/page-youth.php",
+            "size": 7233,
+            "hash": "6371846430021a87606a8182cde9b8810e960521ab8e11c67df2ef8c582c4cca"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/breadcrumb.php",
+            "size": 997,
+            "hash": "10de9312e55c64b2d2f68e75702ff4b7474f9c312bd3accff586e4697def29f1"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/submenu-nav.php",
+            "size": 1497,
+            "hash": "1c50f51142a8b2a54c40379676ceea19dd1077fc4c148fe37a755d56dd705d29"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/subpage-hero.php",
+            "size": 1978,
+            "hash": "cc7593e429235ba65d96f4b72b03a58cb167e460220619b8d9433e19aa055ae6"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/common.css",
+            "size": 10206,
+            "hash": "c8132aa0db3b50e352c724041735766a03603c3023015eb897fed38cbc095eff"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/community-design.css",
+            "size": 2571,
+            "hash": "6b075e9f58366a75f8d91eef731e0f6a0c59c10187c64a7f05d00f1f01fe0e17"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/components.css",
+            "size": 18146,
+            "hash": "e01c1372354efbb99c6c96fd5bd0ded27599b49f781bfa0224bf79180a9376c4"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/department-design.css",
+            "size": 2473,
+            "hash": "bb165d0a18fe976ff59b284bf73e03654e27caeadc5742f45ebc8be009e4ae17"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/history-chevrons.css",
+            "size": 2245,
+            "hash": "71e8e3662ab5cb8c33d206066242cc9bae6c9b5044d39ece990a740025b58ce9"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/history-design.css",
+            "size": 3492,
+            "hash": "baa5866005a62521513efa0a8b04f695db11f4277cbe3531de6484a0a954848d"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/history-stepper.css",
+            "size": 3209,
+            "hash": "5ed49ef36300f673067a8ca61e0cc814790baa9d209c50887e38221f680a0a39"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/layout.css",
+            "size": 10320,
+            "hash": "a057bd77820800c9b70497dd2b24aaf76bd24fb791e1845b3cd10679487f0d31"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/location-design.css",
+            "size": 3759,
+            "hash": "ab1d6ec016230f27846b30b36587841d43abc52809a01747da16ae7228bb4457"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/mobile-menu-enhanced.css",
+            "size": 2753,
+            "hash": "a137bda863f9bd873339a8d6b6593f55f977176505a15c97072c1fb4c6e4a4f9"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/mobile-menu.css",
+            "size": 5532,
+            "hash": "d9dc171175a4c715ba032acdfb028319bb774c94e99aac7ce2833b000d96fc47"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/pathfinder-design.css",
+            "size": 3510,
+            "hash": "97f3955e409811d70b63ff89d89fba8b4a0c0395033ab095fb7cac0802351388"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/sabbath-design.css",
+            "size": 3948,
+            "hash": "bc6aa2e0ab0ae2e1ead2be1d8d06b4ef474f06c17fdc80892b10c5409df3e81d"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/smallgroup-design.css",
+            "size": 2588,
+            "hash": "ab5f5b235c39d3aeca1b8a46805ac57e3eeb2e88bc01623e3ff633af16a6cfe3"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/style.css",
+            "size": 176241,
+            "hash": "18318eb90f3ecbe45937c6ef2cf208979113c666ac16243a281405e5d02ee404"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/submenu-pills.css",
+            "size": 1639,
+            "hash": "d785cfb4ecfdce4edb21cbb56d0f9ec923e05749608435c00682f5ba497c29a1"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/vision-premium.css",
+            "size": 4679,
+            "hash": "7196f02becc322a6d0c676596fd51ed0e09db1c6cb226a0a60d146402f641e42"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/worship-design.css",
+            "size": 4200,
+            "hash": "99aa27fc4c551f3f3ad44fb2205688b0e30b3f7a0314eb95674ce951e305bcd3"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/youth-design.css",
+            "size": 3146,
+            "hash": "658303f88a47d4d45a90bf392ed1d45d80fe893eee490d55d479db7d5015f7e8"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/activity-1.png",
+            "size": 797641,
+            "hash": "7e86cb415d2fffd23ccac38c7eca6f27db37bd2b1cdbbd6779c01caa5b17eebf"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/activity-2.png",
+            "size": 851939,
+            "hash": "0c270eecbfb2e78d6dfdb029e4a968c7f6edd90c0a48434b7e887c3fcf3979d1"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/activity-3.png",
+            "size": 992876,
+            "hash": "253a490c8124d027a6d49255a66d5996058922bb9cd5dce34e3a7bd156207774"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/activity-4.png",
+            "size": 792747,
+            "hash": "7443c19877b6c979e38c74f3b0b5f5585b28f9b4afa4e47574d1fddb4e5beb13"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/activity-5.png",
+            "size": 864391,
+            "hash": "fcbf22c641dcf88b4d0708be68ec1093a0daf1192a9bafba8108f12042ed215d"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/activity-6.png",
+            "size": 717324,
+            "hash": "06e1b6b24c8e094d9e45a735babdbcd976c14a778b4f015c150a8ba535ee5a4b"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/activity-7.png",
+            "size": 782890,
+            "hash": "f8cd2d1ddc8586f55444f100e5bfbc68bade74ea44263dae1f3124d94672a6ae"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/bulletin-cover.png",
+            "size": 586168,
+            "hash": "266ff7992a9bf343f1f1703474dcd68ce7bd75d3f14c30675b32129d47729ec1"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/hero-1.png",
+            "size": 982199,
+            "hash": "ace892aaae43090f197fd79b6df76e31a408c2bbf1456d6344ef28dd3ed4b01f"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/hero-2.png",
+            "size": 864194,
+            "hash": "1466a3c0f63ff0541d6a9bc3559bfd0979006815e67c5f370a19cc7915717d04"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/hero-3.png",
+            "size": 1104042,
+            "hash": "f80e02755a7b6d24918df469623ebad51fb13b6361904a8ff143d636f1975a9c"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/hero-church.jpg",
+            "size": 273443,
+            "hash": "bd8cd858541923c86a161cfcf755466bd67b806c9075e992a6815a4777e9e251"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/hero-slide-1.jpg",
+            "size": 218072,
+            "hash": "f3e3a24a7fd7dd92f0cc7804b9ddf79a534d06385893b96945973df4bad3b434"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/hero-slide-2.jpg",
+            "size": 251043,
+            "hash": "42239b0db953b636b09bae809601c6382a3ff00c82f5380ac49c2d3dce6ed9b0"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/logo.png",
+            "size": 186617,
+            "hash": "7a8408eaf96e1b5378dce9c0a0bf7942f84259a37e741c932297d6f800058d58"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/ministry-hero-bg.png",
+            "size": 675568,
+            "hash": "3177977acc87a5944c0b9e6c1413fddd74ae2021a1f81d515a2917c6b8625481"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/mission-card-bg.png",
+            "size": 636938,
+            "hash": "4eb5467ad1fbbc164f4af4a6d216c9f4983def0725e7e407aff10afb634a3b8c"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/pastor.jpg",
+            "size": 77877,
+            "hash": "37ef37ef1ec96c0e9b7679badd79f9f60dfa1736bbf23605ba099fc9a91b8960"
+        },
+        {
+            "type": "file",
+            "name": "assets/images/worship-main.png",
+            "size": 966508,
+            "hash": "b34217a55baf81011c844905f740c2890fc9f22f3cac39d836e7729b478499e9"
+        },
+        {
+            "type": "file",
+            "name": "assets/js/common.js",
+            "size": 9330,
+            "hash": "472748a7ffa70e1cc32bd9fa936c678ae4b49beb19b1e29d2aff10ec373b8fab"
+        },
+        {
+            "type": "file",
+            "name": "assets/js/dept.js",
+            "size": 2079,
+            "hash": "8bba605934db516328ab26c77d2c428a41f85959c74b0b573e0712a30e39192e"
+        },
+        {
+            "type": "file",
+            "name": "assets/js/history.js",
+            "size": 759,
+            "hash": "6730d430323685e41340a040da79c377cb1266f50fc0c917adba9fc248b504ff"
+        },
+        {
+            "type": "file",
+            "name": "assets/js/main.js",
+            "size": 32589,
+            "hash": "cbc4924c3de409d9fbcb74b031788dae0940eb3c7f280f3a8398ddc86194df27"
+        },
+        {
+            "type": "file",
+            "name": "assets/js/prayer.js",
+            "size": 13276,
+            "hash": "fc2dfb78d8d605894172f4085a814dc6d4360c27330f752109d2fd15651bf875"
+        }
+    ]
+}

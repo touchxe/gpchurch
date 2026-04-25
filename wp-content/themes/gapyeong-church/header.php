@@ -15,7 +15,23 @@
 </head>
 
 <body <?php body_class(); ?>>
-    <?php wp_body_open(); ?>
+    <?php
+    wp_body_open();
+    $gapyeong_login_url = esc_url( home_url( '/로그인-화면/' ) );
+    $gapyeong_mypage_url = esc_url( home_url( '/마이페이지/' ) );
+
+    if ( is_user_logged_in() ) {
+        if ( function_exists( 'wpmem_profile_url' ) ) {
+            $gapyeong_header_auth_url = esc_url( wpmem_profile_url() );
+        } else {
+            $gapyeong_header_auth_url = $gapyeong_mypage_url;
+        }
+        $gapyeong_header_auth_label = '프로필';
+    } else {
+        $gapyeong_header_auth_url   = $gapyeong_login_url;
+        $gapyeong_header_auth_label = '로그인';
+    }
+    ?>
 
     <!-- Header -->
     <header class="header">
@@ -96,8 +112,8 @@
             </nav>
 
             <div class="header-actions">
-                <a href="/login" class="btn-text desktop-only">로그인</a>
-                <a href="/login" class="btn-icon mobile-only" aria-label="로그인">
+                <a href="<?php echo esc_url( $gapyeong_header_auth_url ); ?>" class="btn-text desktop-only"><?php echo esc_html( $gapyeong_header_auth_label ); ?></a>
+                <a href="<?php echo esc_url( $gapyeong_header_auth_url ); ?>" class="btn-icon mobile-only" aria-label="<?php echo esc_attr( $gapyeong_header_auth_label ); ?>">
                     <i data-lucide="user"></i>
                 </a>
                 <a href="/live" class="btn-live off-air desktop-only"><span class="live-dot"></span>OFF AIR</a>
@@ -191,9 +207,9 @@
             </nav>
             <div class="mobile-menu-bottom">
                 <div class="mobile-shortcuts">
-                    <a href="/login" class="mobile-shortcut-item">
+                    <a href="<?php echo esc_url( $gapyeong_header_auth_url ); ?>" class="mobile-shortcut-item">
                         <i data-lucide="user"></i>
-                        <span>로그인</span>
+                        <span><?php echo esc_html( $gapyeong_header_auth_label ); ?></span>
                     </a>
                     <a href="/community/notices" class="mobile-shortcut-item">
                         <i data-lucide="bell"></i>

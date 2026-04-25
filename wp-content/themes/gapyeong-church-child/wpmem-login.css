@@ -70,6 +70,7 @@ main.gpc-login-page {
 .gpc-login-form-wrap label[for="log"],
 .gpc-login-form-wrap label[for="pwd"],
 .gpc-login-form-wrap label[for="user"],
+.gpc-login-form-wrap label[for="pass0"],
 .gpc-login-form-wrap label[for="pass1"],
 .gpc-login-form-wrap label[for="pass2"] {
     display: block;

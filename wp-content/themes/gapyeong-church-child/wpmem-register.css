@@ -138,6 +138,12 @@ main.gpc-register-page {
     align-items: stretch;
 }
 
+/* 회원정보 수정: 항상 한 줄에 라벨 위·입력 아래 (fieldset flex 와 무관하게 블록 단위) */
+.gpc-register-form-wrap #wpmem_reg fieldset > .gpc-reg-field--edit {
+    flex: 1 1 100%;
+    max-width: 100%;
+}
+
 .gpc-reg-field--full {
     flex: 1 1 100%;
     max-width: 100%;
