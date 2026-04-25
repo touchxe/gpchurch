@@ -135,6 +135,28 @@ function gpc_is_mypage_password_shell() {
 }
 
 /**
+ * 비밀번호 변경 폼이 카드 스타일·pass0 필터 대상인지
+ * (POST 후 URL에서 a=pwdchange 가 빠져도 regchk 로 판별)
+ */
+function gpc_is_changepassword_form_style_context() {
+    if ( gpc_is_mypage_password_shell() ) {
+        return true;
+    }
+    if ( ! is_user_logged_in() || ! gpc_is_wp_members_profile_page() ) {
+        return false;
+    }
+    global $wpmem;
+    if ( empty( $wpmem ) || ! isset( $wpmem->regchk ) || '' === (string) $wpmem->regchk ) {
+        return false;
+    }
+    return in_array(
+        (string) $wpmem->regchk,
+        array( 'gpc_curpwd_bad', 'gpc_curpwd_empty', 'pwdchangerr', 'pwdchangempty' ),
+        true
+    );
+}
+
+/**
  * WP-Members에 설정된 프로필 페이지인지 (슬러그 변경에도 대응)
  */
 function gpc_is_wp_members_profile_page() {
@@ -194,7 +216,7 @@ function gpc_login_page_assets() {
         'gpc-login-css',
         get_stylesheet_directory_uri() . '/wpmem-login.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.login7'
+        wp_get_theme()->get( 'Version' ) . '.login8'
     );
 
     if ( gpc_is_mypage_profile_shell() && 'edit' === gpc_mypage_action() ) {
@@ -271,7 +293,7 @@ add_filter( 'wpmem_resetpassword_form_defaults', 'gpc_wpmem_resetpassword_form_d
  * 메일 링크 이후 새 비밀번호 입력 폼 (같은 마이페이지에서 a=pwdchange 등)
  */
 function gpc_wpmem_changepassword_form_defaults( $arr, $form ) {
-    if ( 'changepassword' !== $form || ! gpc_is_mypage_password_shell() ) {
+    if ( 'changepassword' !== $form || ! gpc_is_changepassword_form_style_context() ) {
         return $arr;
     }
     $arr['heading']     = '';
@@ -342,7 +364,7 @@ function gpc_wpmem_pwd_change_error( $is_error, $user_id, $pass1 ) {
     if ( ! is_user_logged_in() ) {
         return $is_error;
     }
-    if ( ! gpc_is_mypage_password_shell() || 'pwdchange' !== gpc_mypage_action() ) {
+    if ( ! gpc_is_mypage_password_shell() && 'pwdchange' !== $a_req ) {
         return $is_error;
     }
 
