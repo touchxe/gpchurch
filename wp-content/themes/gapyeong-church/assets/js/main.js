@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     safeRun(initScheduleModal, 'Schedule Modal');
     safeRun(initScrollIndicator, 'Scroll Indicator');
     safeRun(initScrollToTop, 'Scroll To Top');
+    safeRun(initFooterReveal, 'Footer Reveal');
 });
 
 // Helper wrapper to prevent one error from stopping everything
@@ -677,6 +678,7 @@ function initMiniCalendar() {
 
 /**
  * Schedule Ticker: 2개 높이로 클리핑, 3개 이상이면 위로 슬라이드
+ * listEl: <ul class="schedule-list"> 엘리먼트
  */
 function _initScheduleTicker(listEl) {
     if (!listEl) return;
@@ -684,49 +686,63 @@ function _initScheduleTicker(listEl) {
     const items = Array.from(listEl.querySelectorAll('.schedule-item'));
     if (items.length <= 2) return;
 
-    // 아이템 하나의 높이 측정 (첫 번째 기준)
-    const itemH = items[0].getBoundingClientRect().height || 48;
-    const gap = 4; // schedule-list gap (CSS에서 gap 설정 시 맞춰야 함)
-    const visibleH = itemH * 2 + gap;
+    // --- 구조 구성 ---
+    // 1) 클리핑 wrapper div 생성 → listEl의 자리에 삽입
+    const clipper = document.createElement('div');
+    clipper.className = 'schedule-ticker-clip';
+    clipper.style.cssText = [
+        'overflow: hidden',
+        'position: relative',
+        'width: 100%',
+    ].join(';');
 
-    // 컨테이너 클리핑
-    listEl.style.height = visibleH + 'px';
-    listEl.style.overflow = 'hidden';
-    listEl.style.position = 'relative';
+    // 2) listEl을 clipper 안으로 이동
+    listEl.parentNode.insertBefore(clipper, listEl);
+    clipper.appendChild(listEl);
 
-    let current = 0;
-    let timer = null;
+    // 3) listEl 자체 스타일 초기화 (transform 대상은 listEl)
+    listEl.style.cssText += ';transition:none;transform:translateY(0);margin:0;padding:0;';
 
-    function slideTo(idx) {
-        const offset = idx * (itemH + gap);
-        listEl.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
-        listEl.style.transform = `translateY(-${offset}px)`;
-        current = idx;
-    }
+    // --- 높이 측정은 렌더 후 ---
+    requestAnimationFrame(() => {
+        const gap = parseInt(getComputedStyle(listEl).gap) || 8;
+        const firstItem = items[0];
+        const itemH = firstItem.getBoundingClientRect().height || 52;
+        const visibleH = itemH * 2 + gap;
 
-    function next() {
-        // 마지막 슬라이드 위치: 마지막 아이템이 2번째 줄에 오는 위치
-        const maxIdx = items.length - 2;
-        const nextIdx = current >= maxIdx ? 0 : current + 1;
-        if (nextIdx === 0) {
-            // 처음으로 돌아갈 때: transition 제거 후 즉시 복귀, 다시 animate
-            listEl.style.transition = 'none';
-            listEl.style.transform = 'translateY(0)';
-            current = 0;
-            // 강제 리플로우
-            listEl.getBoundingClientRect();
-        } else {
-            slideTo(nextIdx);
+        // 클리퍼 높이 고정
+        clipper.style.height = visibleH + 'px';
+
+        let current = 0;
+        let timer = null;
+
+        function slideTo(idx) {
+            const offset = idx * (itemH + gap);
+            listEl.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
+            listEl.style.transform = `translateY(-${offset}px)`;
+            current = idx;
         }
-    }
 
-    // 3초 간격으로 슬라이드
-    timer = setInterval(next, 3000);
+        function next() {
+            const maxIdx = items.length - 2;
+            if (current >= maxIdx) {
+                // 처음으로 순간이동 후 애니메이션 재개
+                listEl.style.transition = 'none';
+                listEl.style.transform = 'translateY(0)';
+                current = 0;
+                // 강제 리플로우 → 다음 프레임에 애니메이션 시작
+                listEl.getBoundingClientRect();
+            } else {
+                slideTo(current + 1);
+            }
+        }
 
-    // 호버 시 일시정지
-    listEl.addEventListener('mouseenter', () => clearInterval(timer));
-    listEl.addEventListener('mouseleave', () => {
         timer = setInterval(next, 3000);
+
+        clipper.addEventListener('mouseenter', () => clearInterval(timer));
+        clipper.addEventListener('mouseleave', () => {
+            timer = setInterval(next, 3000);
+        });
     });
 }
 
@@ -921,4 +937,38 @@ async function checkLiveStatus() {
             alert('현재는 실시간 방송 중이 아닙니다.\n[정규 방송 시간]\n금요일: 오후 7시 30분\n안식일: 오전 9시 30분 / 11시');
         };
     }
+}
+
+/**
+ * Footer Parallax Reveal
+ * 스크롤 시 푸터가 아래에서 위로 올라오며 나타나는 효과
+ */
+function initFooterReveal() {
+    const footer = document.querySelector('.footer');
+    if (!footer) return;
+
+    if (!('IntersectionObserver' in window)) {
+        footer.classList.add('footer-revealed');
+        return;
+    }
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    requestAnimationFrame(() => {
+                        footer.classList.add('footer-revealed');
+                    });
+                    observer.unobserve(footer);
+                }
+            });
+        },
+        {
+            root: null,
+            threshold: 0.05,
+            rootMargin: '0px 0px -20px 0px',
+        }
+    );
+
+    observer.observe(footer);
 }

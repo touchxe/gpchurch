@@ -2261,10 +2261,20 @@ img {
 
 /* =========================================Footer========================================= */
 .footer {
-    background: #f4f6f8;
+    background: #ffffff;
     color: #2d3748;
     padding: 64px 0 0;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #e8ecf0;
+    /* Parallax reveal 초기 상태 */
+    transform: translateY(60px);
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+    will-change: transform, opacity;
+}
+
+.footer.footer-revealed {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .footer-grid {
@@ -2377,8 +2387,8 @@ img {
     align-items: center;
     justify-content: space-between;
     padding: 20px 0;
-    border-top: 1px solid #e2e8f0;
-    background: #edf0f4;
+    border-top: 1px solid #e8ecf0;
+    background: #ffffff;
     margin: 0 -999px;
     padding-left: 999px;
     padding-right: 999px;
@@ -3251,6 +3261,16 @@ img {
     list-style: none;
     padding: 0;
     margin: 0;
+    gap: 0; /* JS에서 getComputedStyle로 읽음 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 티커 클리핑 래퍼 (JS가 동적으로 생성) */
+.schedule-ticker-clip {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
 }
 
 .schedule-item {
@@ -3261,6 +3281,7 @@ img {
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     cursor: pointer;
     transition: var(--transition);
+    flex-shrink: 0; /* 슬라이더 안에서 높이 유지 */
 }
 
 .schedule-item:last-child {
@@ -3269,9 +3290,10 @@ img {
 
 .schedule-item:hover {
     background: rgba(59, 130, 246, 0.05);
-    margin: 0 -12px;
-    padding: 10px 12px;
+    padding-left: 8px;
+    padding-right: 8px;
     border-radius: 8px;
+    /* margin 변경 제거 — 높이 불안정 방지 */
 }
 
 .schedule-date {
@@ -3308,7 +3330,6 @@ img {
 
 .schedule-item.schedule-empty:hover {
     background: none;
-    margin: 0;
     padding: 12px 0;
     border-radius: 0;
 }
@@ -5633,18 +5654,7 @@ img {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
 }
 
-.mission-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-}
 
-.mission-card:hover::before {}
 
 .mission-card:hover {
     transform: translateY(-6px);
