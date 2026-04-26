@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     safeRun(initScrollIndicator, 'Scroll Indicator');
     safeRun(initScrollToTop, 'Scroll To Top');
     safeRun(initFooterReveal, 'Footer Reveal');
+    safeRun(initDeptCardReveal, 'Dept Card Reveal');
 });
 
 // Helper wrapper to prevent one error from stopping everything
@@ -987,4 +988,34 @@ function initFooterReveal() {
     );
 
     observer.observe(footer);
+}
+
+/**
+ * Dept Card 3D Reveal
+ * .dept-profile-card 가 뷰포트에 들어오면 dept-card-visible 추가 → 3D 페이드인
+ */
+function initDeptCardReveal() {
+    const cards = document.querySelectorAll('.dept-profile-card');
+    if (!cards.length) return;
+
+    // CSS prefers-reduced-motion 존중: 움직임 감소 모드면 즉시 보이기
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        cards.forEach(card => card.classList.add('dept-card-visible'));
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // 섹션 안에서의 순서로 딜레이 부여 (같은 화면에 여러 개 없으므로 0ms)
+                entry.target.classList.add('dept-card-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -40px 0px',
+    });
+
+    cards.forEach(card => observer.observe(card));
 }
