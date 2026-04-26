@@ -214,7 +214,7 @@ $theme_uri = get_template_directory_uri();
             </a>
 
             <!-- 3. 오시는 길 -->
-            <a href="https://gpchurch.mycafe24.com/intro/location/" class="quick-item">
+            <a href="/intro/location" class="quick-item">
                 <div class="quick-icon">
                     <svg viewBox="0 0 64 64" fill="none">
                         <defs>
@@ -492,7 +492,7 @@ $theme_uri = get_template_directory_uri();
                     <h3>교회 활동에 함께 하고 싶으신가요?</h3>
                     <p>다양한 프로그램에 참여하고 싶으시다면 언제든 문의해 주세요. 따뜻하게 환영합니다!</p>
                 </div>
-                <a href="https://gpchurch.mycafe24.com/community/contact/" class="btn btn-white">활동 참여 문의하기</a>
+                <a href="/community/contact" class="btn btn-white">활동 참여 문의하기</a>
             </div>
         </div>
     </div>
@@ -523,7 +523,7 @@ $theme_uri = get_template_directory_uri();
                     하나님의 사랑 안에서 함께 성장하며 서로 돌보는 <span class="highlight">따뜻한 신앙 공동체</span>입니다. 말씀과 찬양으로 하나 되어 이웃을 섬기며
                     사랑을 실천합니다.
                 </h3>
-                <a href="https://gpchurch.mycafe24.com/intro/location/" class="team-cta-btn">오시는 길</a>
+                <a href="/intro/location" class="team-cta-btn">오시는 길</a>
             </div>
         </div>
 
@@ -672,7 +672,7 @@ $theme_uri = get_template_directory_uri();
                         </a>
                     </div>
                 </div>
-                <a href="/contact" class="contact-cta-btn">
+                <a href="/community/contact" class="contact-cta-btn">
                     <i data-lucide="mail"></i>
                     <span>문의하기</span>
                 </a>
@@ -739,72 +739,72 @@ $theme_uri = get_template_directory_uri();
         <!-- Department Slider -->
         <div class="dept-slider-container" id="deptSliderContainer">
             <div class="dept-slider-track" id="deptSliderTrack">
-                <a href="https://gpchurch.mycafe24.com/dept/ministry/" class="department-card">
+                <a href="/dept/ministry" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="book-open"></i></div>
                     <h3>목회부</h3>
                     <p>성령의 임재 속에 모든 성도가 증인이 되어 새 생명을 잉태하도록 이끕니다. 말씀365, 행복누리기 소그룹, 제자훈련 등을 주관합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/clerk/" class="department-card">
+                <a href="/dept/clerk" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="file-text"></i></div>
                     <h3>교회서기</h3>
                     <p>교회의 모든 행정 사항을 기록으로 남겨 보관합니다. 교인 교적 정리, 각부 기말보고 종합, 교회 비품 및 재산 관리 업무를 수행합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/treasury/" class="department-card">
+                <a href="/dept/treasury" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="coins"></i></div>
                     <h3>교회재무</h3>
                     <p>하나님의 소유권을 인정하는 청지기 정신으로 교회의 재정을 관리합니다. 십일금 및 월정헌금 정착, 투명한 지출 결의 집행을 담당합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/elders/" class="department-card">
+                <a href="/dept/elders" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="users"></i></div>
                     <h3>장로회</h3>
                     <p>성도들에게 영적 모범을 보이며 목사와 협력하여 양들을 목양합니다. 예배 시무 및 설교 준비, 성만찬과 각종 예식을 주관합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/deacons/" class="department-card">
+                <a href="/dept/deacons" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="hand-heart"></i></div>
                     <h3>집사회</h3>
                     <p>경건한 예배 분위기를 조성하고 교회의 시설과 비품을 관리합니다. 예배 안내, 헌금 수합, 침례 및 성찬 예식의 실무를 조력합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/mission/" class="department-card">
+                <a href="/dept/mission" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="globe"></i></div>
                     <h3>선교회</h3>
                     <p>TMI(전교인 참여 사역) 관계 중심 전도를 통해 영혼을 구원하는 일에 주력합니다. 소그룹 전도 축제 운영, 평신도 선교 교육, 새벽기도회 등을 기획합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/sabbath-school/" class="department-card">
+                <a href="/dept/sabbath-school" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="book-open-check"></i></div>
                     <h3>안식일학교</h3>
                     <p>성경 연구와 교제를 통해 성도의 영적 성장을 도모합니다. 토의식 교과 교수법 정착, 새신자 정착 지원, 정각 출석 캠페인을 전개합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/community-service/" class="department-card">
+                <a href="/dept/community-service" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="gift"></i></div>
                     <h3>지역사회봉사회(도르가회)</h3>
                     <p>구제와 봉사를 통해 지역사회에 하나님의 사랑을 전합니다. 도르가 바자회 운영, 자립준비청년 지원, 지역인재 장학금 사업을 수행합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/children/" class="department-card">
+                <a href="/dept/children" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="smile"></i></div>
                     <h3>어린이부</h3>
                     <p>어린이들이 예수님의 제자로 성장하도록 전문적인 신앙 교육을 제공합니다. 여름/겨울 성경학교, 영성 훈련 캠프, 친구 초청 안식일 등을 운영합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/youth-student/" class="department-card">
+                <a href="/dept/youth-student" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="graduation-cap"></i></div>
                     <h3>청년·학생 선교회</h3>
                     <p>하나님의 사랑을 바탕으로 서로 사랑하며 사회에 봉사하는 증인이 됩니다. 국내외 봉사활동, 동아리 운영, 자체 홈페이지 구축 프로젝트를 진행합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/pathfinder-dept/" class="department-card">
+                <a href="/dept/pathfinder" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="compass"></i></div>
                     <h3>패스파인더</h3>
                     <p>어린이와 청소년을 대상으로 지적·영적·신체적 성장을 위한 전인 교육을 실시합니다. 기능 활동 교육, 캠프 개최, 지도자 양성 프로그램을 운영합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/choir/" class="department-card">
+                <a href="/dept/choir" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="music"></i></div>
                     <h3>찬양대</h3>
                     <p>음악과 찬양을 통해 하나님께 영광을 돌리고 풍성한 예배를 준비합니다. 예배 찬양 주관, 기악팀 운영, 연말 찬양 발표회를 개최합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/health-welfare/" class="department-card">
+                <a href="/dept/health-welfare" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="heart-pulse"></i></div>
                     <h3>보건복지부</h3>
                     <p>성경적인 건강 기별을 따라 영육이 강건한 삶을 살도록 돕습니다. 맨발 걷기(어싱), 절제 주간 운영, 예언의 신 말씀 나눔 활동을 진행합니다.</p>
                 </a>
-                <a href="https://gpchurch.mycafe24.com/dept/digital-media/" class="department-card">
+                <a href="/dept/digital-media" class="department-card">
                     <div class="dept-icon-wrapper"><i data-lucide="monitor-play"></i></div>
                     <h3>디지털 홍보부</h3>
                     <p>현대적 매체와 기술을 활용하여 효과적으로 복음을 전파합니다. 온라인 예배 생중계, 방송 시스템 안정화, 디지털 미디어 교육을 담당합니다.</p>

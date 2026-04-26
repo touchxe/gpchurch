@@ -73,7 +73,7 @@ get_template_part('template-parts/submenu-nav');
                     <!-- Left: Text Content -->
                     <div class="ceo-text-content">
                         <!-- Main Title -->
-                        <h1 class="ceo-main-title">안녕하십니까?</h1>
+                        <h2 class="ceo-main-title">안녕하십니까?</h2>
                         <h2 class="ceo-subtitle">가평교회 담임목사 위수민입니다.</h2>
                         <p class="ceo-intro">저희 교회 홈페이지를 방문해 주신 여러분을 진심으로 환영합니다.</p>
 
