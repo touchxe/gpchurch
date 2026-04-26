@@ -6140,7 +6140,7 @@ img {
 .org-admin-card {
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid #1a1a1a;
     border-radius: 1.5rem;
     padding: var(--spacing-xl) var(--spacing-2xl);
     transition: all 0.3s ease;
@@ -6151,6 +6151,7 @@ img {
 
 .org-admin-card:hover {
     background: rgba(255, 255, 255, 0.8);
+    border-color: transparent;
     box-shadow: 0 12px 40px rgba(59, 130, 246, 0.1);
     transform: translateY(-4px);
 }
@@ -6220,7 +6221,7 @@ img {
 .org-ministry-card {
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid #1a1a1a;
     border-radius: 1.5rem;
     padding: var(--spacing-2xl);
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -6230,6 +6231,7 @@ img {
 
 .org-ministry-card:hover {
     transform: translateY(-6px);
+    border-color: transparent;
     box-shadow: 0 15px 50px rgba(59, 130, 246, 0.15);
     background: rgba(255, 255, 255, 0.7);
 }
