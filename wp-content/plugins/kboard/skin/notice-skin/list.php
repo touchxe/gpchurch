@@ -13,7 +13,9 @@
 				action="<?php echo esc_url($url->toString()) ?>">
 				<?php echo $url->set('pageid', '1')->set('category1', '')->set('category2', '')->set('target', '')->set('keyword', '')->set('mod', 'list')->set('kboard_list_sort_remember', $board->id)->toInput() ?>
 
-				<select name="kboard_list_sort"
+				<label for="kboard-sort-select-<?php echo $board->id ?>" class="screen-reader-text"><?php echo __('Sort', 'kboard') ?></label>
+				<select id="kboard-sort-select-<?php echo $board->id ?>" name="kboard_list_sort"
+					aria-label="<?php echo esc_attr(__('Sort', 'kboard')) ?>"
 					onchange="jQuery('#kboard-sort-form-<?php echo $board->id ?>').submit();">
 					<option value="newest" <?php if ($list->getSorting() == 'newest'): ?> selected<?php endif ?>>
 						<?php echo __('Newest', 'kboard') ?></option>
@@ -186,7 +188,8 @@
 			action="<?php echo esc_url($url->toString()) ?>">
 			<?php echo $url->set('pageid', '1')->set('target', '')->set('keyword', '')->set('mod', 'list')->toInput() ?>
 
-			<select name="target">
+			<label for="kboard-search-target-<?php echo $board->id ?>" class="screen-reader-text"><?php echo __('Search target', 'kboard') ?></label>
+			<select id="kboard-search-target-<?php echo $board->id ?>" name="target" aria-label="<?php echo esc_attr(__('Search target', 'kboard')) ?>">
 				<option value=""><?php echo __('All', 'kboard') ?></option>
 				<option value="title" <?php if (kboard_target() == 'title'): ?> selected<?php endif ?>>
 					<?php echo __('Title', 'kboard') ?></option>
@@ -195,7 +198,8 @@
 				<option value="member_display" <?php if (kboard_target() == 'member_display'): ?> selected<?php endif ?>>
 					<?php echo __('Author', 'kboard') ?></option>
 			</select>
-			<input type="text" name="keyword" value="<?php echo esc_attr(kboard_keyword()) ?>">
+			<label for="kboard-search-keyword-<?php echo $board->id ?>" class="screen-reader-text"><?php echo __('Keyword', 'kboard') ?></label>
+			<input id="kboard-search-keyword-<?php echo $board->id ?>" type="text" name="keyword" value="<?php echo esc_attr(kboard_keyword()) ?>" aria-label="<?php echo esc_attr(__('Search keyword', 'kboard')) ?>">
 			<button type="submit" class="kboard-avatar-button-small"><?php echo __('Search', 'kboard') ?></button>
 		</form>
 	</div>

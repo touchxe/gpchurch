@@ -30,7 +30,80 @@ function gapyeong_setup()
 add_action('after_setup_theme', 'gapyeong_setup');
 
 
-// 스크립트 및 스타일 등록
+/**
+ * SEO: 페이지별 Meta Description 자동 생성
+ *
+ * Lighthouse SEO 검사에서 모든 페이지에 meta description 부재 지적(L-03).
+ * 이 함수는 wp_head 훅으로 각 페이지에 맞는 description을 출력합니다.
+ * Yoast SEO 또는 All in One SEO 플러그인이 활성화된 경우에는 출력하지 않습니다.
+ */
+function gapyeong_meta_description()
+{
+    // SEO 플러그인이 이미 meta description을 관리하면 중복 출력 방지
+    if (defined('WPSEO_VERSION') || defined('AIOSEOP_VERSION') || class_exists('AIOSEOP_Core')) {
+        return;
+    }
+
+    // 페이지별 설명 정의
+    $description_map = array(
+        // 교회소개
+        'greeting'     => '가평 제칠일 안식일 예수재림교회 담임목사 위수민의 인사말입니다. 하나님의 사랑 안에서 함께하는 가평교회에 오신 것을 환영합니다.',
+        'vision'       => '가평교회의 2026년 비전과 4대 공동체, 5대 중점 목표를 소개합니다. 말씀을 사랑으로 실천하는 성령의 교회.',
+        'history'      => '가평 제칠일 안식일 예수재림교회의 역사와 연혁을 소개합니다.',
+        'organization' => '가평교회의 담임목사, 장로, 각 부서 조직도를 안내합니다.',
+        'location'     => '가평교회 오시는 길 안내입니다. 경기도 가평군 가평읍 석봉로 153번길 2에 위치합니다.',
+        // 프로그램
+        'worship'      => '가평교회 예배 시간 안내입니다. 안식일(토) 11시 예배, 금요일 저녁 7시 30분 예비 예배.',
+        'sabbath'      => '가평교회 안식일학교 안내입니다. 매주 안식일 오전 9시 30분, 연령별 성경 공부와 교과 토의.',
+        'pathfinder'   => '가평교회 패스파인더 클럽 소개입니다. 어린이·청소년을 위한 야외 활동과 봉사 프로그램.',
+        'youth'        => '가평교회 청년반 소개입니다. 청년들이 함께 신앙을 나누며 성장하는 공동체.',
+        'smallgroup'   => '가평교회 소그룹 모임 안내입니다. 이웃을 섬기며 사랑을 실천하는 소그룹 활동.',
+        // 커뮤니티
+        'notices'      => '가평교회 공지사항입니다. 교회의 최신 소식과 주요 안내사항을 확인하세요.',
+        'gallery'      => '가평교회 사진 갤러리입니다. 교회 활동과 행사 사진을 감상하세요.',
+        'contact'      => '가평교회에 문의하세요. 예배 참석, 교회 활동 참여, 기타 문의 사항을 남겨주세요.',
+        'prayer'       => '가평교회 기도요청 게시판입니다. 기도 제목을 나누고 함께 기도합니다.',
+    );
+
+    $description = '';
+
+    if (is_front_page() || is_home()) {
+        $description = '가평 제칠일 안식일 예수재림교회(Gapyeong SDA Church)입니다. 매주 토요일 안식일 예배로 여러분을 초대합니다. 경기도 가평군 가평읍 석봉로 153번길 2.';
+    } elseif (is_singular('page')) {
+        $post = get_post();
+        if ($post) {
+            // 현재 페이지 슬러그로 설명 찾기
+            $slug = $post->post_name;
+            if (isset($description_map[$slug])) {
+                $description = $description_map[$slug];
+            } else {
+                // 부모 페이지 슬러그로 찾기
+                $parent = get_post($post->post_parent);
+                if ($parent) {
+                    $parent_slug = $parent->post_name;
+                    $description_map_parent = array(
+                        'dept' => '가평교회 ' . get_the_title() . ' 부서 소개입니다.',
+                    );
+                    $description = isset($description_map_parent[$parent_slug])
+                        ? $description_map_parent[$parent_slug]
+                        : get_the_title() . ' — 가평 제칠일 안식일 예수재림교회.';
+                } else {
+                    $description = get_the_title() . ' — 가평 제칠일 안식일 예수재림교회.';
+                }
+            }
+        }
+    }
+
+    // 필터로 외부에서 description 오버라이드 가능
+    $description = apply_filters('gapyeong_meta_description', $description);
+
+    if (!empty($description)) {
+        echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    }
+}
+add_action('wp_head', 'gapyeong_meta_description', 1);
+
+
 function gapyeong_enqueue_scripts()
 {
     $uri = get_template_directory_uri();
