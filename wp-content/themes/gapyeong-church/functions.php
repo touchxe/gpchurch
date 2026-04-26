@@ -236,6 +236,7 @@ function gapyeong_enqueue_scripts()
 
     // === 부서(dept) 페이지 공용 CSS ===
     $dept_templates = array(
+        'page-templates/page-dept.php',           // 통합 부서 페이지
         'page-templates/page-dept-ministry.php',
         'page-templates/page-dept-clerk.php',
         'page-templates/page-dept-treasury.php',
@@ -574,20 +575,20 @@ function gapyeong_get_submenu($group)
 
         // 부서
         'dept' => array(
-            array('label' => '목회부', 'href' => '/dept/ministry'),
-            array('label' => '교회서기', 'href' => '/dept/clerk'),
-            array('label' => '교회재무', 'href' => '/dept/treasury'),
-            array('label' => '장로회', 'href' => '/dept/elders'),
-            array('label' => '집사회', 'href' => '/dept/deacons'),
-            array('label' => '선교회', 'href' => '/dept/mission'),
-            array('label' => '안식일학교', 'href' => '/dept/sabbath-school'),
-            array('label' => '지역사회봉사회', 'href' => '/dept/community-service'),
-            array('label' => '어린이부', 'href' => '/dept/children'),
-            array('label' => '청년·학생 선교회', 'href' => '/dept/youth-student'),
-            array('label' => '패스파인더', 'href' => '/dept/pathfinder'),
-            array('label' => '찬양대', 'href' => '/dept/choir'),
-            array('label' => '보건복지부', 'href' => '/dept/health-welfare'),
-            array('label' => '디지털 홍보부', 'href' => '/dept/digital-media'),
+            array('label' => '목회부', 'href' => '/dept/#ministry'),
+            array('label' => '교회서기', 'href' => '/dept/#clerk'),
+            array('label' => '교회재무', 'href' => '/dept/#treasury'),
+            array('label' => '장로회', 'href' => '/dept/#elders'),
+            array('label' => '집사회', 'href' => '/dept/#deacons'),
+            array('label' => '선교회', 'href' => '/dept/#mission'),
+            array('label' => '안식일학교', 'href' => '/dept/#sabbath-school'),
+            array('label' => '지역사회봉사회', 'href' => '/dept/#community-service'),
+            array('label' => '어린이부', 'href' => '/dept/#children'),
+            array('label' => '청년·학생 선교회', 'href' => '/dept/#youth-student'),
+            array('label' => '패스파인더', 'href' => '/dept/#pathfinder'),
+            array('label' => '찬양대', 'href' => '/dept/#choir'),
+            array('label' => '보건복지부', 'href' => '/dept/#health-welfare'),
+            array('label' => '디지털 홍보부', 'href' => '/dept/#digital-media'),
         ),
 
     );

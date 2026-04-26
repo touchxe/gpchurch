@@ -82,20 +82,20 @@
                     <li class="nav-item has-dropdown">
                         <a href="#" class="nav-link">부서</a>
                         <ul class="dropdown-menu" style="min-width: 200px;">
-                            <li><a href="/dept/ministry" class="dropdown-item">목회부</a></li>
-                            <li><a href="/dept/clerk" class="dropdown-item">교회서기</a></li>
-                            <li><a href="/dept/treasury" class="dropdown-item">교회재무</a></li>
-                            <li><a href="/dept/elders" class="dropdown-item">장로회</a></li>
-                            <li><a href="/dept/deacons" class="dropdown-item">집사회</a></li>
-                            <li><a href="/dept/mission" class="dropdown-item">선교회</a></li>
-                            <li><a href="/dept/sabbath-school" class="dropdown-item">안식일학교</a></li>
-                            <li><a href="/dept/community-service" class="dropdown-item">지역사회봉사회</a></li>
-                            <li><a href="/dept/children" class="dropdown-item">어린이부</a></li>
-                            <li><a href="/dept/youth-student" class="dropdown-item">청년·학생 선교회</a></li>
-                            <li><a href="/dept/pathfinder" class="dropdown-item">패스파인더</a></li>
-                            <li><a href="/dept/choir" class="dropdown-item">찬양대</a></li>
-                            <li><a href="/dept/health-welfare" class="dropdown-item">보건복지부</a></li>
-                            <li><a href="/dept/digital-media" class="dropdown-item">디지털 홍보부</a></li>
+                            <li><a href="/dept/#ministry" class="dropdown-item">목회부</a></li>
+                            <li><a href="/dept/#clerk" class="dropdown-item">교회서기</a></li>
+                            <li><a href="/dept/#treasury" class="dropdown-item">교회재무</a></li>
+                            <li><a href="/dept/#elders" class="dropdown-item">장로회</a></li>
+                            <li><a href="/dept/#deacons" class="dropdown-item">집사회</a></li>
+                            <li><a href="/dept/#mission" class="dropdown-item">선교회</a></li>
+                            <li><a href="/dept/#sabbath-school" class="dropdown-item">안식일학교</a></li>
+                            <li><a href="/dept/#community-service" class="dropdown-item">지역사회봉사회</a></li>
+                            <li><a href="/dept/#children" class="dropdown-item">어린이부</a></li>
+                            <li><a href="/dept/#youth-student" class="dropdown-item">청년·학생 선교회</a></li>
+                            <li><a href="/dept/#pathfinder" class="dropdown-item">패스파인더</a></li>
+                            <li><a href="/dept/#choir" class="dropdown-item">찬양대</a></li>
+                            <li><a href="/dept/#health-welfare" class="dropdown-item">보건복지부</a></li>
+                            <li><a href="/dept/#digital-media" class="dropdown-item">디지털 홍보부</a></li>
                         </ul>
                     </li>
                     <li class="nav-item has-dropdown">
@@ -177,20 +177,20 @@
                 <div class="mobile-nav-group">
                     <button class="mobile-nav-toggle">부서 <i data-lucide="chevron-down"></i></button>
                     <div class="mobile-nav-dropdown">
-                        <a href="/dept/ministry">목회부</a>
-                        <a href="/dept/clerk">교회서기</a>
-                        <a href="/dept/treasury">교회재무</a>
-                        <a href="/dept/elders">장로회</a>
-                        <a href="/dept/deacons">집사회</a>
-                        <a href="/dept/mission">선교회</a>
-                        <a href="/dept/sabbath-school">안식일학교</a>
-                        <a href="/dept/community-service">지역사회봉사회</a>
-                        <a href="/dept/children">어린이부</a>
-                        <a href="/dept/youth-student">청년·학생 선교회</a>
-                        <a href="/dept/pathfinder">패스파인더</a>
-                        <a href="/dept/choir">찬양대</a>
-                        <a href="/dept/health-welfare">보건복지부</a>
-                        <a href="/dept/digital-media">디지털 홍보부</a>
+                        <a href="/dept/#ministry">목회부</a>
+                        <a href="/dept/#clerk">교회서기</a>
+                        <a href="/dept/#treasury">교회재무</a>
+                        <a href="/dept/#elders">장로회</a>
+                        <a href="/dept/#deacons">집사회</a>
+                        <a href="/dept/#mission">선교회</a>
+                        <a href="/dept/#sabbath-school">안식일학교</a>
+                        <a href="/dept/#community-service">지역사회봉사회</a>
+                        <a href="/dept/#children">어린이부</a>
+                        <a href="/dept/#youth-student">청년·학생 선교회</a>
+                        <a href="/dept/#pathfinder">패스파인더</a>
+                        <a href="/dept/#choir">찬양대</a>
+                        <a href="/dept/#health-welfare">보건복지부</a>
+                        <a href="/dept/#digital-media">디지털 홍보부</a>
                     </div>
                 </div>
 
