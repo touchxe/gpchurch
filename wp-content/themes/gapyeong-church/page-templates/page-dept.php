@@ -40,19 +40,14 @@ get_template_part('template-parts/subpage-hero');
 <style>
 /* 부서 빠른 이동 네비게이션 */
 .dept-index-nav {
-    background: var(--bg-card, #fff);
-    border-bottom: 1px solid rgba(99,102,241,0.12);
-    position: sticky;
-    top: 70px;
-    z-index: 100;
+    background: transparent;
     padding: 14px 0;
-    box-shadow: 0 2px 12px rgba(99,102,241,0.06);
 }
 .dept-index-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    justify-content: center;
+    justify-content: flex-start;
 }
 .dept-index-item {
     font-size: 0.82rem;
