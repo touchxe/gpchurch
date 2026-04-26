@@ -4642,42 +4642,6 @@ img {
     list-style: none;
 }
 
-/* Footer Mappings */
-.footer-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 60px;
-}
-
-.footer-brand p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin: 16px 0;
-    line-height: 1.6;
-}
-
-.footer-logo {
-    height: 32px;
-    width: auto;
-    margin-bottom: 16px;
-    opacity: 0.8;
-}
-
-.footer-social {
-    display: flex;
-    gap: 16px;
-}
-
-.footer-social a {
-    color: var(--text-muted);
-    transition: color 0.2s;
-}
-
-.footer-social a:hover {
-    color: var(--primary);
-}
-
 /* Mobile Menu styles → see mobile-menu.css */
 
 .nav-link.active {
@@ -4688,17 +4652,6 @@ img {
 @media (max-width: 1024px) {
     .main-nav {
         display: none;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-    }
-}
-
-@media (max-width: 640px) {
-    .footer-grid {
-        grid-template-columns: 1fr;
     }
 }
 
