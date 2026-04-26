@@ -55,10 +55,10 @@ button.kboard-avatar-button-small:active { opacity: 0.7; }
 #kboard-avatar-list .kboard-list table td { padding: 10px 0; height: auto; text-align: center; vertical-align: middle; font-size: 14px; }
 #kboard-avatar-list .kboard-list table td.kboard-list-uid { width: 65px; }
 #kboard-avatar-list .kboard-list table td.kboard-list-title { width: auto; }
-#kboard-avatar-list .kboard-list table td.kboard-list-user { width: 100px; }
-#kboard-avatar-list .kboard-list table td.kboard-list-date { width: 75px; }
-#kboard-avatar-list .kboard-list table td.kboard-list-vote { width: 55px; }
-#kboard-avatar-list .kboard-list table td.kboard-list-view { width: 55px; }
+#kboard-avatar-list .kboard-list table td.kboard-list-user { width: 120px; white-space: nowrap; }
+#kboard-avatar-list .kboard-list table td.kboard-list-date { width: 75px; white-space: nowrap; }
+#kboard-avatar-list .kboard-list table td.kboard-list-vote { width: 70px; white-space: nowrap; }
+#kboard-avatar-list .kboard-list table td.kboard-list-view { width: 70px; white-space: nowrap; }
 #kboard-avatar-list .kboard-list thead { background-color: transparent; }
 #kboard-avatar-list .kboard-list thead tr td { font-weight: bold; color: #545861; border: 0; border-bottom: 2px solid #f1f1f1; }
 #kboard-avatar-list .kboard-list tbody tr td { word-break: break-all; border: 0; border-bottom: 1px solid #f1f1f1; }
