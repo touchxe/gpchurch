@@ -250,7 +250,8 @@ get_header();
                     <div class="location-icon"><i data-lucide="phone"></i></div>
                     <h3>연락처</h3>
                     <p>전화: 031-581-2765</p>
-                    <p>담임목사: 010-XXXX-XXXX</p>
+                    <p>담임목사 위수민: 010-5730-3630</p>
+                    <p>수석장로 김재신: 010-5310-0062</p>
                 </div>
                 <div class="location-card">
                     <div class="location-icon"><i data-lucide="clock"></i></div>
