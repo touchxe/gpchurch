@@ -330,3 +330,134 @@
         font-size: 1.25rem;
     }
 }
+/* ==========================================
+   부서별 고유 색상 테마 (dept-color-*)
+   ========================================== */
+
+/* 공통: --dc-* 변수를 통해 각 부서 색상 적용 */
+.dept-profile-card[data-color] .dept-profile-left {
+    background: linear-gradient(160deg,
+        color-mix(in srgb, var(--dc-main) 8%, #f8faff),
+        color-mix(in srgb, var(--dc-main) 14%, #eef2ff)
+    );
+}
+.dept-profile-card[data-color] .dept-profile-icon {
+    background: linear-gradient(135deg, var(--dc-main), var(--dc-alt));
+}
+.dept-profile-card[data-color] .dept-profile-divider {
+    background: linear-gradient(90deg, var(--dc-main), var(--dc-alt));
+}
+.dept-profile-card[data-color] .dept-profile-badge {
+    color: var(--dc-main);
+    background: color-mix(in srgb, var(--dc-main) 12%, white);
+}
+.dept-profile-card[data-color] .dept-right-label i {
+    color: var(--dc-main);
+}
+.dept-profile-card[data-color] .dept-plan-keyword {
+    color: var(--dc-main);
+    background: color-mix(in srgb, var(--dc-main) 10%, white);
+}
+.dept-profile-card[data-color] .dept-mission-text {
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--dc-main) 7%, white),
+        color-mix(in srgb, var(--dc-alt) 5%, white)
+    );
+}
+.dept-profile-card[data-color] .dept-tag {
+    border: 1px solid color-mix(in srgb, var(--dc-main) 22%, white);
+    color: var(--dc-main);
+}
+
+/* ── 1. 목회부 — 인디고 (기존 기준색) ── */
+#ministry .dept-profile-card {
+    --dc-main: #6366f1;
+    --dc-alt:  #818cf8;
+}
+/* ── 2. 교회서기 — 슬레이트 ── */
+#clerk .dept-profile-card {
+    --dc-main: #64748b;
+    --dc-alt:  #94a3b8;
+}
+/* ── 3. 교회재무 — 앰버 ── */
+#treasury .dept-profile-card {
+    --dc-main: #d97706;
+    --dc-alt:  #f59e0b;
+}
+/* ── 4. 장로회 — 딥 블루 ── */
+#elders .dept-profile-card {
+    --dc-main: #1d4ed8;
+    --dc-alt:  #3b82f6;
+}
+/* ── 5. 집사회 — 스카이 블루 ── */
+#deacons .dept-profile-card {
+    --dc-main: #0284c7;
+    --dc-alt:  #38bdf8;
+}
+/* ── 6. 선교회 — 레드 ── */
+#mission .dept-profile-card {
+    --dc-main: #dc2626;
+    --dc-alt:  #f87171;
+}
+/* ── 7. 안식일학교 — 블루 ── */
+#sabbath-school .dept-profile-card {
+    --dc-main: #2563eb;
+    --dc-alt:  #60a5fa;
+}
+/* ── 8. 지역사회봉사회 — 퍼플 ── */
+#community-service .dept-profile-card {
+    --dc-main: #9333ea;
+    --dc-alt:  #c084fc;
+}
+/* ── 9. 어린이부 — 오렌지 ── */
+#children .dept-profile-card {
+    --dc-main: #ea580c;
+    --dc-alt:  #fb923c;
+}
+/* ── 10. 청년·학생선교회 — 시안 ── */
+#youth-student .dept-profile-card {
+    --dc-main: #0891b2;
+    --dc-alt:  #22d3ee;
+}
+/* ── 11. 패스파인더 — 바이올렛 ── */
+#pathfinder .dept-profile-card {
+    --dc-main: #7c3aed;
+    --dc-alt:  #a78bfa;
+}
+/* ── 12. 찬양대 — 로즈 ── */
+#choir .dept-profile-card {
+    --dc-main: #be185d;
+    --dc-alt:  #f472b6;
+}
+/* ── 13. 보건복지부 — 에메랄드 ── */
+#health-welfare .dept-profile-card {
+    --dc-main: #059669;
+    --dc-alt:  #34d399;
+}
+/* ── 14. 디지털홍보부 — 인디고 다크 ── */
+#digital-media .dept-profile-card {
+    --dc-main: #4338ca;
+    --dc-alt:  #818cf8;
+}
+
+/* ── color-mix() 미지원 브라우저 fallback ── */
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+    .dept-profile-card[data-color] .dept-profile-left {
+        background: linear-gradient(160deg, #f0f4ff 0%, #e8ecff 100%);
+    }
+    .dept-profile-card[data-color] .dept-profile-badge {
+        color: var(--dc-main);
+        background: rgba(99, 102, 241, 0.1);
+    }
+    .dept-profile-card[data-color] .dept-plan-keyword {
+        color: var(--dc-main);
+        background: rgba(99, 102, 241, 0.08);
+    }
+    .dept-profile-card[data-color] .dept-mission-text {
+        background: linear-gradient(135deg, rgba(99,102,241,0.06), rgba(129,140,248,0.04));
+    }
+    .dept-profile-card[data-color] .dept-tag {
+        color: var(--dc-main);
+        border-color: rgba(99, 102, 241, 0.2);
+    }
+}
