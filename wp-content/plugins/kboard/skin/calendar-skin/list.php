@@ -25,48 +25,70 @@
     ?>
 
     <!-- 일정 목록 -->
-    <ul class="kboard-calendar-schedule-list">
-        <?php
-        $list_index = 0;
-        while ($content = $list->hasNext()):
-            $list_index++;
-            $event_date     = $content->option->event_date     ?? '';
-            $event_end_date = $content->option->event_end_date ?? '';
-            $display_date   = '';
-            if ($event_date) {
-                $ts_s = strtotime($event_date);
-                if ($ts_s) {
-                    if ($event_end_date && $event_end_date !== $event_date) {
-                        $ts_e = strtotime($event_end_date);
-                        $display_date = $ts_e
-                            ? date('m.d', $ts_s) . '~' . date('m.d', $ts_e)
-                            : date('m.d', $ts_s);
-                    } else {
-                        $display_date = date('m.d', $ts_s);
+    <div class="kboard-list">
+        <table>
+            <thead>
+                <tr>
+                    <td class="kboard-calendar-col-num">번호</td>
+                    <td class="kboard-calendar-col-date">날짜</td>
+                    <td class="kboard-calendar-col-content">내용</td>
+                    <td class="kboard-calendar-col-more"></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $list_index = 0;
+                while ($content = $list->hasNext()):
+                    $list_index++;
+                    $event_date = $content->option->event_date ?? '';
+                    $event_end_date = $content->option->event_end_date ?? '';
+                    $display_date = '';
+                    if ($event_date) {
+                        $ts_s = strtotime($event_date);
+                        if ($ts_s) {
+                            if ($event_end_date && $event_end_date !== $event_date) {
+                                $ts_e = strtotime($event_end_date);
+                                $display_date = $ts_e
+                                    ? date('Y.m.d', $ts_s) . ' ~ ' . date('Y.m.d', $ts_e)
+                                    : date('Y.m.d', $ts_s);
+                            } else {
+                                $display_date = date('Y.m.d', $ts_s);
+                            }
+                        } else {
+                            $display_date = $event_date;
+                        }
                     }
-                } else {
-                    $display_date = $event_date;
-                }
-            }
-            ?>
-            <li class="kboard-calendar-item">
-                <a href="<?php echo esc_url($url->getDocumentURLWithUID($content->uid)) ?>" class="kboard-calendar-link">
-                    <div class="kboard-calendar-date-col">
+                    $summary = wp_strip_all_tags($content->content ?? '');
+                    $summary = mb_substr($summary, 0, 60, 'UTF-8');
+                    if (mb_strlen(wp_strip_all_tags($content->content ?? ''), 'UTF-8') > 60) $summary .= '…';
+                ?>
+                <tr class="kboard-calendar-row">
+                    <td class="kboard-calendar-col-num"><?php echo $list_index ?></td>
+                    <td class="kboard-calendar-col-date">
                         <span class="kboard-calendar-date"><?php echo esc_html($display_date ?: '--') ?></span>
-                    </div>
-                    <div class="kboard-calendar-info-col">
-                        <span class="kboard-calendar-title"><?php echo esc_html($content->title) ?></span>
-                        <?php if ($content->isNew()): ?>
-                            <span class="kboard-calendar-new">NEW</span>
-                        <?php endif; ?>
-                    </div>
-                </a>
-            </li>
-        <?php endwhile; ?>
-        <?php if ($list_index == 0): ?>
-            <li class="kboard-calendar-empty">등록된 일정이 없습니다.</li>
-        <?php endif; ?>
-    </ul>
+                    </td>
+                    <td class="kboard-calendar-col-content">
+                        <span class="kboard-calendar-title">
+                            <?php echo esc_html($content->title) ?>
+                            <?php if ($content->isNew()): ?><span class="kboard-calendar-new">NEW</span><?php endif ?>
+                        </span>
+                        <?php if ($summary): ?>
+                        <span class="kboard-calendar-summary"><?php echo esc_html($summary) ?></span>
+                        <?php endif ?>
+                    </td>
+                    <td class="kboard-calendar-col-more">
+                        <a href="<?php echo esc_url($url->getDocumentURLWithUID($content->uid)) ?>" class="kboard-calendar-more-btn">더보기</a>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
+                <?php if ($list_index == 0): ?>
+                <tr>
+                    <td colspan="4" class="kboard-calendar-empty">등록된 일정이 없습니다.</td>
+                </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 
     <!-- 페이징 -->
     <div class="kboard-pagination">
@@ -100,10 +122,4 @@
         </div>
     <?php endif ?>
 
-    <?php if ($board->contribution()): ?>
-        <div class="kboard-thumbnail-poweredby">
-            <a href="https://www.cosmosfarm.com/products/kboard" onclick="window.open(this.href);return false;"
-                title="KBoard">Powered by KBoard</a>
-        </div>
-    <?php endif ?>
 </div>
