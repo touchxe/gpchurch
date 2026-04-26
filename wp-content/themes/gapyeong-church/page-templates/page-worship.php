@@ -53,17 +53,17 @@ get_template_part('template-parts/submenu-nav');
                 <h2 class="program-section-title">예배 및 기도회</h2>
                 <div class="worship-schedule-list">
                     <div class="worship-item">
-                        <span class="worship-badge badge-dawn">새벽 기도회</span>
+                        <span class="worship-badge badge-sabbath">안식일 예배</span>
                         <div class="worship-info">
-                            <h3 class="worship-name">전도회 기간 중 탄력적 운영</h3>
-                            <p class="worship-time">오전 06:00 / 본당</p>
+                            <h3 class="worship-name">매주 안식일 (토요일)</h3>
+                            <p class="worship-time">오전 11:00 / 본당</p>
                         </div>
                     </div>
                     <div class="worship-item">
-                        <span class="worship-badge badge-friday">일몰 예배 &amp; 친교</span>
+                        <span class="worship-badge badge-friday">금요일 예배</span>
                         <div class="worship-info">
-                            <h3 class="worship-name">매주 안식일 (금요일)</h3>
-                            <p class="worship-time">오후 17:00 / 본당 및 식당</p>
+                            <h3 class="worship-name">매주 금요일</h3>
+                            <p class="worship-time">오후 7:30 / 본당</p>
                         </div>
                     </div>
                 </div>
@@ -80,10 +80,16 @@ get_template_part('template-parts/submenu-nav');
                         <p class="activity-desc">탄력적 운영 (청소년 및 어린이)</p>
                     </div>
                     <div class="activity-card">
+                        <div class="activity-icon"><i data-lucide="users"></i></div>
+                        <h3>청년반</h3>
+                        <span class="activity-time">매주 안식일 13:30 ~ 16:00</span>
+                        <p class="activity-desc">청년 교제 및 신앙 활동</p>
+                    </div>
+                    <div class="activity-card">
                         <div class="activity-icon"><i data-lucide="book-heart"></i></div>
                         <h3>말씀 교제</h3>
                         <span class="activity-time">매주 안식일 13:30 ~ 15:00</span>
-                        <p class="activity-desc">보건복지부 주관 (예언의 신 연구)</p>
+                        <p class="activity-desc">선교부 주관 (예언의 신 연구)</p>
                     </div>
                     <div class="activity-card">
                         <div class="activity-icon"><i data-lucide="footprints"></i></div>
@@ -91,43 +97,16 @@ get_template_part('template-parts/submenu-nav');
                         <span class="activity-time">매주 안식일 15:00</span>
                         <p class="activity-desc">맨발 걷기 및 자연 교감 활동</p>
                     </div>
+                    <div class="activity-card">
+                        <div class="activity-icon"><i data-lucide="home"></i></div>
+                        <h3>대심방</h3>
+                        <span class="activity-time">4~5월 대심방 기간</span>
+                        <p class="activity-desc">선교회 주관 대심방</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- 3. 각종 회의 및 운영 -->
-            <div class="program-section">
-                <h2 class="program-section-title">각종 회의 및 운영</h2>
-                <div class="meeting-table-container">
-                    <table class="meeting-table">
-                        <thead>
-                            <tr>
-                                <th>구분</th>
-                                <th>일정</th>
-                                <th>비고</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="meeting-name">직원회</td>
-                                <td>매월 첫째 주 금요일 저녁 20:40<br>또는 안식일 오후 13:30</td>
-                                <td>교회 운영 전반 논의</td>
-                            </tr>
-                            <tr>
-                                <td class="meeting-name">선교위원회</td>
-                                <td>연 2회 (2월, 8월)<br>넷째 주 안식일 오후 12:50</td>
-                                <td>선교 계획 및 결산</td>
-                            </tr>
-                            <tr>
-                                <td class="meeting-name">선교임원회</td>
-                                <td>매월 넷째 주 안식일 오후 12:50</td>
-                                <td>각 부서 선교 현황 공유</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 4. 예배 준비 수칙 -->
+            <!-- 3. 예배 준비 수칙 -->
             <div class="program-section" style="margin-bottom: 0;">
                 <div class="rules-box">
                     <h2 class="rules-title"><i data-lucide="check-circle-2" style="margin-right: 10px;"></i> 예배 준비 수칙</h2>
