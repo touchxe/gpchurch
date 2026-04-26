@@ -27,10 +27,15 @@
                         <span class="kboard-notice-month"><?php echo esc_html($yearmon) ?></span>
                     </div>
                     <div class="kboard-notice-content">
-                        <span class="kboard-notice-title"><?php echo esc_html($content->title) ?></span>
-                        <?php if ($content->isNew()): ?>
-                            <span class="kboard-notice-new">NEW</span>
-                        <?php endif; ?>
+                        <div class="kboard-notice-title-row">
+                            <span class="kboard-notice-title"><?php echo esc_html($content->title) ?></span>
+                            <?php if ($content->isNew()): ?>
+                                <span class="kboard-notice-new">NEW</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="kboard-notice-summary">
+                            <?php echo esc_html(wp_strip_all_tags($content->content ?? '')) ?>
+                        </div>
                     </div>
                 </a>
             </li>
