@@ -28,11 +28,13 @@
     border-bottom: 2px solid var(--primary-100, #ede9fe) !important;
     margin-bottom: 1.25rem !important;
 }
+
 .kboard-total-count {
     font-size: 0.875rem !important;
     color: var(--slate-500, #64748b) !important;
     font-weight: 500 !important;
 }
+
 .kboard-sort select {
     font-size: 0.875rem !important;
     padding: 0.35rem 0.75rem !important;
@@ -50,6 +52,7 @@
     display: flex !important;
     gap: 0.5rem !important;
 }
+
 .kboard-search-form input[type="text"] {
     flex: 1 !important;
     padding: 0.6rem 1rem !important;
@@ -59,9 +62,11 @@
     outline: none !important;
     transition: border-color 0.2s !important;
 }
+
 .kboard-search-form input[type="text"]:focus {
     border-color: var(--primary-400, #a78bfa) !important;
 }
+
 .kboard-search-form input[type="submit"],
 .kboard-search-form button {
     padding: 0.6rem 1.25rem !important;
@@ -74,6 +79,7 @@
     cursor: pointer !important;
     transition: background 0.2s !important;
 }
+
 .kboard-search-form input[type="submit"]:hover {
     background: var(--primary-700, #6d28d9) !important;
 }
@@ -86,6 +92,7 @@
     margin-top: 2rem !important;
     flex-wrap: wrap !important;
 }
+
 .kboard-page a,
 .kboard-page strong {
     display: inline-flex !important;
@@ -101,11 +108,13 @@
     text-decoration: none !important;
     transition: all 0.2s !important;
 }
+
 .kboard-page a:hover {
     background: var(--primary-50, #f5f3ff) !important;
     border-color: var(--primary-300, #c4b5fd) !important;
     color: var(--primary-600, #7c3aed) !important;
 }
+
 .kboard-page strong {
     background: var(--primary-600, #7c3aed) !important;
     border-color: var(--primary-600, #7c3aed) !important;
@@ -128,6 +137,7 @@ a.kboard-write-btn {
     text-decoration: none !important;
     transition: background 0.2s !important;
 }
+
 .kboard-add-document a:hover {
     background: var(--primary-700, #6d28d9) !important;
 }
@@ -142,11 +152,13 @@ a.kboard-write-btn {
     background: #fff !important;
     border-radius: 12px !important;
     overflow: hidden !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.06) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06) !important;
 }
+
 #kboard-avatar-list .kboard-list thead tr {
     background: var(--primary-50, #f5f3ff) !important;
 }
+
 #kboard-avatar-list .kboard-list thead td {
     padding: 0.85rem 1rem !important;
     font-size: 0.8rem !important;
@@ -156,31 +168,38 @@ a.kboard-write-btn {
     letter-spacing: 0.03em !important;
     text-transform: uppercase !important;
 }
+
 #kboard-avatar-list .kboard-list tbody tr {
     border-bottom: 1px solid var(--border-color, #e2e8f0) !important;
     transition: background 0.15s !important;
 }
+
 #kboard-avatar-list .kboard-list tbody tr:last-child {
     border-bottom: none !important;
 }
+
 #kboard-avatar-list .kboard-list tbody tr:hover {
     background: var(--primary-50, #f5f3ff) !important;
 }
+
 #kboard-avatar-list .kboard-list tbody td {
     padding: 1rem 1rem !important;
     font-size: 0.9rem !important;
     color: var(--slate-700, #334155) !important;
     vertical-align: middle !important;
 }
+
 #kboard-avatar-list .kboard-list tbody .kboard-list-title a {
     color: var(--slate-800, #1e293b) !important;
     text-decoration: none !important;
     font-weight: 500 !important;
     transition: color 0.15s !important;
 }
+
 #kboard-avatar-list .kboard-list tbody .kboard-list-title a:hover {
     color: var(--primary-600, #7c3aed) !important;
 }
+
 #kboard-avatar-list .kboard-list tbody .kboard-list-uid,
 #kboard-avatar-list .kboard-list tbody .kboard-list-view,
 #kboard-avatar-list .kboard-list tbody .kboard-list-vote {
@@ -188,13 +207,16 @@ a.kboard-write-btn {
     font-size: 0.82rem !important;
     text-align: center !important;
 }
+
 #kboard-avatar-list .kboard-list tbody .kboard-list-date {
     font-size: 0.82rem !important;
     color: var(--slate-400, #94a3b8) !important;
     white-space: nowrap !important;
 }
+
 /* 모바일: 테이블 열 일부 숨김 */
 @media (max-width: 640px) {
+
     #kboard-avatar-list .kboard-list-uid,
     #kboard-avatar-list .kboard-list-vote,
     #kboard-avatar-list .kboard-list-view,
@@ -212,12 +234,14 @@ a.kboard-write-btn {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
     gap: 1.25rem !important;
 }
+
 #kboard-thumbnail-list .kboard-list table,
 #kboard-thumbnail-list .kboard-list thead,
 #kboard-thumbnail-list .kboard-list tbody,
 #kboard-thumbnail-list .kboard-list tr {
     display: contents !important;
 }
+
 #kboard-thumbnail-list .kboard-list td {
     display: block !important;
 }
@@ -229,26 +253,30 @@ a.kboard-write-btn {
     background: #fff !important;
     border-radius: 14px !important;
     border: 1px solid var(--border-color, #e2e8f0) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
     overflow: hidden !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
+
 #kboard-thumbnail-list .kboard-list tbody tr:hover {
     transform: translateY(-4px) !important;
-    box-shadow: 0 8px 24px rgba(124,58,237,0.12) !important;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.12) !important;
 }
+
 /* 썸네일 */
 #kboard-thumbnail-list .kboard-list .kboard-list-thumbnail {
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
 }
+
 #kboard-thumbnail-list .kboard-list .kboard-list-thumbnail img {
     width: 100% !important;
     height: 180px !important;
     object-fit: cover !important;
     display: block !important;
 }
+
 /* 제목 */
 #kboard-thumbnail-list .kboard-list .kboard-list-title {
     padding: 0.85rem 1rem 0.25rem !important;
@@ -256,13 +284,16 @@ a.kboard-write-btn {
     font-weight: 600 !important;
     color: var(--slate-800, #1e293b) !important;
 }
+
 #kboard-thumbnail-list .kboard-list .kboard-list-title a {
     color: inherit !important;
     text-decoration: none !important;
 }
+
 #kboard-thumbnail-list .kboard-list .kboard-list-title a:hover {
     color: var(--primary-600, #7c3aed) !important;
 }
+
 /* 날짜/작성자 */
 #kboard-thumbnail-list .kboard-list .kboard-list-date,
 #kboard-thumbnail-list .kboard-list .kboard-list-user {
@@ -270,6 +301,7 @@ a.kboard-write-btn {
     font-size: 0.78rem !important;
     color: var(--slate-400, #94a3b8) !important;
 }
+
 /* 불필요 td 숨김 */
 #kboard-thumbnail-list thead,
 #kboard-thumbnail-list .kboard-list-uid,
@@ -287,6 +319,7 @@ a.kboard-write-btn {
     background: var(--primary-50, #f5f3ff) !important;
     border-radius: 8px 8px 0 0 !important;
 }
+
 #kboard-calendar-list .kboard-calendar-week td {
     text-align: center !important;
     padding: 0.6rem 0 !important;
@@ -295,24 +328,28 @@ a.kboard-write-btn {
     color: var(--primary-600, #7c3aed) !important;
     letter-spacing: 0.08em !important;
 }
+
 /* 달력 날짜 셀 */
 #kboard-calendar-list .kboard-calendar-date {
     border: 1px solid var(--border-color, #e2e8f0) !important;
     border-radius: 0 !important;
-    min-height: 80px !important;
+    min-height: 50px !important;
     vertical-align: top !important;
     padding: 0.4rem !important;
     font-size: 0.82rem !important;
     transition: background 0.15s !important;
 }
+
 #kboard-calendar-list .kboard-calendar-date:hover {
     background: var(--primary-50, #f5f3ff) !important;
 }
+
 /* 오늘 날짜 강조 */
 #kboard-calendar-list .kboard-calendar-today {
     background: var(--primary-50, #f5f3ff) !important;
     border-color: var(--primary-200, #ddd6fe) !important;
 }
+
 #kboard-calendar-list .kboard-calendar-today .kboard-calendar-day {
     background: var(--primary-600, #7c3aed) !important;
     color: #fff !important;
@@ -324,6 +361,7 @@ a.kboard-write-btn {
     justify-content: center !important;
     font-weight: 700 !important;
 }
+
 /* 일정 항목 점(이벤트 도트) */
 #kboard-calendar-list .kboard-calendar-event a {
     font-size: 0.72rem !important;
@@ -338,9 +376,11 @@ a.kboard-write-btn {
     text-overflow: ellipsis !important;
     text-decoration: none !important;
 }
+
 #kboard-calendar-list .kboard-calendar-event a:hover {
     background: var(--primary-200, #ddd6fe) !important;
 }
+
 /* 월 네비게이션 */
 #kboard-calendar-list .kboard-calendar-navigate {
     display: flex !important;
@@ -352,6 +392,7 @@ a.kboard-write-btn {
     font-weight: 700 !important;
     color: var(--slate-800, #1e293b) !important;
 }
+
 #kboard-calendar-list .kboard-calendar-navigate a {
     color: var(--primary-600, #7c3aed) !important;
     text-decoration: none !important;
@@ -359,6 +400,7 @@ a.kboard-write-btn {
     line-height: 1 !important;
     transition: color 0.15s !important;
 }
+
 #kboard-calendar-list .kboard-calendar-navigate a:hover {
     color: var(--primary-800, #5b21b6) !important;
 }
@@ -368,10 +410,12 @@ a.kboard-write-btn {
         min-height: 50px !important;
         padding: 0.2rem !important;
     }
+
     #kboard-calendar-list .kboard-calendar-event a {
         font-size: 0.65rem !important;
     }
 }
+
 /* ── 교회일정 페이지네이션 수정 ─────────────────────────
    .kboard-pagination > ul.kboard-pagination-pages > li 구조
    ────────────────────────────────────────────────────── */
@@ -380,6 +424,7 @@ a.kboard-write-btn {
     justify-content: center !important;
     margin-top: 2rem !important;
 }
+
 .kboard-pagination-pages {
     display: flex !important;
     flex-direction: row !important;
@@ -390,11 +435,13 @@ a.kboard-write-btn {
     padding: 0 !important;
     align-items: center !important;
 }
+
 .kboard-pagination-pages li {
     margin: 0 !important;
     padding: 0 !important;
     list-style: none !important;
 }
+
 .kboard-pagination-pages li a,
 .kboard-pagination-pages li.active a {
     display: inline-flex !important;
@@ -411,11 +458,13 @@ a.kboard-write-btn {
     transition: all 0.2s !important;
     background: #fff !important;
 }
+
 .kboard-pagination-pages li a:hover {
     background: var(--primary-50, #f5f3ff) !important;
     border-color: var(--primary-300, #c4b5fd) !important;
     color: var(--primary-600, #7c3aed) !important;
 }
+
 .kboard-pagination-pages li.active a {
     background: var(--primary-600, #7c3aed) !important;
     border-color: var(--primary-600, #7c3aed) !important;
@@ -423,6 +472,7 @@ a.kboard-write-btn {
     font-weight: 700 !important;
     pointer-events: none !important;
 }
+
 .kboard-pagination-pages li.next-page a,
 .kboard-pagination-pages li.last-page a,
 .kboard-pagination-pages li.prev-page a,
@@ -452,6 +502,7 @@ a.kboard-write-btn {
     overflow: hidden !important;
     transition: transform 0.18s ease, box-shadow 0.18s ease !important;
 }
+
 #kboard-calendar-list .kboard-calendar-item:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1) !important;
@@ -468,6 +519,7 @@ a.kboard-write-btn {
     border-radius: 0 !important;
     background: none !important;
 }
+
 #kboard-calendar-list .kboard-calendar-link:hover {
     background: none !important;
     color: inherit !important;
@@ -478,6 +530,7 @@ a.kboard-write-btn {
     flex-shrink: 0 !important;
     min-width: auto !important;
 }
+
 #kboard-calendar-list .kboard-calendar-date {
     display: inline-flex !important;
     align-items: center !important;
@@ -486,7 +539,8 @@ a.kboard-write-btn {
     background: var(--primary-50, #f5f3ff) !important;
     color: var(--primary-700, #6d28d9) !important;
     border: 1px solid var(--primary-200, #ddd6fe) !important;
-    border-radius: 999px !important;    /* pill 형태 */
+    border-radius: 999px !important;
+    /* pill 형태 */
     font-size: 0.78rem !important;
     font-weight: 700 !important;
     letter-spacing: 0.03em !important;
@@ -505,6 +559,7 @@ a.kboard-write-btn {
     flex: 1 !important;
     min-width: 0 !important;
 }
+
 #kboard-calendar-list .kboard-calendar-title {
     font-size: 0.95rem !important;
     font-weight: 500 !important;
@@ -514,6 +569,7 @@ a.kboard-write-btn {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
 }
+
 #kboard-calendar-list .kboard-calendar-link:hover .kboard-calendar-title {
     color: var(--primary-600, #7c3aed) !important;
 }
@@ -532,6 +588,7 @@ a.kboard-write-btn {
         padding: 0.75rem 1rem !important;
         gap: 0.75rem !important;
     }
+
     #kboard-calendar-list .kboard-calendar-title {
         font-size: 0.875rem !important;
     }

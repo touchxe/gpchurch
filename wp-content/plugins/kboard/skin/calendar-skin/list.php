@@ -49,10 +49,10 @@
                             if ($event_end_date && $event_end_date !== $event_date) {
                                 $ts_e = strtotime($event_end_date);
                                 $display_date = $ts_e
-                                    ? date('Y.m.d', $ts_s) . ' ~ ' . date('Y.m.d', $ts_e)
-                                    : date('Y.m.d', $ts_s);
+                                    ? date('m.d', $ts_s) . ' ~ ' . date('m.d', $ts_e)
+                                    : date('m.d', $ts_s);
                             } else {
-                                $display_date = date('Y.m.d', $ts_s);
+                                $display_date = date('m.d', $ts_s);
                             }
                         } else {
                             $display_date = $event_date;
@@ -60,31 +60,33 @@
                     }
                     $summary = wp_strip_all_tags($content->content ?? '');
                     $summary = mb_substr($summary, 0, 60, 'UTF-8');
-                    if (mb_strlen(wp_strip_all_tags($content->content ?? ''), 'UTF-8') > 60) $summary .= '…';
-                ?>
-                <tr class="kboard-calendar-row">
-                    <td class="kboard-calendar-col-num"><?php echo $list_index ?></td>
-                    <td class="kboard-calendar-col-date">
-                        <span class="kboard-calendar-date"><?php echo esc_html($display_date ?: '--') ?></span>
-                    </td>
-                    <td class="kboard-calendar-col-content">
-                        <span class="kboard-calendar-title">
-                            <?php echo esc_html($content->title) ?>
-                            <?php if ($content->isNew()): ?><span class="kboard-calendar-new">NEW</span><?php endif ?>
-                        </span>
-                        <?php if ($summary): ?>
-                        <span class="kboard-calendar-summary"><?php echo esc_html($summary) ?></span>
-                        <?php endif ?>
-                    </td>
-                    <td class="kboard-calendar-col-more">
-                        <a href="<?php echo esc_url($url->getDocumentURLWithUID($content->uid)) ?>" class="kboard-calendar-more-btn">더보기</a>
-                    </td>
-                </tr>
+                    if (mb_strlen(wp_strip_all_tags($content->content ?? ''), 'UTF-8') > 60)
+                        $summary .= '…';
+                    ?>
+                    <tr class="kboard-calendar-row">
+                        <td class="kboard-calendar-col-num"><?php echo $list_index ?></td>
+                        <td class="kboard-calendar-col-date">
+                            <span class="kboard-calendar-date"><?php echo esc_html($display_date ?: '--') ?></span>
+                        </td>
+                        <td class="kboard-calendar-col-content">
+                            <span class="kboard-calendar-title">
+                                <?php echo esc_html($content->title) ?>
+                                <?php if ($content->isNew()): ?><span class="kboard-calendar-new">NEW</span><?php endif ?>
+                            </span>
+                            <?php if ($summary): ?>
+                                <span class="kboard-calendar-summary"><?php echo esc_html($summary) ?></span>
+                            <?php endif ?>
+                        </td>
+                        <td class="kboard-calendar-col-more">
+                            <a href="<?php echo esc_url($url->getDocumentURLWithUID($content->uid)) ?>"
+                                class="kboard-calendar-more-btn">더보기</a>
+                        </td>
+                    </tr>
                 <?php endwhile; ?>
                 <?php if ($list_index == 0): ?>
-                <tr>
-                    <td colspan="4" class="kboard-calendar-empty">등록된 일정이 없습니다.</td>
-                </tr>
+                    <tr>
+                        <td colspan="4" class="kboard-calendar-empty">등록된 일정이 없습니다.</td>
+                    </tr>
                 <?php endif; ?>
             </tbody>
         </table>
