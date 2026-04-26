@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     safeRun(initScrollIndicator, 'Scroll Indicator');
     safeRun(initScrollToTop, 'Scroll To Top');
     safeRun(initFooterReveal, 'Footer Reveal');
+    safeRun(initDeptCardReveal, 'Dept Card Reveal');
 });
 
 // Helper wrapper to prevent one error from stopping everything
@@ -677,71 +678,87 @@ function initMiniCalendar() {
 }
 
 /**
- * Schedule Ticker: 2개 높이로 클리핑, 3개 이상이면 위로 슬라이드
+ * Schedule Ticker: 2개 높이로 클리핑, 3개 이상이면 무한 위로 슬라이드
+ * 원본 아이템을 복제해 이어붙이는 방식으로 끊김 없는 무한 루프 구현
  * listEl: <ul class="schedule-list"> 엘리먼트
  */
 function _initScheduleTicker(listEl) {
     if (!listEl) return;
 
-    const items = Array.from(listEl.querySelectorAll('.schedule-item'));
-    if (items.length <= 2) return;
+    const origItems = Array.from(listEl.querySelectorAll('.schedule-item'));
+    if (origItems.length <= 2) return;
 
-    // --- 구조 구성 ---
-    // 1) 클리핑 wrapper div 생성 → listEl의 자리에 삽입
+    // 1) 원본 아이템 복제해 뒤에 이어붙여 무한 루프 구성
+    origItems.forEach(item => {
+        listEl.appendChild(item.cloneNode(true));
+    });
+
+    // 2) 클리퍼 래퍼 생성 및 삽입
     const clipper = document.createElement('div');
     clipper.className = 'schedule-ticker-clip';
-    clipper.style.cssText = [
-        'overflow: hidden',
-        'position: relative',
-        'width: 100%',
-    ].join(';');
-
-    // 2) listEl을 clipper 안으로 이동
     listEl.parentNode.insertBefore(clipper, listEl);
     clipper.appendChild(listEl);
 
-    // 3) listEl 자체 스타일 초기화 (transform 대상은 listEl)
+    // 3) listEl 스타일 초기화
     listEl.style.cssText += ';transition:none;transform:translateY(0);margin:0;padding:0;';
 
-    // --- 높이 측정은 렌더 후 ---
+    // 4) 렌더 후 높이 측정 및 애니메이션 시작
     requestAnimationFrame(() => {
-        const gap = parseInt(getComputedStyle(listEl).gap) || 8;
-        const firstItem = items[0];
-        const itemH = firstItem.getBoundingClientRect().height || 52;
-        const visibleH = itemH * 2 + gap;
+        // 아이템 높이: getBoundingClientRect 로 실측 (소수점 포함)
+        const firstItem = origItems[0];
+        const itemH = firstItem.getBoundingClientRect().height;
 
-        // 클리퍼 높이 고정
+        // gap: row-gap 우선, 없으면 gap, 기본 0
+        const cs = getComputedStyle(listEl);
+        const gap = parseFloat(cs.rowGap || cs.gap) || 0;
+
+        const step = itemH + gap;          // 한 칸 이동 거리 (정밀)
+        const visibleH = step * 2 - gap;  // 2개 딱 맞게 보이는 클리퍼 높이
+
         clipper.style.height = visibleH + 'px';
 
-        let current = 0;
+        const totalOrig = origItems.length;  // 원본 개수
+        const fullH = step * totalOrig;       // 원본 전체 높이 (복제 시작점)
+
+        let currentY = 0;
+        let isAnimating = false;
         let timer = null;
+        let isPaused = false;
 
-        function slideTo(idx) {
-            const offset = idx * (itemH + gap);
+        function slideNext() {
+            if (isAnimating || isPaused) return;
+            isAnimating = true;
+
+            const nextY = currentY + step;
+
             listEl.style.transition = 'transform 0.55s cubic-bezier(0.4,0,0.2,1)';
-            listEl.style.transform = `translateY(-${offset}px)`;
-            current = idx;
+            listEl.style.transform = `translateY(-${nextY}px)`;
+
+            listEl.addEventListener('transitionend', function onEnd() {
+                listEl.removeEventListener('transitionend', onEnd);
+
+                currentY = nextY;
+
+                // 원본 전체를 다 돌았으면 복제 구간에서 원본 위치로 순간이동
+                if (currentY >= fullH) {
+                    currentY = currentY - fullH;
+                    listEl.style.transition = 'none';
+                    listEl.style.transform = `translateY(-${currentY}px)`;
+                    // 강제 리플로우
+                    listEl.getBoundingClientRect();
+                }
+
+                isAnimating = false;
+            }, { once: true });
         }
 
-        function next() {
-            const maxIdx = items.length - 2;
-            if (current >= maxIdx) {
-                // 처음으로 순간이동 후 애니메이션 재개
-                listEl.style.transition = 'none';
-                listEl.style.transform = 'translateY(0)';
-                current = 0;
-                // 강제 리플로우 → 다음 프레임에 애니메이션 시작
-                listEl.getBoundingClientRect();
-            } else {
-                slideTo(current + 1);
-            }
-        }
+        timer = setInterval(slideNext, 3000);
 
-        timer = setInterval(next, 3000);
-
-        clipper.addEventListener('mouseenter', () => clearInterval(timer));
+        clipper.addEventListener('mouseenter', () => {
+            isPaused = true;
+        });
         clipper.addEventListener('mouseleave', () => {
-            timer = setInterval(next, 3000);
+            isPaused = false;
         });
     });
 }
@@ -971,4 +988,34 @@ function initFooterReveal() {
     );
 
     observer.observe(footer);
+}
+
+/**
+ * Dept Card 3D Reveal
+ * .dept-profile-card 가 뷰포트에 들어오면 dept-card-visible 추가 → 3D 페이드인
+ */
+function initDeptCardReveal() {
+    const cards = document.querySelectorAll('.dept-profile-card');
+    if (!cards.length) return;
+
+    // CSS prefers-reduced-motion 존중: 움직임 감소 모드면 즉시 보이기
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        cards.forEach(card => card.classList.add('dept-card-visible'));
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // 섹션 안에서의 순서로 딜레이 부여 (같은 화면에 여러 개 없으므로 0ms)
+                entry.target.classList.add('dept-card-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -150px 0px',
+    });
+
+    cards.forEach(card => observer.observe(card));
 }

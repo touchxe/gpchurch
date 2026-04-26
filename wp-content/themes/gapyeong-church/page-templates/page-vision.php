@@ -51,43 +51,43 @@ get_header();
             </div>
 
             <div class="vision-section-header">
-                <h3 class="vision-section-title">4대 공동체 비전</h3>
+                <h2 class="vision-section-title">4대 공동체 비전</h2>
                 <p class="community-desc" style="margin-top: 10px;">가평교회는 다음의 네 가지 공동체를 지향합니다.</p>
             </div>
 
             <div class="communities-grid">
                 <div class="community-card">
                     <div class="community-icon"><i data-lucide="book-open"></i></div>
-                    <h4 class="community-title">말씀으로 세우는 공동체</h4>
+                    <h3 class="community-title">말씀으로 세우는 공동체</h3>
                     <p class="community-desc">말씀(통독/성경연구)을 생활화하고<br>확신의 삶을 위해 노력합니다.</p>
                 </div>
                 <div class="community-card">
                     <div class="community-icon"><i data-lucide="heart-handshake"></i></div>
-                    <h4 class="community-title">교제공동체</h4>
+                    <h3 class="community-title">교제공동체</h3>
                     <p class="community-desc">가정과 사회를 변화시키며<br>마음과 마음을 이어주는 소그룹 회복에 집중합니다.</p>
                 </div>
                 <div class="community-card">
                     <div class="community-icon"><i data-lucide="globe"></i></div>
-                    <h4 class="community-title">선교공동체</h4>
+                    <h3 class="community-title">선교공동체</h3>
                     <p class="community-desc">주님의 선교 명령에 순종하며<br>유익한 훈련들로 생활화에 집중합니다.</p>
                 </div>
                 <div class="community-card">
                     <div class="community-icon"><i data-lucide="graduation-cap"></i></div>
-                    <h4 class="community-title">비전공동체</h4>
+                    <h3 class="community-title">비전공동체</h3>
                     <p class="community-desc">미래의 지도자가 될<br>젊은이와 어린이 선교에 적극 집중합니다.</p>
                 </div>
             </div>
 
             <div class="vision-section-header">
-                <h3 class="vision-section-title">5대 중점 목표</h3>
+                <h2 class="vision-section-title">5대 중점 목표</h2>
             </div>
 
             <div class="goals-grid">
-                <div class="goal-card"><div class="goal-header"><span class="goal-num">01</span><h4 class="goal-title">예배</h4></div><div class="goal-body"><p class="goal-desc">찬양과 예배로 하나님 앞에 서도록 인도합니다.</p></div></div>
-                <div class="goal-card"><div class="goal-header"><span class="goal-num">02</span><h4 class="goal-title">소그룹</h4></div><div class="goal-body"><p class="goal-desc">소그룹 모임에 참여하여 삶과 신앙을 나눕니다.</p></div></div>
-                <div class="goal-card"><div class="goal-header"><span class="goal-num">03</span><h4 class="goal-title">봉사</h4></div><div class="goal-body"><p class="goal-desc">성령의 은사를 발견하고 개발하여 봉사하는 기회를 제공합니다.</p></div></div>
-                <div class="goal-card"><div class="goal-header"><span class="goal-num">04</span><h4 class="goal-title">전도</h4></div><div class="goal-body"><p class="goal-desc">지역사회에 선한 영향력을 끼쳐 새로운 영혼을 인도합니다.</p></div></div>
-                <div class="goal-card"><div class="goal-header"><span class="goal-num">05</span><h4 class="goal-title">양육</h4></div><div class="goal-body"><p class="goal-desc">다음 세대를 양육하고 다양한 방법으로 복음 일꾼 양성을 지원합니다.</p></div></div>
+                <div class="goal-card"><div class="goal-header"><span class="goal-num">01</span><h3 class="goal-title">예배</h3></div><div class="goal-body"><p class="goal-desc">찬양과 예배로 하나님 앞에 서도록 인도합니다.</p></div></div>
+                <div class="goal-card"><div class="goal-header"><span class="goal-num">02</span><h3 class="goal-title">소그룹</h3></div><div class="goal-body"><p class="goal-desc">소그룹 모임에 참여하여 삶과 신앙을 나눕니다.</p></div></div>
+                <div class="goal-card"><div class="goal-header"><span class="goal-num">03</span><h3 class="goal-title">봉사</h3></div><div class="goal-body"><p class="goal-desc">성령의 은사를 발견하고 개발하여 봉사하는 기회를 제공합니다.</p></div></div>
+                <div class="goal-card"><div class="goal-header"><span class="goal-num">04</span><h3 class="goal-title">전도</h3></div><div class="goal-body"><p class="goal-desc">지역사회에 선한 영향력을 끼쳐 새로운 영혼을 인도합니다.</p></div></div>
+                <div class="goal-card"><div class="goal-header"><span class="goal-num">05</span><h3 class="goal-title">양육</h3></div><div class="goal-body"><p class="goal-desc">다음 세대를 양육하고 다양한 방법으로 복음 일꾼 양성을 지원합니다.</p></div></div>
             </div>
 
         </div>

@@ -104,13 +104,15 @@
         <form id="kboard-search-form-<?php echo $board->id ?>" method="get"
             action="<?php echo esc_url($url->toString()) ?>">
             <?php echo $url->set('pageid', '1')->set('target', '')->set('keyword', '')->set('mod', 'list')->toInput() ?>
-            <select name="target">
+            <label for="kboard-search-target-<?php echo $board->id ?>" class="screen-reader-text"><?php echo __('Search target', 'kboard') ?></label>
+            <select id="kboard-search-target-<?php echo $board->id ?>" name="target" aria-label="<?php echo esc_attr(__('Search target', 'kboard')) ?>">
                 <option value=""><?php echo __('All', 'kboard') ?></option>
                 <option value="title" <?php if (kboard_target() == 'title'): ?>selected<?php endif ?>>
                     <?php echo __('Title', 'kboard') ?>
                 </option>
             </select>
-            <input type="text" name="keyword" value="<?php echo esc_attr(kboard_keyword()) ?>">
+            <label for="kboard-search-keyword-<?php echo $board->id ?>" class="screen-reader-text"><?php echo __('Keyword', 'kboard') ?></label>
+            <input id="kboard-search-keyword-<?php echo $board->id ?>" type="text" name="keyword" value="<?php echo esc_attr(kboard_keyword()) ?>" aria-label="<?php echo esc_attr(__('Search keyword', 'kboard')) ?>">
             <button type="submit" class="kboard-thumbnail-button-small"><?php echo __('Search', 'kboard') ?></button>
         </form>
     </div>

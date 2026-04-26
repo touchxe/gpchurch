@@ -37,12 +37,12 @@
     <header class="header">
         <div class="header-container">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="logo">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/logo.png" alt="가평교회 로고"
-                    class="logo-img">
+                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/logo.png" alt=""
+                    class="logo-img" aria-hidden="true">
                 <span class="logo-text">가평교회</span>
             </a>
 
-            <nav class="main-nav">
+            <nav class="main-nav" aria-label="주요 메뉴">
                 <?php
                 if (has_nav_menu('main-menu')) {
                     wp_nav_menu(array(
@@ -131,14 +131,14 @@
         <div class="mobile-menu">
             <div class="mobile-menu-header">
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="mobile-logo">
-                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/logo.png" alt="가평교회" class="mobile-logo-img">
+                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/logo.png" alt="" class="mobile-logo-img" aria-hidden="true">
                     <span>가평교회</span>
                 </a>
                 <button class="mobile-menu-close" aria-label="메뉴 닫기">
                     <i data-lucide="x"></i>
                 </button>
             </div>
-            <nav class="mobile-nav">
+            <nav class="mobile-nav" aria-label="모바일 메뉴">
                 <?php
                 if (has_nav_menu('main-menu')) {
                     wp_nav_menu(array(
