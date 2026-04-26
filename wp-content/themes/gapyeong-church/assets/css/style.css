@@ -2341,7 +2341,7 @@ img {
     background: linear-gradient(135deg, #3b82f6, #8b5cf6);
     color: white;
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .footer-social i {
@@ -2433,7 +2433,7 @@ img {
     transition: transform 0.25s ease;
 }
 
-.family-site-list.open ~ .family-site-btn .family-chevron,
+.family-site-list.open~.family-site-btn .family-chevron,
 .family-site-btn[aria-expanded="true"] .family-chevron {
     transform: rotate(180deg);
 }
@@ -2447,7 +2447,7 @@ img {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
     overflow: hidden;
     list-style: none;
     padding: 6px 0;
@@ -2461,8 +2461,15 @@ img {
 }
 
 @keyframes familyFadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .family-site-list li a {
@@ -2834,7 +2841,7 @@ img {
 }
 
 .info-row-main {
-    grid-template-columns: 1fr 1fr 40%;
+    grid-template-columns: 30% 35% 35%;
     gap: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
@@ -3261,7 +3268,8 @@ img {
     list-style: none;
     padding: 0;
     margin: 0;
-    gap: 0; /* JS에서 getComputedStyle로 읽음 */
+    gap: 0;
+    /* JS에서 getComputedStyle로 읽음 */
     display: flex;
     flex-direction: column;
 }
@@ -3281,7 +3289,8 @@ img {
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     cursor: pointer;
     transition: var(--transition);
-    flex-shrink: 0; /* 슬라이더 안에서 높이 유지 */
+    flex-shrink: 0;
+    /* 슬라이더 안에서 높이 유지 */
 }
 
 .schedule-item:last-child {
