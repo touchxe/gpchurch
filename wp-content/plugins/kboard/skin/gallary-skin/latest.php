@@ -17,7 +17,9 @@
 							<?php endif ?>
 						</div>
 						<div class="featured-content">
+							<?php if ($content->category1): ?>
 							<div class="featured-category"><?php echo $content->category1 ?></div>
+							<?php endif ?>
 							<h2 class="featured-title"><?php echo $content->title ?></h2>
 							<div class="featured-summary">
 								<?php echo mb_strimwidth(strip_tags($content->content), 0, 100, '...', 'utf-8') ?>

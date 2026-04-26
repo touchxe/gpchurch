@@ -666,7 +666,7 @@ $theme_uri = get_template_directory_uri();
                     <i data-lucide="map-pin"></i>
                     <div class="contact-info">
                         <span class="contact-label">교회주소</span>
-                        <span class="contact-address">경기도 가평군 가평읍 석봉로 153번길 2</span>
+                        <span class="contact-address">가평군 가평읍 석봉로 153번길 2</span>
                         <a href="https://maps.google.com/?q=경기도+가평군+가평읍+석봉로+153번길+2" target="_blank" class="map-link">
                             <i data-lucide="external-link"></i> 지도보기
                         </a>

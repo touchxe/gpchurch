@@ -604,7 +604,7 @@ function initMiniCalendar() {
         }
 
         let html = '';
-        scheduleData.slice(0, 4).forEach(item => {
+        scheduleData.forEach(item => {
             // REST API url 필드 우선, 없으면 JS에서 직접 생성
             const docUrl = item.url || buildDocUrl(item.uid);
             const linkStart = docUrl
@@ -620,6 +620,11 @@ function initMiniCalendar() {
             </li>`;
         });
         scheduleList.innerHTML = html;
+
+        // 2개 초과 시 슬라이딩 ticker 적용
+        if (scheduleData.length > 2) {
+            _initScheduleTicker(scheduleList);
+        }
     }
 
     /**
@@ -668,6 +673,61 @@ function initMiniCalendar() {
             updateCalendar(currentDate);
         });
     }
+}
+
+/**
+ * Schedule Ticker: 2개 높이로 클리핑, 3개 이상이면 위로 슬라이드
+ */
+function _initScheduleTicker(listEl) {
+    if (!listEl) return;
+
+    const items = Array.from(listEl.querySelectorAll('.schedule-item'));
+    if (items.length <= 2) return;
+
+    // 아이템 하나의 높이 측정 (첫 번째 기준)
+    const itemH = items[0].getBoundingClientRect().height || 48;
+    const gap = 4; // schedule-list gap (CSS에서 gap 설정 시 맞춰야 함)
+    const visibleH = itemH * 2 + gap;
+
+    // 컨테이너 클리핑
+    listEl.style.height = visibleH + 'px';
+    listEl.style.overflow = 'hidden';
+    listEl.style.position = 'relative';
+
+    let current = 0;
+    let timer = null;
+
+    function slideTo(idx) {
+        const offset = idx * (itemH + gap);
+        listEl.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+        listEl.style.transform = `translateY(-${offset}px)`;
+        current = idx;
+    }
+
+    function next() {
+        // 마지막 슬라이드 위치: 마지막 아이템이 2번째 줄에 오는 위치
+        const maxIdx = items.length - 2;
+        const nextIdx = current >= maxIdx ? 0 : current + 1;
+        if (nextIdx === 0) {
+            // 처음으로 돌아갈 때: transition 제거 후 즉시 복귀, 다시 animate
+            listEl.style.transition = 'none';
+            listEl.style.transform = 'translateY(0)';
+            current = 0;
+            // 강제 리플로우
+            listEl.getBoundingClientRect();
+        } else {
+            slideTo(nextIdx);
+        }
+    }
+
+    // 3초 간격으로 슬라이드
+    timer = setInterval(next, 3000);
+
+    // 호버 시 일시정지
+    listEl.addEventListener('mouseenter', () => clearInterval(timer));
+    listEl.addEventListener('mouseleave', () => {
+        timer = setInterval(next, 3000);
+    });
 }
 
 /**
