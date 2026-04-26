@@ -650,24 +650,24 @@ $theme_uri = get_template_directory_uri();
                     <i data-lucide="user"></i>
                     <div class="contact-info">
                         <span class="contact-label">담임목사</span>
-                        <span class="contact-name">홍길동 목사</span>
-                        <a href="tel:010-1234-5678" class="contact-phone">010-1234-5678</a>
+                        <span class="contact-name">위수민 목사</span>
+                        <a href="tel:010-5730-3630" class="contact-phone">010-5730-3630</a>
                     </div>
                 </div>
                 <div class="contact-item">
                     <i data-lucide="shield-check"></i>
                     <div class="contact-info">
                         <span class="contact-label">수석장로</span>
-                        <span class="contact-name">김성실 장로</span>
-                        <a href="tel:010-9876-5432" class="contact-phone">010-9876-5432</a>
+                        <span class="contact-name">김재신 장로</span>
+                        <a href="tel:010-5310-0062" class="contact-phone">010-5310-0062</a>
                     </div>
                 </div>
                 <div class="contact-item">
                     <i data-lucide="map-pin"></i>
                     <div class="contact-info">
                         <span class="contact-label">교회주소</span>
-                        <span class="contact-address">경기도 가평군 가평읍 (상세주소)</span>
-                        <a href="https://maps.google.com/?q=가평교회" target="_blank" class="map-link">
+                        <span class="contact-address">경기도 가평군 가평읍 석봉로 153번길 2</span>
+                        <a href="https://maps.google.com/?q=경기도+가평군+가평읍+석봉로+153번길+2" target="_blank" class="map-link">
                             <i data-lucide="external-link"></i> 지도보기
                         </a>
                     </div>
