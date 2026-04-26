@@ -6168,11 +6168,12 @@ img {
 }
 
 .admin-role {
-    font-size: 1rem;
+    font-size: 0.75rem;
     color: var(--primary);
-    padding: 4px 12px;
+    padding: 3px 10px;
     background: rgba(59, 130, 246, 0.1);
     border-radius: 0.5rem;
+    margin-left: 8px;
 }
 
 /* ========================================

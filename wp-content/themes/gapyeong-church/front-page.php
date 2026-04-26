@@ -9,6 +9,8 @@ get_header();
 $theme_uri = get_template_directory_uri();
 ?>
 
+<main id="main-content">
+
 <!-- Global Parallax Background Orbs -->
 <div class="global-orbs">
     <div class="orb orb-1"></div>
@@ -594,17 +596,17 @@ $theme_uri = get_template_directory_uri();
                             <li class="resource-item">
                                 <i data-lucide="file-text"></i>
                                 <span class="resource-name">2026년 교회 사업계획서</span>
-                                <a href="#" class="resource-download"><i data-lucide="download"></i></a>
+                                <a href="#" class="resource-download" aria-label="2026년 교회 사업계획서 다운로드"><i data-lucide="download"></i></a>
                             </li>
                             <li class="resource-item">
                                 <i data-lucide="file-spreadsheet"></i>
                                 <span class="resource-name">안식일학교 교과 자료</span>
-                                <a href="#" class="resource-download"><i data-lucide="download"></i></a>
+                                <a href="#" class="resource-download" aria-label="안식일학교 교과 자료 다운로드"><i data-lucide="download"></i></a>
                             </li>
                             <li class="resource-item">
                                 <i data-lucide="file-image"></i>
                                 <span class="resource-name">교회 행사 포스터</span>
-                                <a href="#" class="resource-download"><i data-lucide="download"></i></a>
+                                <a href="#" class="resource-download" aria-label="교회 행사 포스터 다운로드"><i data-lucide="download"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -620,9 +622,9 @@ $theme_uri = get_template_directory_uri();
                         <!-- Mini Calendar -->
                         <div class="mini-calendar">
                             <div class="calendar-header">
-                                <button class="cal-nav cal-prev"><i data-lucide="chevron-left"></i></button>
+                                <button class="cal-nav cal-prev" aria-label="이전 달"><i data-lucide="chevron-left"></i></button>
                                 <span class="cal-month">로딩 중...</span>
-                                <button class="cal-nav cal-next"><i data-lucide="chevron-right"></i></button>
+                                <button class="cal-nav cal-next" aria-label="다음 달"><i data-lucide="chevron-right"></i></button>
                             </div>
                             <div class="calendar-grid">
                                 <div class="cal-weekdays">
@@ -999,5 +1001,6 @@ $theme_uri = get_template_directory_uri();
     </div>
 </section>
 
+</main><!-- /#main-content -->
 
 <?php get_footer(); ?>
