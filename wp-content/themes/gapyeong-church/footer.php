@@ -96,7 +96,7 @@
                     <li><a href="/intro/location">오시는 길</a></li>
                     <li><a href="/intro/greeting">담임목사 인사말</a></li>
                     <li><a href="/community/prayer">기도 요청</a></li>
-                    <li><a href="https://gpchurch.mycafe24.com/로그인-화면/">로그인</a></li>
+                    <li><a href="<?php echo esc_url( home_url( '/로그인-화면/' ) ); ?>">로그인</a></li>
                 </ul>
             </div>
         </div>

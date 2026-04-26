@@ -312,19 +312,22 @@ body #kboard-document .kboard-document-wrap .kboard-title::after {
 body #kboard-document .kboard-document-wrap .kboard-title h1 {
     font-size: 22px !important; font-weight: 700 !important;
     color: #1e293b !important; line-height: 1.45 !important;
-    margin: 0 0 18px !important; padding: 0 !important;
+    margin: 0 !important; padding: 0 !important;
     letter-spacing: -0.3px !important; position: relative !important;
     z-index: 1 !important; text-align: left !important;
     text-shadow: none !important; background: none !important; border: none !important;
 }
 
 body #kboard-document .kboard-document-wrap .kboard-detail {
-    display: flex !important; flex-wrap: nowrap !important;
+    display: flex !important; flex-wrap: wrap !important;
     align-items: center !important;
-    justify-content: space-between !important;
-    padding: 0 !important; margin: 0 !important;
-    background: transparent !important; border: none !important;
-    float: none !important; width: auto !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    padding: 14px 36px 16px !important; margin: 0 !important;
+    background: linear-gradient(135deg, #eef2ff 0%, #ede9fe 50%, #dbeafe 100%) !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(99,102,241,0.15) !important;
+    float: none !important; width: auto !important; box-sizing: border-box !important;
     position: relative !important; z-index: 1 !important; font-size: 13px !important;
 }
 

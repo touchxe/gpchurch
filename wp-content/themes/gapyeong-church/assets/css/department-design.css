@@ -8,7 +8,210 @@
     padding: 3rem 0 4rem;
 }
 
-/* 리더 카드 */
+/* ==========================================
+   부서 프로필 카드 (좌우 분할 레이아웃)
+   - 좌: 아이콘 / 부서명 / 담당자
+   - 우: 사명 / 활동 계획
+   ========================================== */
+.dept-profile-card {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 0;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid #e2e8f0;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+    transition: box-shadow 0.3s ease;
+}
+
+.dept-profile-card:hover {
+    box-shadow: 0 16px 48px rgba(59, 130, 246, 0.12);
+}
+
+/* ── 왼쪽 패널 ── */
+.dept-profile-left {
+    background: linear-gradient(160deg, #f8faff 0%, #eef2ff 100%);
+    border-right: 1px solid #e2e8f0;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0;
+}
+
+.dept-profile-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-radius: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+.dept-profile-icon i {
+    width: 32px;
+    height: 32px;
+}
+
+.dept-profile-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 0.3rem;
+    letter-spacing: -0.02em;
+}
+
+.dept-profile-sub {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    font-weight: 500;
+    margin: 0;
+}
+
+.dept-profile-divider {
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 2px;
+    margin: 1.5rem 0;
+}
+
+.dept-profile-members {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.dept-profile-member {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+}
+
+.dept-profile-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.dept-profile-member-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.dept-profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
+.dept-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 3px 10px;
+}
+
+/* ── 오른쪽 패널 ── */
+.dept-profile-right {
+    padding: 2.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+}
+
+.dept-right-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dept-right-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dept-right-label i {
+    width: 15px;
+    height: 15px;
+    color: #3b82f6;
+}
+
+.dept-mission-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.7;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(99, 102, 241, 0.04));
+    border-left: 4px solid #3b82f6;
+    border-radius: 0 0.75rem 0.75rem 0;
+    margin: 0;
+}
+
+.dept-plan-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.dept-plan-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+    border: 1px solid #f1f5f9;
+}
+
+.dept-plan-keyword {
+    flex-shrink: 0;
+    font-weight: 700;
+    color: #3b82f6;
+    font-size: 0.82rem;
+    background: rgba(59, 130, 246, 0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* ==========================================
+   구 스타일 (다른 부서 페이지 호환용 유지)
+   ========================================== */
 .dept-leader-card {
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(20px);
@@ -62,7 +265,6 @@
     color: var(--color-text, #1e293b);
 }
 
-/* 부서 멤버 박스 */
 .dept-members-box {
     background: rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(20px);
@@ -72,7 +274,6 @@
     padding: 2.5rem 2rem;
 }
 
-/* 부서 섹션 타이틀 */
 .dept-section-title {
     font-size: 1.5rem;
     font-weight: 700;
@@ -85,9 +286,30 @@
 /* ==========================================
    반응형 디자인
    ========================================== */
+@media (max-width: 900px) {
+    .dept-profile-card {
+        grid-template-columns: 1fr;
+    }
+
+    .dept-profile-left {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 2rem 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .dept-page-section {
         padding: 2rem 0 3rem;
+    }
+
+    .dept-profile-right {
+        padding: 1.75rem 1.5rem;
+        gap: 1.75rem;
+    }
+
+    .dept-mission-text {
+        font-size: 1rem;
     }
 
     .dept-leader-card {
