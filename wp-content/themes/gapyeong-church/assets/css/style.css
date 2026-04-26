@@ -2261,10 +2261,20 @@ img {
 
 /* =========================================Footer========================================= */
 .footer {
-    background: #f4f6f8;
+    background: #ffffff;
     color: #2d3748;
     padding: 64px 0 0;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #e8ecf0;
+    /* Parallax reveal 초기 상태 */
+    transform: translateY(60px);
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+    will-change: transform, opacity;
+}
+
+.footer.footer-revealed {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .footer-grid {
@@ -2377,8 +2387,8 @@ img {
     align-items: center;
     justify-content: space-between;
     padding: 20px 0;
-    border-top: 1px solid #e2e8f0;
-    background: #edf0f4;
+    border-top: 1px solid #e8ecf0;
+    background: #ffffff;
     margin: 0 -999px;
     padding-left: 999px;
     padding-right: 999px;
@@ -5633,18 +5643,7 @@ img {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
 }
 
-.mission-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-}
 
-.mission-card:hover::before {}
 
 .mission-card:hover {
     transform: translateY(-6px);

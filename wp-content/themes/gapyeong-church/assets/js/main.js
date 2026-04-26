@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     safeRun(initScheduleModal, 'Schedule Modal');
     safeRun(initScrollIndicator, 'Scroll Indicator');
     safeRun(initScrollToTop, 'Scroll To Top');
+    safeRun(initFooterReveal, 'Footer Reveal');
 });
 
 // Helper wrapper to prevent one error from stopping everything
@@ -921,4 +922,38 @@ async function checkLiveStatus() {
             alert('현재는 실시간 방송 중이 아닙니다.\n[정규 방송 시간]\n금요일: 오후 7시 30분\n안식일: 오전 9시 30분 / 11시');
         };
     }
+}
+
+/**
+ * Footer Parallax Reveal
+ * 스크롤 시 푸터가 아래에서 위로 올라오며 나타나는 효과
+ */
+function initFooterReveal() {
+    const footer = document.querySelector('.footer');
+    if (!footer) return;
+
+    if (!('IntersectionObserver' in window)) {
+        footer.classList.add('footer-revealed');
+        return;
+    }
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    requestAnimationFrame(() => {
+                        footer.classList.add('footer-revealed');
+                    });
+                    observer.unobserve(footer);
+                }
+            });
+        },
+        {
+            root: null,
+            threshold: 0.05,
+            rootMargin: '0px 0px -20px 0px',
+        }
+    );
+
+    observer.observe(footer);
 }
