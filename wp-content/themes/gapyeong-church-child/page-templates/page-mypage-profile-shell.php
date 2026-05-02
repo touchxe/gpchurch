@@ -30,6 +30,16 @@ if ( 'edit' === $a ) {
             <?php endif; ?>
         </div>
 
+        <?php
+        if ( is_user_logged_in() && 'edit' !== $a && 'getusername' !== $a ) :
+            $gpc_user = wp_get_current_user();
+            ?>
+            <div class="gpc-profile-user-summary" aria-label="<?php esc_attr_e( '로그인한 계정', 'gapyeong-church-child' ); ?>">
+                <p class="gpc-profile-user-summary__name"><?php echo esc_html( $gpc_user->display_name ); ?></p>
+                <p class="gpc-profile-user-summary__email"><?php echo esc_html( $gpc_user->user_email ); ?></p>
+            </div>
+        <?php endif; ?>
+
         <div class="gpc-login-form-wrap gpc-profile-form-wrap gpc-register-form-wrap">
             <?php
             if ( have_posts() ) :

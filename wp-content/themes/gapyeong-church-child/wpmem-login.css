@@ -320,6 +320,30 @@ main.gpc-login-page {
     text-align: center;
 }
 
+/* 프로필 허브: 로그인 계정 요약 (버튼 위) */
+.gpc-login-card .gpc-profile-user-summary {
+    text-align: center;
+    margin: 0 0 1.25rem;
+    padding: 0 0.5rem;
+}
+
+.gpc-login-card .gpc-profile-user-summary__name {
+    margin: 0 0 0.35rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--text-color, #1a1a1a);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.gpc-login-card .gpc-profile-user-summary__email {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-muted, #6b7280);
+    line-height: 1.4;
+    word-break: break-all;
+}
+
 /* ── 프로필 허브 메뉴 (WP-Members member 링크) ── */
 .gpc-login-form-wrap .gpc-profile-menu {
     list-style: none;

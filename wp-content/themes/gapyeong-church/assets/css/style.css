@@ -6990,6 +6990,17 @@ img {
     animation: none;
 }
 
+.header-actions .btn-icon.on-air {
+    background: rgba(239, 68, 68, 0.18);
+    color: #ef4444;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+
+.header-actions .btn-icon.on-air:hover {
+    background: rgba(239, 68, 68, 0.28);
+    color: #dc2626;
+}
+
 /* =========================================
    2026-02-14 Update: Features (Safe Mode)
    ========================================= */
