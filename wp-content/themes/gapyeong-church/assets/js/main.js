@@ -916,43 +916,79 @@ function initScrollSpy() {
 
 
 /**
- * Live Button Logic (API Driven)
+ * 라이브 버튼: 정규 예배 시간(KST) 구간에는 ON AIR, 그 외 OFF AIR.
+ * OFF AIR 클릭 시 예배 시간 안내, ON AIR 클릭 시 유튜브 채널로 이동.
  */
-async function checkLiveStatus() {
-    const liveBtn = document.querySelector('.btn-live');
-    if (!liveBtn) return;
+const GAPYEONG_LIVE_YOUTUBE_URL = 'https://www.youtube.com/@제칠일안식일예수-z1w';
+const GAPYEONG_OFF_AIR_ALERT =
+    '현재는 실시간 방송 중이 아닙니다.\n[정규 방송 시간]\n금요일: 오후 7시 30분\n안식일: 오전 9시 30분 / 11시';
 
-    let isLive = false;
-    let liveUrl = 'https://www.youtube.com/@gapyeongsdachurch/streams';
+// 금요 저녁 예배(일몰·저녁 예배), 안식일(토) 오전 예배 구간. 종료는 예배 길이·친교를 고려한 여유 시간.
+const GAPYEONG_ON_AIR_WINDOWS_KST = [
+    { weekdays: new Set(['Fri']), startMinutes: 19 * 60 + 25, endMinutes: 21 * 60 },
+    { weekdays: new Set(['Sat']), startMinutes: 9 * 60 + 25, endMinutes: 12 * 60 },
+];
 
-    try {
-        const response = await fetch('/api/youtube_status.php');
-        const data = await response.json();
+function gapyeongGetSeoulClock(now = new Date()) {
+    const weekday = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Seoul',
+        weekday: 'short',
+    }).format(now);
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Seoul',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+    }).formatToParts(now);
+    const part = (type) => parseInt(parts.find((p) => p.type === type)?.value ?? '0', 10);
+    return { weekday, minutes: part('hour') * 60 + part('minute') };
+}
 
-        if (data && data.isLive) {
-            isLive = true;
-            if (data.data && data.data.videoId) {
-                liveUrl = `https://www.youtube.com/watch?v=${data.data.videoId}`;
+function gapyeongIsScheduleOnAir(now = new Date()) {
+    const { weekday, minutes } = gapyeongGetSeoulClock(now);
+    return GAPYEONG_ON_AIR_WINDOWS_KST.some(
+        (w) => w.weekdays.has(weekday) && minutes >= w.startMinutes && minutes < w.endMinutes
+    );
+}
+
+function checkLiveStatus() {
+    const els = document.querySelectorAll('[data-gapyeong-live-btn]');
+    if (!els.length) return;
+
+    function refreshLiveAirUi() {
+        const onAir = gapyeongIsScheduleOnAir();
+        els.forEach((el) => {
+            el.classList.toggle('on-air', onAir);
+            el.classList.toggle('off-air', !onAir);
+
+            if (el.classList.contains('btn-live')) {
+                el.innerHTML = onAir
+                    ? '<span class="live-dot"></span>ON AIR'
+                    : '<span class="live-dot"></span>OFF AIR';
             }
-        }
-    } catch (e) { }
 
-    if (isLive) {
-        liveBtn.classList.add('on-air');
-        liveBtn.classList.remove('off-air');
-        liveBtn.innerHTML = '🔴 LIVE';
-        liveBtn.onclick = (e) => {
-            e.preventDefault();
-            window.open(liveUrl, '_blank');
-        };
-    } else {
-        liveBtn.classList.remove('on-air');
-        liveBtn.classList.add('off-air');
-        liveBtn.innerHTML = '<span class="live-dot"></span>OFF AIR';
-        liveBtn.onclick = (e) => {
-            e.preventDefault();
-            alert('현재는 실시간 방송 중이 아닙니다.\n[정규 방송 시간]\n금요일: 오후 7시 30분\n안식일: 오전 9시 30분 / 11시');
-        };
+            const label = el.querySelector('[data-gapyeong-live-label]');
+            if (label) {
+                label.textContent = onAir ? 'ON AIR' : 'OFF AIR';
+            }
+
+            el.setAttribute('aria-label', onAir ? '유튜브 라이브 예배 (송출 중)' : '예배 방송 시간 안내');
+
+            el.onclick = (e) => {
+                e.preventDefault();
+                if (onAir) {
+                    window.open(GAPYEONG_LIVE_YOUTUBE_URL, '_blank', 'noopener,noreferrer');
+                } else {
+                    alert(GAPYEONG_OFF_AIR_ALERT);
+                }
+            };
+        });
+    }
+
+    refreshLiveAirUi();
+
+    if (!window._gapyeongLiveAirIntervalId) {
+        window._gapyeongLiveAirIntervalId = window.setInterval(refreshLiveAirUi, 60 * 1000);
     }
 }
 

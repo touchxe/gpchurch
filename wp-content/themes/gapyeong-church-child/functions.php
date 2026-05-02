@@ -216,7 +216,7 @@ function gpc_login_page_assets() {
         'gpc-login-css',
         get_stylesheet_directory_uri() . '/wpmem-login.css',
         array( 'gapyeong-child-style' ),
-        wp_get_theme()->get( 'Version' ) . '.login9'
+        wp_get_theme()->get( 'Version' ) . '.login10'
     );
 
     if ( gpc_is_mypage_profile_shell() && 'edit' === gpc_mypage_action() ) {

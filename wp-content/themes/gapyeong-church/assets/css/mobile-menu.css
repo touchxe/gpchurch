@@ -277,6 +277,14 @@
     color: #fff;
 }
 
+.mobile-shortcut-item.highlight.on-air {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.mobile-shortcut-item.highlight.on-air svg {
+    color: #fff;
+}
+
 /* --- Scroll Floating Widget: hide on mobile --- */
 @media (max-width: 1024px) {
     .scroll-floating-widget {
