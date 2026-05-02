@@ -34,7 +34,7 @@ add_action('after_setup_theme', 'gapyeong_setup');
 function gapyeong_enqueue_scripts()
 {
     $uri = get_template_directory_uri();
-    $version = '20260502-live-air-schedule-v1';
+    $version = '20260502-live-air-test-10m-v1';
 
     // === Fonts ===
     wp_enqueue_style(
