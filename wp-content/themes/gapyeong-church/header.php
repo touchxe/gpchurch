@@ -116,8 +116,8 @@
                 <a href="<?php echo esc_url( $gapyeong_header_auth_url ); ?>" class="btn-icon mobile-only" aria-label="<?php echo esc_attr( $gapyeong_header_auth_label ); ?>">
                     <i data-lucide="user"></i>
                 </a>
-                <a href="/live" class="btn-live off-air desktop-only"><span class="live-dot"></span>OFF AIR</a>
-                <a href="/live" class="btn-icon mobile-only" aria-label="라이브 예배">
+                <a href="#" class="btn-live off-air desktop-only" data-gapyeong-live-btn role="button"><span class="live-dot"></span>OFF AIR</a>
+                <a href="#" class="btn-icon mobile-only off-air" data-gapyeong-live-btn aria-label="예배 방송 시간 안내">
                     <i data-lucide="youtube"></i>
                 </a>
             </div>
@@ -219,9 +219,9 @@
                         <i data-lucide="heart"></i>
                         <span>기도요청</span>
                     </a>
-                    <a href="/live" class="mobile-shortcut-item highlight">
+                    <a href="#" class="mobile-shortcut-item highlight off-air" data-gapyeong-live-btn role="button">
                         <i data-lucide="radio"></i>
-                        <span>LIVE</span>
+                        <span data-gapyeong-live-label>OFF AIR</span>
                     </a>
                 </div>
             </div>
