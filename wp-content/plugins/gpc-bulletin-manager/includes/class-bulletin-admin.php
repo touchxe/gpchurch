@@ -212,6 +212,9 @@ class GPC_Bulletin_Admin {
             }
         }
 
+        // 저장 시점에도 인명/찬미/일몰시각 정규화 (수동 입력 방어)
+        $data = GPC_Bulletin_AI_Extractor::normalize_for_save( $data );
+
         if ( empty( $data['publish_date'] ) ) {
             wp_send_json_error( '발행 날짜는 필수입니다.' );
         }
