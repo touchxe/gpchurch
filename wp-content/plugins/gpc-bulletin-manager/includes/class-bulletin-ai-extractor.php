@@ -223,7 +223,6 @@ class GPC_Bulletin_AI_Extractor {
      * @return array  [ 'success' => bool, 'data' => array|null, 'error' => string ]
      */
     public static function extract_from_image( $image_path ) {
-
         $settings = self::get_settings();
 
         if ( empty( $settings['api_key'] ) ) {
@@ -442,11 +441,144 @@ class GPC_Bulletin_AI_Extractor {
             );
         }
 
+        // AI가 규칙을 어겼더라도 안전하게 정규화 (이름 공백/괄호 찬미/일몰시각)
+        $extracted = self::normalize_extracted_data( $extracted );
+
         return array(
             'success' => true,
             'data'    => $extracted,
             'error'   => '',
         );
+    }
+
+    /**
+     * AI 추출 결과 후처리 정규화
+     *
+     * 프롬프트 규칙을 AI가 어긴 경우에도 결정적인 정리를 강제합니다.
+     * - 인명 필드: 글자 사이 공백 제거
+     * - 찬미/송영 필드: 괄호 및 내부 공백 제거 → "?장"
+     * - 일몰시각: `*` 제거, pm/am → 오후/오전
+     *
+     * @param  array $data 추출된 데이터
+     * @return array       정규화된 데이터
+     */
+    private static function normalize_extracted_data( $data ) {
+        if ( ! is_array( $data ) ) {
+            return $data;
+        }
+
+        $name_fields = array(
+            'ss_host', 'ss_prayer', 'ss_welcome',
+            'ws_host', 'ws_invocation', 'ws_prayer',
+            'ws_offering_leader', 'ws_offering_benediction',
+            'ws_preacher', 'ws_benediction',
+        );
+        foreach ( $name_fields as $f ) {
+            if ( isset( $data[ $f ] ) ) {
+                $data[ $f ] = self::normalize_korean_name( $data[ $f ] );
+            }
+        }
+
+        $hymn_fields = array(
+            'ss_hymn', 'ws_doxology', 'ws_hymn',
+            'ws_offering_hymn', 'ws_closing_hymn',
+        );
+        foreach ( $hymn_fields as $f ) {
+            if ( isset( $data[ $f ] ) ) {
+                $data[ $f ] = self::normalize_hymn( $data[ $f ] );
+            }
+        }
+
+        if ( isset( $data['sunset_time'] ) ) {
+            $data['sunset_time'] = self::normalize_sunset_time( $data['sunset_time'] );
+        }
+
+        return $data;
+    }
+
+    /**
+     * 한글 인명 공백 제거
+     *
+     * "심 재 영" → "심재영"
+     * "심재영, 김 한 나" → "심재영, 김한나"
+     * 한글로만 구성되고 공백 제거 시 5자 이하인 경우에만 적용 (일반 텍스트 오인식 방지)
+     */
+    private static function normalize_korean_name( $value ) {
+        if ( ! is_string( $value ) ) {
+            return $value;
+        }
+        $value = trim( $value );
+        if ( '' === $value ) {
+            return '';
+        }
+
+        // 콤마/슬래시 등 구분자로 분리 후 각각 정규화
+        $parts = preg_split( '/\s*[,，、·•・\/]\s*/u', $value );
+        $out   = array();
+        foreach ( $parts as $part ) {
+            $part = trim( $part );
+            if ( '' === $part ) {
+                continue;
+            }
+            // 한글과 공백만 있는 경우, 공백 제거한 길이가 5자 이하면 이름으로 간주
+            if ( preg_match( '/^[가-힣\s]+$/u', $part ) ) {
+                $compact = preg_replace( '/\s+/u', '', $part );
+                if ( mb_strlen( $compact ) > 0 && mb_strlen( $compact ) <= 5 ) {
+                    $out[] = $compact;
+                    continue;
+                }
+            }
+            $out[] = $part;
+        }
+        return implode( ', ', $out );
+    }
+
+    /**
+     * 찬미/송영 장수 정규화
+     *
+     * "( 28장 )" → "28장",  "(2장)" → "2장",  "82장" → "82장"
+     */
+    private static function normalize_hymn( $value ) {
+        if ( ! is_string( $value ) ) {
+            return $value;
+        }
+        $value = trim( $value );
+        if ( '' === $value ) {
+            return '';
+        }
+        // 외곽 괄호 제거 (전각/반각 모두)
+        if ( preg_match( '/^[\(\（]\s*(.+?)\s*[\)\）]$/u', $value, $m ) ) {
+            $value = $m[1];
+        }
+        // 내부 공백 모두 제거
+        $value = preg_replace( '/\s+/u', '', $value );
+        return $value;
+    }
+
+    /**
+     * 일몰시각 정규화
+     *
+     * "*일몰pm7:35*" → "오후 7:35"
+     * "am6:20"       → "오전 6:20"
+     */
+    private static function normalize_sunset_time( $value ) {
+        if ( ! is_string( $value ) ) {
+            return $value;
+        }
+        $value = trim( $value );
+        if ( '' === $value ) {
+            return '';
+        }
+        // 별표 및 콜론 형태 별표 제거
+        $value = str_replace( array( '*', '＊' ), '', $value );
+        // "일몰" 라벨 제거
+        $value = preg_replace( '/일몰\s*/u', '', $value );
+        // pm/am 한글 변환 (대소문자 무관)
+        $value = preg_replace( '/\s*p\.?m\.?\s*/iu', '오후 ', $value );
+        $value = preg_replace( '/\s*a\.?m\.?\s*/iu', '오전 ', $value );
+        // 공백 정리
+        $value = preg_replace( '/\s+/u', ' ', $value );
+        return trim( $value );
     }
 
     /**
@@ -624,11 +756,36 @@ class GPC_Bulletin_AI_Extractor {
 규칙:
 1. 값이 없거나 읽을 수 없는 항목은 빈 문자열("")로 반환하세요.
 2. 날짜는 "YYYY-MM-DD" 형식으로 반환하세요.
-3. 찬미 장수는 "82장" 같은 형식 그대로 반환하세요.
-4. 교독문은 "856 어린이 (막10:13-16)" 같이 번호와 제목을 함께 반환하세요.
-5. 긴 텍스트(교회 소식 등)에서 줄바꿈이 필요할 때는 **절대로 실제 줄바꿈(Enter)을 사용하지 말고**, 반드시 이스케이프된 문자열 `\n` 기호를 그대로 입력하세요.
-6. 반드시 유효한 JSON만 반환하세요. 추가 설명이나 생각 과정 없이 JSON만 출력하세요.
-7. <think> 태그나 추론 과정을 출력하지 마세요. JSON만 반환하세요.
+
+3. **인명(사람 이름)은 글자 사이의 공백을 모두 제거하세요.**
+   - 예: "홍 길 동" → "홍길동", "심 재 영" → "심재영", "김 한 나" → "김한나"
+   - 적용 필드: ss_host, ss_prayer, ss_welcome, ws_host, ws_invocation, ws_prayer, ws_offering_leader, ws_offering_benediction, ws_preacher, ws_benediction
+   - 여러 명이 콤마로 구분된 경우(예: "홍길동, 김철수")는 콤마는 유지하고 각 이름 내부의 공백만 제거하세요.
+
+4. **찬미/송영 장수는 괄호와 내부 공백을 모두 제거하고 "?장" 형식으로 반환하세요.**
+   - 예: "( 28장 )" → "28장", "(2장)" → "2장", "( 84장 )" → "84장", "(215장)" → "215장"
+   - 적용 필드: ss_hymn, ws_doxology, ws_hymn, ws_offering_hymn, ws_closing_hymn
+
+5. **일몰시각(sunset_time)은 별표(`*`) 및 "일몰" 라벨을 제거하고, 영문 시간 표기를 한글로 변환하세요.**
+   - "pm" / "PM" → "오후",  "am" / "AM" → "오전"
+   - 예: "*일몰pm7:35*" → "오후 7:35"
+   - 예: "am6:20" → "오전 6:20"
+
+6. **안교 특창(ss_special_song)의 기준:**
+   - 주보에서 "다같이"라고 표시되어 있는 찬양/특별 순서만 ss_special_song에 넣으세요.
+   - 솔로, 중창, 특정인이 부르는 항목은 ss_special_song이 아닙니다.
+   - "다같이"가 적힌 항목이 없으면 빈 문자열("")을 반환하세요.
+
+7. **안교 특순(ss_special_order)의 기준:**
+   - 안식일학교 영역에서 점선(------ 또는 ‒‒‒‒‒‒)으로 둘러싸인 별도 안내 영역의 중앙에 단독으로 적힌 텍스트만 ss_special_order에 넣으세요.
+   - 일반 예배 순서표 행 안에 있는 항목은 ss_special_order가 아닙니다.
+   - 점선으로 둘러싸인 안내가 없으면 빈 문자열("")을 반환하세요.
+
+8. 교독문은 "856 어린이 (막10:13-16)" 같이 번호와 제목을 함께 반환하세요.
+
+9. 긴 텍스트(교회 소식 등)에서 줄바꿈이 필요할 때는 **절대로 실제 줄바꿈(Enter)을 사용하지 말고**, 반드시 이스케이프된 문자열 `\n` 기호를 그대로 입력하세요.
+10. 반드시 유효한 JSON만 반환하세요. 추가 설명이나 생각 과정 없이 JSON만 출력하세요.
+11. <think> 태그나 추론 과정을 출력하지 마세요. JSON만 반환하세요.
 
 ```json
 {
