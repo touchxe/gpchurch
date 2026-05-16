@@ -145,6 +145,7 @@ $kboard_id      = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
 <!-- 공지사항 발행 모달 -->
 <div id="gpc-publish-modal" class="gpc-modal" style="display:none"
      data-publish-date="<?php echo esc_attr( $item->publish_date ); ?>"
+     data-sabbath-type="<?php echo esc_attr( $item->sabbath_type ); ?>"
      data-sermon-title="<?php echo esc_attr( $item->ws_sermon_title ); ?>"
      data-preacher="<?php echo esc_attr( $item->ws_preacher ); ?>"
      data-bible-text="<?php echo esc_attr( $item->ws_bible_text ); ?>"
@@ -169,7 +170,12 @@ $kboard_id      = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
                 <input type="text" id="gpc-publish-title" class="gpc-input">
             </div>
             <div class="gpc-field-group" style="margin-top:12px">
-                <label for="gpc-publish-content">내용</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label for="gpc-publish-content" style="margin-bottom: 0;">내용</label>
+                    <button type="button" id="gpc-ai-reconstruct-btn" class="gpc-btn gpc-btn-secondary" style="padding: 4px 12px; font-size: 12px; height: auto; line-height: 1.5;">
+                        🤖 AI로 재구성하기
+                    </button>
+                </div>
                 <textarea id="gpc-publish-content" class="gpc-input gpc-textarea" rows="18"></textarea>
             </div>
         </div>

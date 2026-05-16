@@ -116,12 +116,114 @@ class GPC_Bulletin_AI_Extractor {
     }
 
     /**
+     * AI를 사용해 공지사항 내용 생성
+     *
+     * 순서지 데이터 + 커스텀 프롬프트를 바탕으로 AI에게
+     * 공지사항 글 본문을 생성 요청합니다.
+     *
+     * @param  array  $bulletin  순서지 데이터 배열
+     * @param  string $prompt    사용자 커스텀 프롬프트
+     * @return array  [ 'success' => bool, 'content' => string, 'error' => string ]
+     */
+    public static function generate_notice_content( $bulletin, $prompt ) {
+        $settings = self::get_settings();
+
+        if ( empty( $settings['api_key'] ) ) {
+            return array(
+                'success' => false,
+                'content' => '',
+                'error'   => 'API Key가 설정되지 않았습니다.',
+            );
+        }
+
+        $labels = GPC_Bulletin_DB::get_column_labels();
+
+        // 순서지 주요 데이터를 읽기 쉬운 텍스트로 정리
+        $data_lines = array();
+        $include_fields = array(
+            'publish_date', 'sabbath_type', 'sunset_time',
+            'ws_sermon_title', 'ws_preacher', 'ws_bible_text',
+            'memory_verse', 'church_news', 'prayer_requests',
+            'service_this_week', 'service_next_week',
+            'offering_list', 'announcements',
+        );
+        foreach ( $include_fields as $field ) {
+            $val = isset( $bulletin[ $field ] ) ? trim( $bulletin[ $field ] ) : '';
+            if ( $val !== '' ) {
+                $label = isset( $labels[ $field ] ) ? $labels[ $field ] : $field;
+                $data_lines[] = "[{$label}] {$val}";
+            }
+        }
+        $data_text = implode( "\n", $data_lines );
+
+        // 기본 프롬프트
+        if ( empty( trim( $prompt ) ) ) {
+            $prompt = '아래 순서지 데이터를 바탕으로 교회 공지사항 글을 따뜻하고 친근한 문체로 작성해주세요. 성도들이 읽기 좋게 섹션별로 정리해주세요.';
+        }
+
+        $full_prompt = $prompt
+            . "\n\n---\n[순서지 데이터]\n" . $data_text
+            . "\n---\n\n위 데이터를 바탕으로 공지사항 글 본문만 작성해주세요. JSON 형식이나 코드블록 없이 순수 텍스트로만 작성해주세요.";
+
+        $body = wp_json_encode( array(
+            'model'       => $settings['model'],
+            'messages'    => array(
+                array( 'role' => 'user', 'content' => $full_prompt ),
+            ),
+            'max_tokens'  => 4096,
+            'temperature' => 0.7,
+        ) );
+
+        $response = wp_remote_post( $settings['api_url'], array(
+            'timeout'     => 60,
+            'headers'     => array(
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer ' . $settings['api_key'],
+            ),
+            'body'        => $body,
+            'data_format' => 'body',
+        ) );
+
+        if ( is_wp_error( $response ) ) {
+            return array(
+                'success' => false,
+                'content' => '',
+                'error'   => '네트워크 오류: ' . $response->get_error_message(),
+            );
+        }
+
+        $code     = wp_remote_retrieve_response_code( $response );
+        $body_raw = wp_remote_retrieve_body( $response );
+
+        if ( $code !== 200 ) {
+            $err = json_decode( $body_raw, true );
+            $msg = isset( $err['error']['message'] ) ? $err['error']['message'] : "HTTP {$code}";
+            return array( 'success' => false, 'content' => '', 'error' => 'API 오류: ' . $msg );
+        }
+
+        $result  = json_decode( $body_raw, true );
+        $content = isset( $result['choices'][0]['message']['content'] )
+            ? $result['choices'][0]['message']['content']
+            : '';
+
+        $content = self::strip_thinking_tags( $content );
+        $content = trim( $content );
+
+        if ( empty( $content ) ) {
+            return array( 'success' => false, 'content' => '', 'error' => 'AI가 빈 응답을 반환했습니다.' );
+        }
+
+        return array( 'success' => true, 'content' => $content, 'error' => '' );
+    }
+
+    /**
      * 순서지 이미지에서 데이터 추출
      *
      * @param  string $image_path  로컬 이미지 파일 경로 또는 URL
      * @return array  [ 'success' => bool, 'data' => array|null, 'error' => string ]
      */
     public static function extract_from_image( $image_path ) {
+
         $settings = self::get_settings();
 
         if ( empty( $settings['api_key'] ) ) {

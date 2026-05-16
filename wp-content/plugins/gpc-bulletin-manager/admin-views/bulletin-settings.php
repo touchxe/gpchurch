@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 $settings      = GPC_Bulletin_AI_Extractor::get_settings();
 $kboard_id     = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
+$notice_prompt = get_option( 'gpc_bulletin_notice_prompt', '' );
 ?>
 <div class="wrap gpc-bulletin-wrap">
     <h1 class="gpc-bulletin-title">⚙️ 설정</h1>
@@ -69,21 +70,23 @@ $kboard_id     = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
     <div class="gpc-settings-card" style="margin-top: 24px;">
         <h2 class="gpc-settings-card-title">📢 공지사항 발행 설정</h2>
         <p class="gpc-settings-card-desc">
-            순서지에서 공지사항을 발행할 KBoard 게시판 ID를 설정합니다.<br>
-            게시판 ID는 <strong>KBoard → 게시판 목록</strong>에서 확인할 수 있습니다.
+            순서지에서 공지사항을 발행할 KBoard 게시판 ID와<br>
+            AI가 공지 글을 작성할 때 사용할 프롬프트를 설정합니다.
         </p>
         <div class="gpc-settings-form">
+
+            <!-- 게시판 ID -->
             <div class="gpc-field-group">
                 <label for="gpc-kboard-id">공지사항 게시판 ID</label>
                 <input type="number" id="gpc-kboard-id" class="gpc-input" style="max-width:200px"
                        value="<?php echo esc_attr( $kboard_id ?: '' ); ?>"
-                       placeholder="예: 3" min="1">
+                       placeholder="예: 1" min="1">
                 <span class="gpc-field-hint">KBoard 관리자 → 게시판 목록에서 확인한 게시판 ID (숫자)를 입력하세요.</span>
             </div>
 
             <div class="gpc-settings-actions">
                 <button type="button" id="gpc-save-kboard-id" class="gpc-btn gpc-btn-primary">
-                    💾 저장
+                    💾 게시판 ID 저장
                 </button>
             </div>
 
@@ -92,6 +95,32 @@ $kboard_id     = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
                     <span class="gpc-status-text"></span>
                 </div>
             </div>
+
+            <hr style="margin: 24px 0; border: none; border-top: 1px solid #e2e8f0;">
+
+            <!-- AI 글 작성 프롬프트 -->
+            <div class="gpc-field-group">
+                <label for="gpc-notice-prompt">📝 AI 공지 작성 프롬프트</label>
+                <textarea id="gpc-notice-prompt" class="gpc-input gpc-textarea" rows="6"
+                          placeholder="예: 아래 데이터를 바탕으로 교회 성도들에게 전달하는 주간 소식을 따뜻하고 친근한 문체로 작성해줘. 제목은 넣지 말고, 섹션별로 이모지를 사용해서 정리해줘."><?php echo esc_textarea( $notice_prompt ); ?></textarea>
+                <span class="gpc-field-hint">
+                    AI가 공지사항 내용을 생성할 때 사용할 지시문입니다. 비워두면 기본 프롬프트를 사용합니다.<br>
+                    순서지 데이터(설교 제목, 교회 소식, 봉사 일정 등)는 자동으로 첨부됩니다.
+                </span>
+            </div>
+
+            <div class="gpc-settings-actions">
+                <button type="button" id="gpc-save-notice-prompt" class="gpc-btn gpc-btn-primary">
+                    💾 프롬프트 저장
+                </button>
+            </div>
+
+            <div id="gpc-prompt-save-status" class="gpc-connection-status" style="display:none;">
+                <div class="gpc-status-badge">
+                    <span class="gpc-status-text"></span>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

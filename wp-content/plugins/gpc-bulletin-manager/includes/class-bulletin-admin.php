@@ -33,7 +33,9 @@ class GPC_Bulletin_Admin {
         add_action( 'wp_ajax_gpc_bulletin_save',            array( $this, 'ajax_save' ) );
         add_action( 'wp_ajax_gpc_bulletin_delete',          array( $this, 'ajax_delete' ) );
         add_action( 'wp_ajax_gpc_bulletin_publish_notice',  array( $this, 'ajax_publish_notice' ) );
-        add_action( 'wp_ajax_gpc_bulletin_save_kboard_id',  array( $this, 'ajax_save_kboard_id' ) );
+        add_action( 'wp_ajax_gpc_bulletin_save_kboard_id',      array( $this, 'ajax_save_kboard_id' ) );
+        add_action( 'wp_ajax_gpc_bulletin_generate_notice',      array( $this, 'ajax_generate_notice_content' ) );
+        add_action( 'wp_ajax_gpc_bulletin_save_notice_prompt',   array( $this, 'ajax_save_notice_prompt' ) );
 
         // admin_init에서 테이블 존재 확인 (안전장치)
         add_action( 'admin_init', array( $this, 'maybe_create_table' ) );
@@ -367,5 +369,51 @@ class GPC_Bulletin_Admin {
         $kboard_id = isset( $_POST['kboard_id'] ) ? (int) $_POST['kboard_id'] : 0;
         update_option( 'gpc_bulletin_kboard_id', $kboard_id );
         wp_send_json_success( '게시판 ID가 저장되었습니다.' );
+    }
+
+    /**
+     * AI 공지사항 내용 생성 AJAX 핸들러
+     *
+     * 순서지 데이터를 읽어 사용자 설정 프롬프트와 함께 AI에 전달,
+     * 생성된 공지 본문을 반환합니다.
+     */
+    public function ajax_generate_notice_content() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        $bulletin_id = isset( $_POST['bulletin_id'] ) ? (int) $_POST['bulletin_id'] : 0;
+        if ( $bulletin_id <= 0 ) {
+            wp_send_json_error( '유효하지 않은 순서지 ID입니다.' );
+        }
+
+        $item = $this->db->get_by_id( $bulletin_id );
+        if ( ! $item ) {
+            wp_send_json_error( '순서지 데이터를 찾을 수 없습니다.' );
+        }
+
+        $prompt   = get_option( 'gpc_bulletin_notice_prompt', '' );
+        $bulletin = (array) $item;
+        $result   = GPC_Bulletin_AI_Extractor::generate_notice_content( $bulletin, $prompt );
+
+        if ( $result['success'] ) {
+            wp_send_json_success( array( 'content' => $result['content'] ) );
+        } else {
+            wp_send_json_error( $result['error'] );
+        }
+    }
+
+    /**
+     * AI 공지사항 작성 프롬프트 저장 AJAX 핸들러
+     */
+    public function ajax_save_notice_prompt() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+        $prompt = isset( $_POST['prompt'] ) ? sanitize_textarea_field( wp_unslash( $_POST['prompt'] ) ) : '';
+        update_option( 'gpc_bulletin_notice_prompt', $prompt );
+        wp_send_json_success( '프롬프트가 저장되었습니다.' );
     }
 }
