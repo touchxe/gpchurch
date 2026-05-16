@@ -351,6 +351,16 @@ class GPC_Bulletin_AI_Extractor {
     }
 
     /**
+     * 저장 시점에도 호출 가능한 정규화 래퍼
+     *
+     * 폼에서 사용자가 수정 후 저장할 때도 동일 정규화를 적용해
+     * 한글 사이 공백/괄호 찬미/별표 일몰시각이 DB에 들어가지 않도록 보장.
+     */
+    public static function normalize_for_save( $data ) {
+        return self::normalize_extracted_data( $data );
+    }
+
+    /**
      * AI 추출 결과 후처리 정규화
      *
      * 프롬프트 규칙을 AI가 어긴 경우에도 결정적인 정리를 강제합니다.
@@ -367,7 +377,7 @@ class GPC_Bulletin_AI_Extractor {
         }
 
         $name_fields = array(
-            'ss_host', 'ss_prayer', 'ss_welcome',
+            'ss_host', 'ss_prayer', 'ss_welcome', 'ss_special_song',
             'ws_host', 'ws_invocation', 'ws_prayer',
             'ws_offering_leader', 'ws_offering_benediction',
             'ws_preacher', 'ws_benediction',
@@ -398,9 +408,11 @@ class GPC_Bulletin_AI_Extractor {
     /**
      * 한글 인명 공백 제거
      *
-     * "심 재 영" → "심재영"
-     * "심재영, 김 한 나" → "심재영, 김한나"
-     * 한글로만 구성되고 공백 제거 시 5자 이하인 경우에만 적용 (일반 텍스트 오인식 방지)
+     * 두 한글 글자 사이의 모든 공백(일반 스페이스, 전각 공백, NBSP 등 유니코드 공백 포함)을 제거.
+     *  "심 재 영"           → "심재영"
+     *  "심재영, 김 한 나"   → "심재영, 김한나"
+     *  "홍 길 동 (장로)"    → "홍길동 (장로)"  (괄호 앞 공백은 보존)
+     *  "John Smith"         → "John Smith"      (한글 사이 공백이 아니므로 변경 없음)
      */
     private static function normalize_korean_name( $value ) {
         if ( ! is_string( $value ) ) {
@@ -411,7 +423,7 @@ class GPC_Bulletin_AI_Extractor {
             return '';
         }
 
-        // 콤마/슬래시 등 구분자로 분리 후 각각 정규화
+        // 콤마/슬래시/가운뎃점 등 다중 이름 구분자로 분리
         $parts = preg_split( '/\s*[,，、·•・\/]\s*/u', $value );
         $out   = array();
         foreach ( $parts as $part ) {
@@ -419,14 +431,17 @@ class GPC_Bulletin_AI_Extractor {
             if ( '' === $part ) {
                 continue;
             }
-            // 한글과 공백만 있는 경우, 공백 제거한 길이가 5자 이하면 이름으로 간주
-            if ( preg_match( '/^[가-힣\s]+$/u', $part ) ) {
-                $compact = preg_replace( '/\s+/u', '', $part );
-                if ( mb_strlen( $compact ) > 0 && mb_strlen( $compact ) <= 5 ) {
-                    $out[] = $compact;
-                    continue;
-                }
-            }
+
+            // [핵심] 두 한글 글자 사이의 공백(유니코드 공백 모두 포함) 제거
+            // \p{Z}: 모든 유니코드 공백 분리자 (전각공백 U+3000, NBSP U+00A0 등)
+            // \s   : ASCII 공백 (스페이스/탭/개행)
+            // 한글-공백-한글 패턴을 반복적으로 적용 (preg_replace 한 번으로 모두 처리됨)
+            $part = preg_replace(
+                '/([\x{AC00}-\x{D7A3}])[\s\p{Z}]+(?=[\x{AC00}-\x{D7A3}])/u',
+                '$1',
+                $part
+            );
+
             $out[] = $part;
         }
         return implode( ', ', $out );
@@ -658,7 +673,7 @@ class GPC_Bulletin_AI_Extractor {
 
 3. **인명(사람 이름)은 글자 사이의 공백을 모두 제거하세요.**
    - 예: "홍 길 동" → "홍길동", "심 재 영" → "심재영", "김 한 나" → "김한나"
-   - 적용 필드: ss_host, ss_prayer, ss_welcome, ws_host, ws_invocation, ws_prayer, ws_offering_leader, ws_offering_benediction, ws_preacher, ws_benediction
+   - 적용 필드: ss_host, ss_prayer, ss_welcome, ss_special_song, ws_host, ws_invocation, ws_prayer, ws_offering_leader, ws_offering_benediction, ws_preacher, ws_benediction
    - 여러 명이 콤마로 구분된 경우(예: "홍길동, 김철수")는 콤마는 유지하고 각 이름 내부의 공백만 제거하세요.
 
 4. **찬미/송영 장수는 괄호와 내부 공백을 모두 제거하고 "?장" 형식으로 반환하세요.**
@@ -670,13 +685,13 @@ class GPC_Bulletin_AI_Extractor {
    - 예: "*일몰pm7:35*" → "오후 7:35"
    - 예: "am6:20" → "오전 6:20"
 
-6. **안교 특창(ss_special_song)의 기준:**
-   - 주보에서 "다같이"라고 표시되어 있는 찬양/특별 순서만 ss_special_song에 넣으세요.
-   - 솔로, 중창, 특정인이 부르는 항목은 ss_special_song이 아닙니다.
-   - "다같이"가 적힌 항목이 없으면 빈 문자열("")을 반환하세요.
+6. **안교 특순 진행자(ss_special_song)의 기준:**
+   - 안교 특순(ss_special_order)을 진행/담당하는 사람의 이름을 넣으세요.
+   - 인명이므로 규칙 3(공백 제거)을 동일하게 적용하세요.
+   - 진행자가 표기되어 있지 않으면 빈 문자열("")을 반환하세요.
 
 7. **안교 특순(ss_special_order)의 기준:**
-   - 안식일학교 영역에서 점선(------ 또는 ‒‒‒‒‒‒)으로 둘러싸인 별도 안내 영역의 중앙에 단독으로 적힌 텍스트만 ss_special_order에 넣으세요.
+   - 안식일학교 영역에서 점선(------ 또는 ‒‒‒‒‒‒)으로 둘러싸인 별도 안내 영역의 중앙에 단독으로 적힌 텍스트(특순의 제목/내용)만 ss_special_order에 넣으세요.
    - 일반 예배 순서표 행 안에 있는 항목은 ss_special_order가 아닙니다.
    - 점선으로 둘러싸인 안내가 없으면 빈 문자열("")을 반환하세요.
 

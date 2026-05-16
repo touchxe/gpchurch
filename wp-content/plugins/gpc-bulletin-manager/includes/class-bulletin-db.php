@@ -134,7 +134,7 @@ class GPC_Bulletin_DB {
             'ss_hymn'                => '안교 찬미',
             'ss_prayer'              => '안교 기도',
             'ss_welcome'             => '환영사',
-            'ss_special_song'        => '안교 특창',
+            'ss_special_song'        => '안교 특순 진행자',
             'ss_special_order'       => '안교 특순',
             'ss_lesson_title'        => '교과 제목',
             'ws_host'                => '예배 인도',
