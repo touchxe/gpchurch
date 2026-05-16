@@ -1,0 +1,509 @@
+/* ========================================
+   순서지 관리 - 관리자 전용 스타일
+   admin-bulletin.css
+   ======================================== */
+
+/* 공통 래퍼 */
+.gpc-bulletin-wrap {
+    max-width: 1200px;
+    margin: 20px auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif;
+}
+
+.gpc-bulletin-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.gpc-title-date {
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.gpc-bulletin-desc {
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+/* ── 버튼 ── */
+.gpc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.gpc-btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+.gpc-btn-primary:hover {
+    background: linear-gradient(135deg, #4338ca, #4f46e5);
+    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+.gpc-btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+.gpc-btn-secondary:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.gpc-btn-danger {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+.gpc-btn-danger:hover {
+    background: #fee2e2;
+}
+
+.gpc-btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+.gpc-btn-lg { padding: 14px 28px; font-size: 1rem; }
+
+.gpc-btn-icon {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.15s;
+}
+.gpc-btn-icon:hover { background: #e2e8f0; }
+
+.gpc-btn-link {
+    background: none;
+    border: none;
+    color: #4f46e5;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    text-decoration: none;
+}
+.gpc-btn-link:hover { text-decoration: underline; }
+.gpc-btn-link.gpc-btn-danger { color: #dc2626; }
+
+.gpc-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── 입력 필드 ── */
+.gpc-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #1e293b;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+.gpc-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.gpc-textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.gpc-field-group {
+    margin-bottom: 16px;
+}
+.gpc-field-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+}
+.gpc-field-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: #94a3b8;
+}
+
+.gpc-key-input-wrap {
+    display: flex;
+    gap: 8px;
+}
+.gpc-key-input-wrap .gpc-input {
+    flex: 1;
+}
+
+/* ── 카드 ── */
+.gpc-settings-card,
+.gpc-upload-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    margin-bottom: 24px;
+}
+
+/* ── 설정 페이지 ── */
+.gpc-settings-form {
+    max-width: 600px;
+}
+
+.gpc-settings-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.gpc-connection-status {
+    margin-top: 20px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.gpc-connection-status.gpc-status-ok {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+.gpc-connection-status.gpc-status-fail {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.gpc-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.gpc-status-time {
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+/* ── 드롭존 ── */
+.gpc-dropzone {
+    border: 2px dashed #d1d5db;
+    border-radius: 16px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #fafbfc;
+}
+.gpc-dropzone:hover,
+.gpc-dropzone.gpc-dragover {
+    border-color: #6366f1;
+    background: #f5f3ff;
+}
+
+.gpc-dropzone-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+.gpc-dropzone-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #475569;
+}
+.gpc-dropzone-hint {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+/* 미리보기 */
+.gpc-preview {
+    position: relative;
+    display: inline-block;
+    margin-top: 16px;
+}
+.gpc-preview img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+.gpc-preview .gpc-btn-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.9);
+}
+
+.gpc-upload-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* 프로그레스 바 */
+.gpc-progress {
+    margin-top: 20px;
+    text-align: center;
+}
+.gpc-progress-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1, #a78bfa, #6366f1);
+    background-size: 200% 100%;
+    border-radius: 2px;
+    animation: gpc-shimmer 1.5s infinite;
+    margin-bottom: 12px;
+}
+@keyframes gpc-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.gpc-progress-text {
+    font-size: 0.9rem;
+    color: #6366f1;
+    font-weight: 500;
+}
+
+/* ── 폼 섹션 ── */
+.gpc-data-form {
+    margin-top: 24px;
+}
+
+.gpc-section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.gpc-form-section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.gpc-form-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.gpc-section-ss .gpc-form-section-title { border-bottom-color: #93c5fd; }
+.gpc-section-ws .gpc-form-section-title { border-bottom-color: #a5b4fc; }
+.gpc-section-info .gpc-form-section-title { border-bottom-color: #86efac; }
+
+.gpc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px 20px;
+}
+
+.gpc-field-wide {
+    grid-column: span 2;
+}
+.gpc-field-full {
+    grid-column: 1 / -1;
+}
+
+.gpc-form-grid-full {
+    grid-template-columns: 1fr;
+}
+
+.gpc-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    align-items: center;
+}
+.gpc-form-actions .gpc-btn-danger {
+    margin-left: auto;
+}
+
+/* ── 알림 ── */
+.gpc-notice {
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-top: 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.gpc-notice-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
+.gpc-notice-success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+}
+
+/* ── 테이블 ── */
+.gpc-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.gpc-table thead {
+    background: #f8fafc;
+}
+.gpc-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+}
+.gpc-table td {
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+.gpc-table tbody tr:hover {
+    background: #f8fafc;
+}
+.gpc-col-date { white-space: nowrap; }
+.gpc-col-sermon { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gpc-col-actions { white-space: nowrap; text-align: right; }
+
+/* 목록 툴바 */
+.gpc-list-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.gpc-search-form {
+    display: flex;
+    gap: 8px;
+}
+.gpc-search-input {
+    width: 280px;
+}
+.gpc-list-count {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* 페이지네이션 */
+.gpc-pagination {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 20px;
+}
+.gpc-page-link,
+.gpc-page-current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.gpc-page-link {
+    background: #f1f5f9;
+    color: #475569;
+}
+.gpc-page-link:hover {
+    background: #e2e8f0;
+}
+.gpc-page-current {
+    background: #4f46e5;
+    color: #fff;
+}
+
+/* 빈 상태 */
+.gpc-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+}
+.gpc-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+.gpc-empty-state p {
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+/* 수정 페이지 원본 이미지 */
+.gpc-edit-image {
+    margin: 16px 0;
+}
+.gpc-edit-thumbnail {
+    max-width: 400px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 782px) {
+    .gpc-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .gpc-field-wide {
+        grid-column: 1;
+    }
+    .gpc-settings-form {
+        max-width: 100%;
+    }
+    .gpc-search-input {
+        width: 180px;
+    }
+    .gpc-list-toolbar {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    .gpc-form-actions {
+        flex-wrap: wrap;
+    }
+}
