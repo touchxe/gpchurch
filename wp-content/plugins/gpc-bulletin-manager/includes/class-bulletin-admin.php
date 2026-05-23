@@ -213,9 +213,19 @@ class GPC_Bulletin_Admin {
 
         $data = array();
         $columns = GPC_Bulletin_DB::get_data_columns();
+        $hymn_fields = array( 'ss_hymn', 'ws_doxology', 'ws_hymn', 'ws_offering_hymn', 'ws_closing_hymn' );
+
         foreach ( $columns as $col ) {
             if ( isset( $_POST[ $col ] ) ) {
-                $data[ $col ] = sanitize_textarea_field( wp_unslash( $_POST[ $col ] ) );
+                $val = sanitize_textarea_field( wp_unslash( $_POST[ $col ] ) );
+                
+                // 찬미/송영 필드: 괄호 제거
+                if ( in_array( $col, $hymn_fields, true ) ) {
+                    $val = str_replace( array( '(', ')', '（', '）' ), '', $val );
+                    $val = trim( $val );
+                }
+
+                $data[ $col ] = $val;
             }
         }
 
