@@ -337,16 +337,30 @@ class GPC_Bulletin_Admin {
         if ( $existing_uid > 0 ) {
             // 기존 글 업데이트
             $content_obj->initWithUID( $existing_uid );
-            $result = $content_obj->insertContent( array(
-                'board_id'       => $board_id,
-                'title'          => $post_title,
-                'content'        => nl2br( esc_html( $post_content ) ),
-                'member_uid'     => get_current_user_id(),
-                'member_display' => wp_get_current_user()->display_name,
-                'notice'         => 1,
-            ) );
-            $kboard_uid = $existing_uid;
-            $is_update  = true;
+            if ( ! empty( $content_obj->uid ) ) {
+                $result = $content_obj->updateContent( array(
+                    'board_id'       => $board_id,
+                    'title'          => $post_title,
+                    'content'        => nl2br( esc_html( $post_content ) ),
+                    'member_uid'     => get_current_user_id(),
+                    'member_display' => wp_get_current_user()->display_name,
+                    'notice'         => 1,
+                ) );
+                $kboard_uid = $existing_uid;
+                $is_update  = true;
+            } else {
+                // 기존 ID가 있으나 실제 KBoard 글이 삭제된 경우 대응
+                $result = $content_obj->insertContent( array(
+                    'board_id'       => $board_id,
+                    'title'          => $post_title,
+                    'content'        => nl2br( esc_html( $post_content ) ),
+                    'member_uid'     => get_current_user_id(),
+                    'member_display' => wp_get_current_user()->display_name,
+                    'notice'         => 1,
+                ) );
+                $kboard_uid = $content_obj->uid;
+                $is_update  = false;
+            }
         } else {
             // 신규 발행
             $result = $content_obj->insertContent( array(
@@ -463,7 +477,8 @@ class GPC_Bulletin_Admin {
             // 기존 글 업데이트
             $content_obj->initWithUID( $existing_uid );
             if ( ! empty( $content_obj->uid ) ) {
-                $kboard_uid = $content_obj->insertContent( $content_data );
+                $content_obj->updateContent( $content_data );
+                $kboard_uid = $existing_uid;
             } else {
                 $kboard_uid = $content_obj->insertContent( $content_data );
             }
