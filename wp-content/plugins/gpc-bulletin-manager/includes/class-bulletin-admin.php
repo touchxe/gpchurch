@@ -27,11 +27,15 @@ class GPC_Bulletin_Admin {
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 
         // AJAX 엔드포인트
-        add_action( 'wp_ajax_gpc_bulletin_test_api', array( $this, 'ajax_test_api' ) );
-        add_action( 'wp_ajax_gpc_bulletin_save_settings', array( $this, 'ajax_save_settings' ) );
-        add_action( 'wp_ajax_gpc_bulletin_extract', array( $this, 'ajax_extract' ) );
-        add_action( 'wp_ajax_gpc_bulletin_save', array( $this, 'ajax_save' ) );
-        add_action( 'wp_ajax_gpc_bulletin_delete', array( $this, 'ajax_delete' ) );
+        add_action( 'wp_ajax_gpc_bulletin_test_api',       array( $this, 'ajax_test_api' ) );
+        add_action( 'wp_ajax_gpc_bulletin_save_settings',   array( $this, 'ajax_save_settings' ) );
+        add_action( 'wp_ajax_gpc_bulletin_extract',         array( $this, 'ajax_extract' ) );
+        add_action( 'wp_ajax_gpc_bulletin_save',            array( $this, 'ajax_save' ) );
+        add_action( 'wp_ajax_gpc_bulletin_delete',          array( $this, 'ajax_delete' ) );
+        add_action( 'wp_ajax_gpc_bulletin_publish_notice',  array( $this, 'ajax_publish_notice' ) );
+        add_action( 'wp_ajax_gpc_bulletin_save_kboard_id',      array( $this, 'ajax_save_kboard_id' ) );
+        add_action( 'wp_ajax_gpc_bulletin_generate_notice',      array( $this, 'ajax_generate_notice_content' ) );
+        add_action( 'wp_ajax_gpc_bulletin_save_notice_prompt',   array( $this, 'ajax_save_notice_prompt' ) );
 
         // admin_init에서 테이블 존재 확인 (안전장치)
         add_action( 'admin_init', array( $this, 'maybe_create_table' ) );
@@ -46,6 +50,10 @@ class GPC_Bulletin_Admin {
         if ( $wpdb->get_var( "SHOW TABLES LIKE '{$table}'" ) !== $table ) {
             $this->db->create_table();
         }
+        // notice_post_id 컬럼 마이그레이션 (기존 설치 환경 대응)
+        $this->db->maybe_add_notice_post_id_column();
+        // bulletin_post_id 컬럼 마이그레이션 (주보 KBoard 아카이브용)
+        $this->db->maybe_add_bulletin_post_id_column();
     }
 
     /**
@@ -116,8 +124,9 @@ class GPC_Bulletin_Admin {
         wp_enqueue_media();
 
         wp_localize_script( 'gpc-admin-bulletin-js', 'gpcBulletin', array(
-            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'gpc_bulletin_nonce' ),
+            'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
+            'nonce'    => wp_create_nonce( 'gpc_bulletin_nonce' ),
+            'adminUrl' => admin_url( 'admin.php' ),
         ) );
     }
 
@@ -206,9 +215,19 @@ class GPC_Bulletin_Admin {
 
         $data = array();
         $columns = GPC_Bulletin_DB::get_data_columns();
+        $hymn_fields = array( 'ss_hymn', 'ws_doxology', 'ws_hymn', 'ws_offering_hymn', 'ws_closing_hymn' );
+
         foreach ( $columns as $col ) {
             if ( isset( $_POST[ $col ] ) ) {
-                $data[ $col ] = sanitize_textarea_field( wp_unslash( $_POST[ $col ] ) );
+                $val = sanitize_textarea_field( wp_unslash( $_POST[ $col ] ) );
+                
+                // 찬미/송영 필드: 괄호 제거
+                if ( in_array( $col, $hymn_fields, true ) ) {
+                    $val = str_replace( array( '(', ')', '（', '）' ), '', $val );
+                    $val = trim( $val );
+                }
+
+                $data[ $col ] = $val;
             }
         }
 
@@ -224,6 +243,7 @@ class GPC_Bulletin_Admin {
         if ( $id > 0 ) {
             $success = $this->db->update( $id, $data );
             if ( $success ) {
+                $this->sync_to_kboard_archive( $id );
                 wp_send_json_success( array( 'message' => '순서지가 수정되었습니다.', 'id' => $id ) );
             } else {
                 wp_send_json_error( '수정에 실패했습니다.' );
@@ -233,6 +253,7 @@ class GPC_Bulletin_Admin {
             if ( $existing ) {
                 $success = $this->db->update( $existing->id, $data );
                 if ( $success ) {
+                    $this->sync_to_kboard_archive( $existing->id );
                     wp_send_json_success( array( 'message' => '같은 날짜의 기존 순서지를 업데이트했습니다.', 'id' => $existing->id ) );
                 } else {
                     wp_send_json_error( '업데이트에 실패했습니다.' );
@@ -240,6 +261,7 @@ class GPC_Bulletin_Admin {
             } else {
                 $new_id = $this->db->insert( $data );
                 if ( $new_id ) {
+                    $this->sync_to_kboard_archive( $new_id );
                     wp_send_json_success( array( 'message' => '순서지가 저장되었습니다.', 'id' => $new_id ) );
                 } else {
                     wp_send_json_error( '저장에 실패했습니다.' );
@@ -265,5 +287,260 @@ class GPC_Bulletin_Admin {
         } else {
             wp_send_json_error( '삭제에 실패했습니다.' );
         }
+    }
+
+    /**
+     * 공지사항 발행 / 업데이트 AJAX 핸들러
+     *
+     * KBoard 게시판에 순서지 내용을 글로 발행합니다.
+     * 이미 발행된 경우(notice_post_id > 0) 기존 글을 업데이트합니다.
+     */
+    public function ajax_publish_notice() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        $bulletin_id   = isset( $_POST['bulletin_id'] ) ? (int) $_POST['bulletin_id'] : 0;
+        $post_title    = isset( $_POST['post_title'] )   ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
+        $post_content  = isset( $_POST['post_content'] ) ? wp_kses_post( wp_unslash( $_POST['post_content'] ) ) : '';
+        $board_id      = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
+
+        if ( $bulletin_id <= 0 ) {
+            wp_send_json_error( '유효하지 않은 순서지 ID입니다.' );
+        }
+        if ( empty( $post_title ) ) {
+            wp_send_json_error( '제목을 입력해주세요.' );
+        }
+        if ( $board_id <= 0 ) {
+            wp_send_json_error( 'KBoard 게시판 ID가 설정되지 않았습니다. 설정 페이지에서 공지사항 게시판 ID를 입력해주세요.' );
+        }
+
+        $item = $this->db->get_by_id( $bulletin_id );
+        if ( ! $item ) {
+            wp_send_json_error( '순서지 데이터를 찾을 수 없습니다.' );
+        }
+
+        // KBContent 클래스 로드
+        if ( ! class_exists( 'KBContent' ) ) {
+            $kboard_path = WP_PLUGIN_DIR . '/kboard/class/KBContent.class.php';
+            if ( ! file_exists( $kboard_path ) ) {
+                wp_send_json_error( 'KBoard 플러그인이 설치되어 있지 않습니다.' );
+            }
+            require_once $kboard_path;
+        }
+
+        $content_obj = new KBContent( $board_id );
+
+        $existing_uid = (int) $item->notice_post_id;
+
+        if ( $existing_uid > 0 ) {
+            // 기존 글 업데이트
+            $content_obj->initWithUID( $existing_uid );
+            $result = $content_obj->insertContent( array(
+                'board_id'       => $board_id,
+                'title'          => $post_title,
+                'content'        => nl2br( esc_html( $post_content ) ),
+                'member_uid'     => get_current_user_id(),
+                'member_display' => wp_get_current_user()->display_name,
+                'notice'         => 1,
+            ) );
+            $kboard_uid = $existing_uid;
+            $is_update  = true;
+        } else {
+            // 신규 발행
+            $result = $content_obj->insertContent( array(
+                'board_id'       => $board_id,
+                'title'          => $post_title,
+                'content'        => nl2br( esc_html( $post_content ) ),
+                'member_uid'     => get_current_user_id(),
+                'member_display' => wp_get_current_user()->display_name,
+                'notice'         => 1,
+            ) );
+            $kboard_uid = $content_obj->uid;
+            $is_update  = false;
+        }
+
+        if ( ! $kboard_uid ) {
+            wp_send_json_error( 'KBoard 게시판에 글 작성에 실패했습니다.' );
+        }
+
+        // notice_post_id 저장
+        $this->db->update( $bulletin_id, array( 'notice_post_id' => $kboard_uid ) );
+
+        wp_send_json_success( array(
+            'message'     => $is_update ? '공지사항이 업데이트되었습니다.' : '공지사항이 발행되었습니다.',
+            'kboard_uid'  => $kboard_uid,
+            'board_id'    => $board_id,
+            'is_update'   => $is_update,
+        ) );
+    }
+
+    /**
+     * KBoard 게시판 ID 저장 AJAX 핸들러
+     */
+    public function ajax_save_kboard_id() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+        $kboard_id         = isset( $_POST['kboard_id'] ) ? (int) $_POST['kboard_id'] : 0;
+        $kboard_archive_id = isset( $_POST['kboard_archive_id'] ) ? (int) $_POST['kboard_archive_id'] : 0;
+
+        update_option( 'gpc_bulletin_kboard_id', $kboard_id );
+        update_option( 'gpc_bulletin_kboard_archive_id', $kboard_archive_id );
+
+        wp_send_json_success( '게시판 설정이 저장되었습니다.' );
+    }
+
+    /**
+     * 주보(순서지) 데이터를 KBoard 주보 아카이브 게시판에 동기화합니다.
+     *
+     * @param int $bulletin_id 순서지 ID
+     * @return int|false 성공 시 KBoard UID, 실패 시 false
+     */
+    public function sync_to_kboard_archive( $bulletin_id ) {
+        $bulletin_id = (int) $bulletin_id;
+        if ( $bulletin_id <= 0 ) {
+            return false;
+        }
+
+        $item = $this->db->get_by_id( $bulletin_id );
+        if ( ! $item ) {
+            return false;
+        }
+
+        // 이미지 URL이 없으면 KBoard 아카이브에 발행하지 않거나 보류
+        $image_url = isset( $item->image_url ) ? trim( $item->image_url ) : '';
+        if ( empty( $image_url ) ) {
+            return false;
+        }
+
+        // KBoard 아카이브 게시판 ID (기본값 4)
+        $board_id = (int) get_option( 'gpc_bulletin_kboard_archive_id', 4 );
+
+        // KBContent 클래스 로드
+        if ( ! class_exists( 'KBContent' ) ) {
+            $kboard_path = WP_PLUGIN_DIR . '/kboard/class/KBContent.class.php';
+            if ( ! file_exists( $kboard_path ) ) {
+                return false;
+            }
+            require_once $kboard_path;
+        }
+
+        $content_obj = new KBContent( $board_id );
+
+        // 날짜 가독성 개선 (예: 2026-05-30 -> 2026년 05월 30일 안식일 예배 주보)
+        $date_str = $item->publish_date;
+        if ( ! empty( $date_str ) ) {
+            $time = strtotime( $date_str );
+            if ( $time ) {
+                $bulletin_title = date( 'Y년 m월 d일', $time ) . ' 안식일 예배 주보';
+            } else {
+                $bulletin_title = $date_str . ' 안식일 예배 주보';
+            }
+        } else {
+            $bulletin_title = '안식일 예배 주보';
+        }
+
+        // 본문 내용: 이미지를 선명하게 보여주는 HTML
+        $post_content = '<div style="text-align: center; margin: 20px 0;">';
+        $post_content .= '<img src="' . esc_url( $image_url ) . '" style="max-width: 100%; height: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 8px;" alt="' . esc_attr( $bulletin_title ) . '" />';
+        $post_content .= '</div>';
+
+        $existing_uid = (int) $item->bulletin_post_id;
+
+        $content_data = array(
+            'board_id'       => $board_id,
+            'title'          => $bulletin_title,
+            'content'        => $post_content,
+            'member_uid'     => get_current_user_id() ? get_current_user_id() : 1,
+            'member_display' => wp_get_current_user()->display_name ? wp_get_current_user()->display_name : '가평교회',
+            'status'         => 'publish',
+        );
+
+        if ( $existing_uid > 0 ) {
+            // 기존 글 업데이트
+            $content_obj->initWithUID( $existing_uid );
+            if ( ! empty( $content_obj->uid ) ) {
+                $kboard_uid = $content_obj->insertContent( $content_data );
+            } else {
+                $kboard_uid = $content_obj->insertContent( $content_data );
+            }
+        } else {
+            // 신규 발행
+            $kboard_uid = $content_obj->insertContent( $content_data );
+        }
+
+        if ( ! $kboard_uid ) {
+            return false;
+        }
+
+        // 썸네일 등록 (KBoard 썸네일/갤러리 스킨 지원)
+        $site_url = site_url();
+        $relative_thumbnail = str_replace( $site_url, '', $image_url );
+
+        global $wpdb;
+        $wpdb->update(
+            "{$wpdb->prefix}kboard_board_content",
+            array(
+                'thumbnail_file' => $relative_thumbnail,
+                'thumbnail_name' => basename( $image_url ),
+            ),
+            array( 'uid' => $kboard_uid )
+        );
+
+        // 순서지 DB에 KBoard 아카이브 포스트 ID 업데이트
+        if ( $existing_uid !== (int) $kboard_uid ) {
+            $this->db->update( $bulletin_id, array( 'bulletin_post_id' => $kboard_uid ) );
+        }
+
+        return $kboard_uid;
+    }
+
+    /**
+     * AI 공지사항 내용 생성 AJAX 핸들러
+     *
+     * 순서지 데이터를 읽어 사용자 설정 프롬프트와 함께 AI에 전달,
+     * 생성된 공지 본문을 반환합니다.
+     */
+    public function ajax_generate_notice_content() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        $bulletin_id = isset( $_POST['bulletin_id'] ) ? (int) $_POST['bulletin_id'] : 0;
+        if ( $bulletin_id <= 0 ) {
+            wp_send_json_error( '유효하지 않은 순서지 ID입니다.' );
+        }
+
+        $item = $this->db->get_by_id( $bulletin_id );
+        if ( ! $item ) {
+            wp_send_json_error( '순서지 데이터를 찾을 수 없습니다.' );
+        }
+
+        $prompt   = get_option( 'gpc_bulletin_notice_prompt', '' );
+        $bulletin = (array) $item;
+        $result   = GPC_Bulletin_AI_Extractor::generate_notice_content( $bulletin, $prompt );
+
+        if ( $result['success'] ) {
+            wp_send_json_success( array( 'content' => $result['content'] ) );
+        } else {
+            wp_send_json_error( $result['error'] );
+        }
+    }
+
+    /**
+     * AI 공지사항 작성 프롬프트 저장 AJAX 핸들러
+     */
+    public function ajax_save_notice_prompt() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+        $prompt = isset( $_POST['prompt'] ) ? sanitize_textarea_field( wp_unslash( $_POST['prompt'] ) ) : '';
+        update_option( 'gpc_bulletin_notice_prompt', $prompt );
+        wp_send_json_success( '프롬프트가 저장되었습니다.' );
     }
 }

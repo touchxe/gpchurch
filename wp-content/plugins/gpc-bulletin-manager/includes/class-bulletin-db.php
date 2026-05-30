@@ -63,6 +63,8 @@ class GPC_Bulletin_DB {
             memory_verse text,
             announcements text,
             image_url varchar(500) DEFAULT '',
+            notice_post_id bigint(20) DEFAULT 0,
+            bulletin_post_id bigint(20) DEFAULT 0,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY  (id),
@@ -117,7 +119,35 @@ class GPC_Bulletin_DB {
             'announcements',
             // 이미지
             'image_url',
+            // 공지사항 발행
+            'notice_post_id',
+            // 주보 KBoard 아카이브
+            'bulletin_post_id',
         );
+    }
+
+    /**
+     * 기존 테이블에 notice_post_id 컬럼 마이그레이션
+     * 이미 컬럼이 있으면 스킵합니다.
+     */
+    public function maybe_add_notice_post_id_column() {
+        global $wpdb;
+        $cols = $wpdb->get_col( "SHOW COLUMNS FROM {$this->table_name} LIKE 'notice_post_id'" );
+        if ( empty( $cols ) ) {
+            $wpdb->query( "ALTER TABLE {$this->table_name} ADD COLUMN notice_post_id bigint(20) DEFAULT 0" );
+        }
+    }
+
+    /**
+     * 기존 테이블에 bulletin_post_id 컬럼 마이그레이션
+     * 주보 KBoard 아카이브(게시판 ID 4) 연동용.
+     */
+    public function maybe_add_bulletin_post_id_column() {
+        global $wpdb;
+        $cols = $wpdb->get_col( "SHOW COLUMNS FROM {$this->table_name} LIKE 'bulletin_post_id'" );
+        if ( empty( $cols ) ) {
+            $wpdb->query( "ALTER TABLE {$this->table_name} ADD COLUMN bulletin_post_id bigint(20) DEFAULT 0" );
+        }
     }
 
     /**

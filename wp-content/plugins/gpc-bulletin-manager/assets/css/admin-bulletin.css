@@ -507,3 +507,157 @@
         flex-wrap: wrap;
     }
 }
+
+/* ────────────────────────────────
+   섹션 헤더 (발행 버튼 정렬)
+──────────────────────────────── */
+.gpc-form-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.gpc-form-section-header .gpc-form-section-title {
+    margin-bottom: 0;
+}
+
+.gpc-publish-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gpc-published-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.gpc-btn-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(16,185,129,.35);
+}
+
+.gpc-btn-success:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-1px);
+}
+
+/* ────────────────────────────────
+   설정 카드 내부 타이틀
+──────────────────────────────── */
+.gpc-settings-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 6px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+.gpc-settings-card-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 20px;
+    line-height: 1.6;
+}
+
+/* ────────────────────────────────
+   공지사항 발행 모달
+──────────────────────────────── */
+.gpc-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gpc-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+.gpc-modal-box {
+    position: relative;
+    z-index: 1;
+    width: 92%;
+    max-width: 700px;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0,0,0,.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.gpc-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+
+.gpc-modal-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.gpc-modal-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #64748b;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background .15s;
+}
+.gpc-modal-close:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.gpc-modal-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.gpc-modal-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 16px;
+}
+
+.gpc-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+}
+
+body.gpc-modal-open {
+    overflow: hidden;
+}

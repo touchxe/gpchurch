@@ -1,8 +1,14 @@
 {
     "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
     "version": "1.0.0",
-    "generatedTime": 1777106301780,
+    "generatedTime": 1777710208049,
     "data": [
+        {
+            "type": "file",
+            "name": ".ftp-deploy-sync-state.json",
+            "size": 18575,
+            "hash": "36c97db5d91856f6bc72c34715f582afd84174ff7a9e7372b01df9c765e5e3dc"
+        },
         {
             "type": "folder",
             "name": "assets"
@@ -10,26 +16,26 @@
         {
             "type": "file",
             "name": "footer.php",
-            "size": 3875,
-            "hash": "b81d2b84c4d7219b8cc62c25442caee19f3321d06c607ee5a7f8419c792556d5"
+            "size": 6704,
+            "hash": "10ca2be4ae76525a42cfb786c21a6559cc48a0e0adf9561f07f65e4ca2b28b7e"
         },
         {
             "type": "file",
             "name": "front-page.php",
-            "size": 52383,
-            "hash": "e00a2aa49a0dda00f6b8cab3d411c9812b8edca54035241c4390f88695f23c8a"
+            "size": 52162,
+            "hash": "ca7301e0925f30964caf0f46805bfc657e42346c51a30922d0acb3879bd40669"
         },
         {
             "type": "file",
             "name": "functions.php",
-            "size": 29956,
-            "hash": "8a9f7b177b3b21bbe51b4ff04f6b2ee308d12249d806d2d670a0d06f9e395197"
+            "size": 34466,
+            "hash": "20c3b549714a851528d92e750dffc66e110943a1328d575090e172398c7da3ee"
         },
         {
             "type": "file",
             "name": "header.php",
-            "size": 12245,
-            "hash": "d5a6a2570305e36b8518e111b9a5251d38b32ede6df6b0a27c15bb713a4a742e"
+            "size": 12477,
+            "hash": "c118ea13252bcb8cee7dbc49b086178197077f52a7f574b96bfe5147f6b7ce99"
         },
         {
             "type": "folder",
@@ -154,8 +160,8 @@
         {
             "type": "file",
             "name": "page-templates/page-dept-ministry.php",
-            "size": 3020,
-            "hash": "1ad5d47a815a074a214828ae0aeb3d584806ac09614d58014ac680034c2163f7"
+            "size": 4101,
+            "hash": "7c7a324046a8fc430d4b1f87132ac8f688c790f78f2fa95a9dfcfd330ed604fe"
         },
         {
             "type": "file",
@@ -189,9 +195,15 @@
         },
         {
             "type": "file",
+            "name": "page-templates/page-dept.php",
+            "size": 36146,
+            "hash": "9a2d9bc01c4f877628ce3b68e9e482e0c98f77793d52bbf1ee80dd101df334f7"
+        },
+        {
+            "type": "file",
             "name": "page-templates/page-greeting.php",
             "size": 5941,
-            "hash": "a9436ffd6bbc4feb9846b98d0647b2ce7d138cac835cf8f1d7d7cfd252979b49"
+            "hash": "dd1668bf52b59fb27a2c7cbf93aea3060400fb1108763520684f7b822eca6883"
         },
         {
             "type": "file",
@@ -202,8 +214,8 @@
         {
             "type": "file",
             "name": "page-templates/page-location.php",
-            "size": 8524,
-            "hash": "662f41714c1e07133ac1c936e45d64d797c71feb65602611d6cf110ff7015dcd"
+            "size": 8599,
+            "hash": "c30ba6fb26beee6a5bea4085f27da90e53ab28ffea6efd259f644cc222351030"
         },
         {
             "type": "file",
@@ -233,13 +245,13 @@
             "type": "file",
             "name": "page-templates/page-vision.php",
             "size": 6111,
-            "hash": "d6373f019bd439350ade0680a069e0a45e43a24bdee08edcd5184bda526c3696"
+            "hash": "0a8017d78760e66cbb798ba1cee2dacf620e3596efb256caa7fd50c10633a6c4"
         },
         {
             "type": "file",
             "name": "page-templates/page-worship.php",
-            "size": 7055,
-            "hash": "5dda252fa39d807e60ada09bb3b29464e16c8745e807fcbbb155ce620a45af7d"
+            "size": 6130,
+            "hash": "debb114f34ba46fae77c43482cb0243ede374f9a3b7fb80b60658b7a3c360e70"
         },
         {
             "type": "file",
@@ -286,8 +298,8 @@
         {
             "type": "file",
             "name": "assets/css/department-design.css",
-            "size": 2473,
-            "hash": "bb165d0a18fe976ff59b284bf73e03654e27caeadc5742f45ebc8be009e4ae17"
+            "size": 11905,
+            "hash": "bda868e83d33f0925ab480ddad98142061a2a0e80cd3c85d53203388b790de55"
         },
         {
             "type": "file",
@@ -310,8 +322,8 @@
         {
             "type": "file",
             "name": "assets/css/layout.css",
-            "size": 10320,
-            "hash": "a057bd77820800c9b70497dd2b24aaf76bd24fb791e1845b3cd10679487f0d31"
+            "size": 7902,
+            "hash": "f768200881840b3aa18445eeb84a18c6e29d7cc7455256ca0a58f15df56a41fd"
         },
         {
             "type": "file",
@@ -328,8 +340,8 @@
         {
             "type": "file",
             "name": "assets/css/mobile-menu.css",
-            "size": 5532,
-            "hash": "d9dc171175a4c715ba032acdfb028319bb774c94e99aac7ce2833b000d96fc47"
+            "size": 5700,
+            "hash": "ac39938e359b73781b53e316640dd3f15a12e5a87f81f70402a0a0d7762b3483"
         },
         {
             "type": "file",
@@ -352,8 +364,8 @@
         {
             "type": "file",
             "name": "assets/css/style.css",
-            "size": 176241,
-            "hash": "18318eb90f3ecbe45937c6ef2cf208979113c666ac16243a281405e5d02ee404"
+            "size": 180821,
+            "hash": "1561425732b9ad9f5c10825606489df8419f4e8edc475a1dc56f80bb58bd4d00"
         },
         {
             "type": "file",
@@ -489,6 +501,12 @@
         },
         {
             "type": "file",
+            "name": "assets/images/worship-main.jpg",
+            "size": 344740,
+            "hash": "1eb18c1726ee99a55750907ccd072fb8746827745b848217d38b1a5be4d0995e"
+        },
+        {
+            "type": "file",
             "name": "assets/images/worship-main.png",
             "size": 966508,
             "hash": "b34217a55baf81011c844905f740c2890fc9f22f3cac39d836e7729b478499e9"
@@ -514,8 +532,8 @@
         {
             "type": "file",
             "name": "assets/js/main.js",
-            "size": 32589,
-            "hash": "cbc4924c3de409d9fbcb74b031788dae0940eb3c7f280f3a8398ddc86194df27"
+            "size": 39574,
+            "hash": "33532552657e15a63f8db7bd204cbec3f7bd7d1052fe87d708bf72d3c0ee2fc4"
         },
         {
             "type": "file",

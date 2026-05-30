@@ -361,4 +361,264 @@
         });
     });
 
+    // ──────────────────────────────
+    //  KBoard 게시판 ID 저장
+    // ──────────────────────────────
+
+    $('#gpc-save-kboard-id').on('click', function () {
+        const btn = $(this);
+        const kboardId = $('#gpc-kboard-id').val();
+        const kboardArchiveId = $('#gpc-kboard-archive-id').val();
+        const $status = $('#gpc-kboard-save-status');
+        btn.prop('disabled', true).text('저장 중...');
+
+        $.post(ajaxUrl, {
+            action: 'gpc_bulletin_save_kboard_id',
+            nonce: nonce,
+            kboard_id: kboardId,
+            kboard_archive_id: kboardArchiveId,
+        })
+        .done(function (res) {
+            $status
+                .removeClass('gpc-status-fail').addClass('gpc-status-ok')
+                .find('.gpc-status-text').text(res.success ? '✅ ' + (res.data || '저장되었습니다.') : '❌ ' + (res.data || '저장 실패'));
+            $status.show();
+        })
+        .fail(function () {
+            $status.removeClass('gpc-status-ok').addClass('gpc-status-fail')
+                   .find('.gpc-status-text').text('❌ 네트워크 오류');
+            $status.show();
+        })
+        .always(function () {
+            btn.prop('disabled', false).text('💾 게시판 설정 저장');
+        });
+    });
+
+    // 프롬프트 저장
+    $('#gpc-save-notice-prompt').on('click', function () {
+        const btn = $(this);
+        const $status = $('#gpc-prompt-save-status');
+        btn.prop('disabled', true).text('저장 중...');
+
+        $.post(ajaxUrl, {
+            action:  'gpc_bulletin_save_notice_prompt',
+            nonce:   nonce,
+            prompt:  $('#gpc-notice-prompt').val(),
+        })
+        .done(function (res) {
+            $status.find('.gpc-status-text')
+                   .text(res.success ? '✅ ' + (res.data || '저장되었습니다.') : '❌ ' + (res.data || '저장 실패'));
+            $status.show();
+        })
+        .fail(function () {
+            $status.find('.gpc-status-text').text('❌ 네트워크 오류');
+            $status.show();
+        })
+        .always(function () {
+            btn.prop('disabled', false).text('💾 프롬프트 저장');
+        });
+    });
+
+
+    // ──────────────────────────────
+    //  공지사항 발행 모달
+    // ──────────────────────────────
+
+    // 모달 열기 (기본 JS 템플릿 사용)
+    $(document).on('click', '#gpc-publish-notice-btn', function () {
+        const $modal = $('#gpc-publish-modal');
+        if (!$modal.length) return;
+
+        const rawDate = $modal.data('publish-date') || '';
+        const dateFormatted = rawDate
+            ? rawDate.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일')
+            : '';
+        const title = '가평교회 주간소식 — ' + dateFormatted;
+
+        // JS 템플릿으로 기본 구성
+        const content = buildNoticeContent($modal.data());
+
+        $('#gpc-publish-title').val(title);
+        $('#gpc-publish-content').val(content);
+        $('#gpc-publish-result').hide();
+        $('#gpc-publish-confirm').prop('disabled', false).text('✅ 발행');
+        $modal.fadeIn(200);
+        $('body').addClass('gpc-modal-open');
+    });
+
+    // AI로 재구성하기 버튼 클릭
+    $(document).on('click', '#gpc-ai-reconstruct-btn', function () {
+        const $btn = $(this);
+        const $modal = $('#gpc-publish-modal');
+        const bulletinId = $('#gpc-publish-notice-btn').data('bulletin-id');
+
+        $btn.prop('disabled', true).text('⏳ 생성 중...');
+        $('#gpc-publish-content').val('').attr('placeholder', '🤖 AI가 공지 내용을 다시 작성하고 있습니다...');
+        $('#gpc-publish-confirm').prop('disabled', true);
+        $('#gpc-publish-result').hide();
+
+        // AI 호출
+        $.post(ajaxUrl, {
+            action:      'gpc_bulletin_generate_notice',
+            nonce:       nonce,
+            bulletin_id: bulletinId,
+        })
+        .done(function (res) {
+            if (res.success && res.data && res.data.content) {
+                $('#gpc-publish-content').val(res.data.content).attr('placeholder', '');
+                $('#gpc-publish-result').removeClass('gpc-notice-error').addClass('gpc-notice-success')
+                    .text('✨ AI가 내용을 재구성했습니다. 수정 후 발행하세요.').show();
+            } else {
+                const fallback = buildNoticeContent($modal.data());
+                $('#gpc-publish-content').val(fallback).attr('placeholder', '');
+                $('#gpc-publish-result')
+                    .removeClass('gpc-notice-success').addClass('gpc-notice-error')
+                    .text('⚠️ AI 생성 실패, 기본 템플릿으로 복구했습니다: ' + (res.data || ''))
+                    .show();
+            }
+        })
+        .fail(function () {
+            const fallback = buildNoticeContent($modal.data());
+            $('#gpc-publish-content').val(fallback).attr('placeholder', '');
+            $('#gpc-publish-result')
+                .removeClass('gpc-notice-success').addClass('gpc-notice-error')
+                .text('⚠️ 네트워크 오류, 기본 템플릿으로 복구했습니다.')
+                .show();
+        })
+        .always(function () {
+            $btn.prop('disabled', false).text('🤖 AI로 재구성하기');
+            $('#gpc-publish-confirm').prop('disabled', false);
+        });
+    });
+
+    // 모달 닫기
+    function closePublishModal() {
+        $('#gpc-publish-modal').fadeOut(150);
+        $('body').removeClass('gpc-modal-open');
+    }
+
+    $(document).on('click', '#gpc-modal-close, #gpc-publish-cancel, #gpc-modal-overlay', closePublishModal);
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') closePublishModal();
+    });
+
+    // 공지 내용 자동 조합
+    function buildNoticeContent(d) {
+        const lines = [];
+        const date = (d.publishDate || '').replace(/(\d{4})-(\d{2})-(\d{2})/, '$1년 $2월 $3일');
+
+        lines.push('가평교회 주간 공지사항\n');
+
+        if (date) {
+            lines.push('[발행 날짜] ' + date + '\n');
+        }
+
+        const hasWorshipInfo = d.sabbathType || d.sunsetTime || d.preacher || d.memoryVerse || d.sermonTitle || d.bibleText;
+        if (hasWorshipInfo) {
+            lines.push('[예배 안내]');
+            if (d.sabbathType) lines.push(d.sabbathType);
+            if (d.sunsetTime)  lines.push('일몰 시각: ' + d.sunsetTime);
+            if (d.preacher)    lines.push('설교자: ' + d.preacher);
+            if (d.sermonTitle) lines.push('설교 제목: ' + d.sermonTitle);
+            if (d.bibleText)   lines.push('성경 본문: ' + d.bibleText);
+            if (d.memoryVerse) lines.push('기억절: ' + d.memoryVerse);
+            lines.push('');
+        }
+
+        if (d.churchNews) {
+            lines.push('[교회 소식 및 안내]');
+            lines.push(d.churchNews);
+            lines.push('');
+        }
+
+        if (d.announcements) {
+            lines.push('[특별 활동 및 행사]');
+            lines.push(d.announcements);
+            lines.push('');
+        }
+
+        if (d.prayerRequests) {
+            lines.push('[기도 요청]');
+            lines.push(d.prayerRequests);
+            lines.push('');
+        }
+
+        if (d.serviceThisWeek) {
+            lines.push('[이번 주 봉사]');
+            lines.push(d.serviceThisWeek);
+            lines.push('');
+        }
+
+        if (d.serviceNextWeek) {
+            lines.push('[다음 주 봉사]');
+            lines.push(d.serviceNextWeek);
+            lines.push('');
+        }
+
+        if (d.offeringList) {
+            lines.push('[헌금자 명단]');
+            lines.push(d.offeringList);
+            lines.push('');
+        }
+
+        return lines.join('\n').trim();
+    }
+
+    // 발행 확정
+    $(document).on('click', '#gpc-publish-confirm', function () {
+        const btn = $(this);
+        const bulletinId = $('#gpc-publish-notice-btn').data('bulletin-id');
+        const title   = $('#gpc-publish-title').val().trim();
+        const content = $('#gpc-publish-content').val().trim();
+        const $result = $('#gpc-publish-result');
+
+        if (!title) {
+            $result.removeClass('gpc-notice-success').addClass('gpc-notice-error')
+                   .text('❌ 제목을 입력해주세요.').show();
+            return;
+        }
+
+        btn.prop('disabled', true).text('발행 중...');
+        $result.hide();
+
+        $.post(ajaxUrl, {
+            action:       'gpc_bulletin_publish_notice',
+            nonce:        nonce,
+            bulletin_id:  bulletinId,
+            post_title:   title,
+            post_content: content,
+        })
+        .done(function (res) {
+            if (res.success) {
+                $result.removeClass('gpc-notice-error').addClass('gpc-notice-success')
+                       .text('✅ ' + res.data.message).show();
+
+                // 버튼 텍스트를 "업데이트"로 변경
+                const $publishBtn = $('#gpc-publish-notice-btn');
+                $publishBtn
+                    .text('🔄 공지사항 업데이트')
+                    .removeClass('gpc-btn-success').addClass('gpc-btn-secondary')
+                    .data('notice-post-id', res.data.kboard_uid);
+
+                // 발행됨 뱃지 추가
+                if (!$('.gpc-published-badge').length) {
+                    $publishBtn.before('<span class="gpc-published-badge">✅ 발행됨</span> ');
+                }
+
+                // 2초 후 모달 닫기
+                setTimeout(closePublishModal, 2000);
+            } else {
+                $result.removeClass('gpc-notice-success').addClass('gpc-notice-error')
+                       .text('❌ ' + (res.data || '발행 실패')).show();
+            }
+        })
+        .fail(function () {
+            $result.removeClass('gpc-notice-success').addClass('gpc-notice-error')
+                   .text('❌ 네트워크 오류').show();
+        })
+        .always(function () {
+            btn.prop('disabled', false).text('✅ 발행');
+        });
+    });
+
 })(jQuery);
