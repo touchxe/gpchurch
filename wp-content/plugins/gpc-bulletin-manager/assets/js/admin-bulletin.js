@@ -621,4 +621,92 @@
         });
     });
 
+    // ──────────────────────────────
+    //  일괄 주보 동기화 (순서지 목록 페이지)
+    // ──────────────────────────────
+
+    let isBulkSyncing = false;
+
+    $('#gpc-start-bulk-sync').on('click', function () {
+        if (isBulkSyncing) return;
+
+        const mode = $('input[name="gpc-sync-mode"]:checked').val();
+        const onlyUnsynced = (mode === 'unsynced') ? 1 : 0;
+        const confirmMsg = onlyUnsynced
+            ? '미연동 순서지를 KBoard 주보 게시판에 일괄 동기화합니다. 계속하시겠습니까?'
+            : '전체 순서지를 KBoard 주보 게시판에 재동기화합니다. 시간이 걸릴 수 있습니다. 계속하시겠습니까?';
+
+        if (!confirm(confirmMsg)) return;
+
+        isBulkSyncing = true;
+        const $btn = $(this);
+        $btn.prop('disabled', true).text('⏳ 동기화 중...');
+
+        const $progressWrap = $('#gpc-sync-progress-wrap');
+        const $progressBar  = $('#gpc-sync-progress-bar');
+        const $progressLabel = $('#gpc-sync-progress-label');
+        const $result = $('#gpc-sync-result');
+
+        $progressWrap.show();
+        $progressBar.css('width', '0%');
+        $progressLabel.text('준비 중...');
+        $result.hide();
+
+        let totalSuccess = 0;
+        let totalFail    = 0;
+
+        function runChunk(offset) {
+            $.post(ajaxUrl, {
+                action: 'gpc_bulletin_bulk_sync',
+                nonce: nonce,
+                only_unsynced: onlyUnsynced,
+                offset: offset,
+                chunk_size: 5,
+            })
+            .done(function (res) {
+                if (!res.success) {
+                    finishSync(false, '❌ 오류: ' + (res.data || '알 수 없는 오류'));
+                    return;
+                }
+
+                const d = res.data;
+                totalSuccess += (d.success || 0);
+                totalFail    += (d.fail    || 0);
+
+                if (d.total > 0) {
+                    const pct = Math.round((d.processed / d.total) * 100);
+                    $progressBar.css('width', pct + '%');
+                    $progressLabel.text(d.processed + ' / ' + d.total + '  (' + pct + '%)');
+                }
+
+                if (d.done) {
+                    const msg = d.total === 0
+                        ? '✅ 동기화할 항목이 없습니다.'
+                        : '✅ 완료! 총 ' + d.total + '건 중 ' + totalSuccess + '건 성공' +
+                          (totalFail > 0 ? ', ' + totalFail + '건 실패' : '');
+                    finishSync(true, msg);
+                } else {
+                    // 다음 청크
+                    setTimeout(function () { runChunk(d.next_offset); }, 300);
+                }
+            })
+            .fail(function () {
+                finishSync(false, '❌ 네트워크 오류가 발생했습니다.');
+            });
+        }
+
+        function finishSync(ok, msg) {
+            isBulkSyncing = false;
+            $btn.prop('disabled', false).text('▶ 동기화 시작');
+            $progressBar.css('width', ok ? '100%' : $progressBar.css('width'));
+            $result
+                .removeClass('gpc-sync-ok gpc-sync-fail')
+                .addClass(ok ? 'gpc-sync-ok' : 'gpc-sync-fail')
+                .text(msg)
+                .show();
+        }
+
+        runChunk(0);
+    });
+
 })(jQuery);

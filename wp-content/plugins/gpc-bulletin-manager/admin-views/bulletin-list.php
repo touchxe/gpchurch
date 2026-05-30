@@ -24,6 +24,33 @@ $pages    = ceil( $total / $per_page );
         </a>
     </h1>
 
+    <!-- 일괄 주보 동기화 패널 -->
+    <div class="gpc-bulk-sync-panel" id="gpc-bulk-sync-panel">
+        <div class="gpc-bulk-sync-header">
+            <span class="gpc-bulk-sync-title">🔄 주보 아카이브 일괄 동기화</span>
+            <span class="gpc-bulk-sync-desc">순서지 목록에 등록된 주보를 주보 게시판(KBoard 아카이브)에 자동 연동합니다.</span>
+        </div>
+        <div class="gpc-bulk-sync-actions">
+            <label class="gpc-radio-label">
+                <input type="radio" name="gpc-sync-mode" value="unsynced" checked> 미연동 항목만
+            </label>
+            <label class="gpc-radio-label">
+                <input type="radio" name="gpc-sync-mode" value="all"> 전체 재동기화
+            </label>
+            <button type="button" class="gpc-btn gpc-btn-success gpc-btn-sm" id="gpc-start-bulk-sync">
+                ▶ 동기화 시작
+            </button>
+        </div>
+        <!-- 진행 상태 바 -->
+        <div class="gpc-sync-progress-wrap" id="gpc-sync-progress-wrap" style="display:none">
+            <div class="gpc-sync-progress-bar-bg">
+                <div class="gpc-sync-progress-bar" id="gpc-sync-progress-bar" style="width:0%"></div>
+            </div>
+            <span class="gpc-sync-progress-label" id="gpc-sync-progress-label">0 / 0</span>
+        </div>
+        <div class="gpc-sync-result" id="gpc-sync-result" style="display:none"></div>
+    </div>
+
     <div class="gpc-list-toolbar">
         <form method="get" class="gpc-search-form">
             <input type="hidden" name="page" value="gpc-bulletin">

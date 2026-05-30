@@ -36,6 +36,7 @@ class GPC_Bulletin_Admin {
         add_action( 'wp_ajax_gpc_bulletin_save_kboard_id',      array( $this, 'ajax_save_kboard_id' ) );
         add_action( 'wp_ajax_gpc_bulletin_generate_notice',      array( $this, 'ajax_generate_notice_content' ) );
         add_action( 'wp_ajax_gpc_bulletin_save_notice_prompt',   array( $this, 'ajax_save_notice_prompt' ) );
+        add_action( 'wp_ajax_gpc_bulletin_bulk_sync',            array( $this, 'ajax_bulk_sync' ) );
 
         // admin_init에서 테이블 존재 확인 (안전장치)
         add_action( 'admin_init', array( $this, 'maybe_create_table' ) );
@@ -592,5 +593,106 @@ class GPC_Bulletin_Admin {
         $prompt = isset( $_POST['prompt'] ) ? sanitize_textarea_field( wp_unslash( $_POST['prompt'] ) ) : '';
         update_option( 'gpc_bulletin_notice_prompt', $prompt );
         wp_send_json_success( '프롬프트가 저장되었습니다.' );
+    }
+
+    /**
+     * 과거 순서지 일괄 KBoard 동기화 AJAX 핸들러
+     *
+     * 이미지 URL이 있는 모든 순서지(또는 미연동 순서지)를 KBoard 아카이브에 일괄 동기화합니다.
+     * 청크(chunk) 방식으로 한 번에 일정 수만 처리하여 타임아웃 방지.
+     *
+     * POST 파라미터:
+     *   - only_unsynced : 1 = 미연동 항목만, 0 = 전체
+     *   - offset        : 처리 시작 오프셋
+     *   - chunk_size    : 한 번에 처리할 건수 (기본 5)
+     */
+    public function ajax_bulk_sync() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        global $wpdb;
+        $table_name   = $wpdb->prefix . 'gpc_bulletin';
+        $only_unsynced = isset( $_POST['only_unsynced'] ) ? (int) $_POST['only_unsynced'] : 1;
+        $offset        = isset( $_POST['offset'] )        ? (int) $_POST['offset']        : 0;
+        $chunk_size    = isset( $_POST['chunk_size'] )    ? (int) $_POST['chunk_size']    : 5;
+
+        // 안전 범위 제한
+        if ( $chunk_size < 1 )  { $chunk_size = 1; }
+        if ( $chunk_size > 20 ) { $chunk_size = 20; }
+
+        // 총 대상 수 카운트
+        if ( $only_unsynced ) {
+            $total = (int) $wpdb->get_var(
+                "SELECT COUNT(*) FROM {$table_name}
+                  WHERE image_url != '' AND image_url IS NOT NULL
+                    AND (bulletin_post_id IS NULL OR bulletin_post_id = 0)"
+            );
+        } else {
+            $total = (int) $wpdb->get_var(
+                "SELECT COUNT(*) FROM {$table_name}
+                  WHERE image_url != '' AND image_url IS NOT NULL"
+            );
+        }
+
+        if ( $total === 0 ) {
+            wp_send_json_success( array(
+                'done'        => true,
+                'total'       => 0,
+                'processed'   => 0,
+                'success'     => 0,
+                'fail'        => 0,
+                'message'     => '동기화할 항목이 없습니다.',
+            ) );
+            return;
+        }
+
+        // 청크 항목 가져오기
+        if ( $only_unsynced ) {
+            $items = $wpdb->get_results( $wpdb->prepare(
+                "SELECT id FROM {$table_name}
+                  WHERE image_url != '' AND image_url IS NOT NULL
+                    AND (bulletin_post_id IS NULL OR bulletin_post_id = 0)
+                  ORDER BY publish_date DESC
+                  LIMIT %d OFFSET %d",
+                $chunk_size, $offset
+            ) );
+        } else {
+            $items = $wpdb->get_results( $wpdb->prepare(
+                "SELECT id FROM {$table_name}
+                  WHERE image_url != '' AND image_url IS NOT NULL
+                  ORDER BY publish_date DESC
+                  LIMIT %d OFFSET %d",
+                $chunk_size, $offset
+            ) );
+        }
+
+        $success_count = 0;
+        $fail_count    = 0;
+
+        foreach ( $items as $item ) {
+            $result = $this->sync_to_kboard_archive( (int) $item->id );
+            if ( $result ) {
+                $success_count++;
+            } else {
+                $fail_count++;
+            }
+        }
+
+        $processed_so_far = $offset + count( $items );
+        $is_done          = ( $processed_so_far >= $total );
+
+        wp_send_json_success( array(
+            'done'      => $is_done,
+            'total'     => $total,
+            'processed' => $processed_so_far,
+            'success'   => $success_count,
+            'fail'      => $fail_count,
+            'next_offset' => $processed_so_far,
+            'message'   => $is_done
+                ? "총 {$total}건 중 {$success_count}건 동기화 완료" . ( $fail_count > 0 ? " ({$fail_count}건 실패)" : '' )
+                : "{$processed_so_far}/{$total} 처리 중...",
+        ) );
     }
 }

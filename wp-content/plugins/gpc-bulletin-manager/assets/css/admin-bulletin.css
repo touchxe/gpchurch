@@ -661,3 +661,100 @@
 body.gpc-modal-open {
     overflow: hidden;
 }
+
+/* ────────────────────────────────
+   일괄 주보 동기화 패널
+──────────────────────────────── */
+.gpc-bulk-sync-panel {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.gpc-bulk-sync-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.gpc-bulk-sync-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.gpc-bulk-sync-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+.gpc-bulk-sync-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.gpc-radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    color: #475569;
+    cursor: pointer;
+}
+
+.gpc-sync-progress-wrap {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gpc-sync-progress-bar-bg {
+    flex: 1;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.gpc-sync-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.gpc-sync-progress-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    min-width: 100px;
+    text-align: right;
+}
+
+.gpc-sync-result {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.gpc-sync-ok {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+}
+
+.gpc-sync-fail {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+}
