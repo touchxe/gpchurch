@@ -1,0 +1,319 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1777710219317,
+    "data": [
+        {
+            "type": "folder",
+            "name": "calendar-skin"
+        },
+        {
+            "type": "folder",
+            "name": "gallary-skin"
+        },
+        {
+            "type": "folder",
+            "name": "notice-skin"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/confirm.php",
+            "size": 1224,
+            "hash": "a429feaa6619422fc2866d344e100fd909dad1ea2d6e8938048f8ac6859f4347"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/document.php",
+            "size": 6438,
+            "hash": "8862ac52112dc760e8a53f7d9edd65a579bd8bce52b39f2dc87ab2f334dbb4ec"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/editor-fields.php",
+            "size": 34190,
+            "hash": "7edb40512e6ddc083ca5772908b87f94d8697598f22e88fda1f346c7638dda38"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/editor.php",
+            "size": 2325,
+            "hash": "d0ffa629d84aa48ed27b2e19ea075baa96eac4a0ab202704f54a01c02cac1372"
+        },
+        {
+            "type": "folder",
+            "name": "calendar-skin/images"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/latest.php",
+            "size": 1232,
+            "hash": "e1471deef68873389b331126d6ede679ea4b55730f96f6cfdbbcb76206ebb144"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/list-category-default.php",
+            "size": 7104,
+            "hash": "a029d830d3040d51b47365e4af54198eed406c6f56167cb9e8e96c6cdac92340"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/list-category-tree-select.php",
+            "size": 3031,
+            "hash": "dbbfa9f8745bd391836442e76b001a610eafe3d1f2946cc28f5fdcdc912aff31"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/list-category-tree-tab.php",
+            "size": 3329,
+            "hash": "991701d0c3ed34b1b9f9146a65822c232ab751db65a3f576dbdb771f3bc5edda"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/list.php",
+            "size": 6191,
+            "hash": "88bd7b1f30d0123bb710408c96e8f2f5008527baa80da63bbd021f736b9b9006"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/reply-template.php",
+            "size": 2337,
+            "hash": "de73506f7df2c4bc853b50e85b4a4c2253b35c2ec3ec96c000f512d9c18fcdb5"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/screenshot.png",
+            "size": 147572,
+            "hash": "e7074efdd7e5e1bc3e08b5ec6de6c1ffa4c755ec18856e5f0a5e52e9080d0c4e"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/script.js",
+            "size": 2758,
+            "hash": "c97993ae4b639530a49f378228c2c29ced1108887567825fc6f4d4a7e1522464"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/style.css",
+            "size": 17499,
+            "hash": "649450b5c85fdce1adfd12945adf9c43a87f48db00fcbe7335fea01c6bd2ad97"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/thumbnail.png",
+            "size": 6021,
+            "hash": "8503c6439da54fb0853cd076c098939c0843fa934288df049c3bc7e57476eaab"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/confirm.php",
+            "size": 1224,
+            "hash": "a429feaa6619422fc2866d344e100fd909dad1ea2d6e8938048f8ac6859f4347"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/document.php",
+            "size": 6067,
+            "hash": "ee1fa74e298f3d0420615f1db18314e8232d37bbd58f9466884d7c7ab5e53709"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/editor-fields.php",
+            "size": 34190,
+            "hash": "7edb40512e6ddc083ca5772908b87f94d8697598f22e88fda1f346c7638dda38"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/editor.php",
+            "size": 1347,
+            "hash": "53d87638bccab50a197db265145a8b43bf631dcc1e1da2bc6d67c1b8b5d76cf3"
+        },
+        {
+            "type": "folder",
+            "name": "gallary-skin/images"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/latest.php",
+            "size": 3010,
+            "hash": "c5ad024cc306bc548b4ffd3aad42d15717364ad9b59a87a4b74a6f45e5d10088"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/list-category-default.php",
+            "size": 7104,
+            "hash": "a029d830d3040d51b47365e4af54198eed406c6f56167cb9e8e96c6cdac92340"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/list-category-tree-select.php",
+            "size": 3031,
+            "hash": "dbbfa9f8745bd391836442e76b001a610eafe3d1f2946cc28f5fdcdc912aff31"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/list-category-tree-tab.php",
+            "size": 3329,
+            "hash": "991701d0c3ed34b1b9f9146a65822c232ab751db65a3f576dbdb771f3bc5edda"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/list.php",
+            "size": 5940,
+            "hash": "b2e92c03b2c51b4103f36970459a673598dca7b29f42af6de43b0471243b72f9"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/reply-template.php",
+            "size": 2337,
+            "hash": "de73506f7df2c4bc853b50e85b4a4c2253b35c2ec3ec96c000f512d9c18fcdb5"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/screenshot.png",
+            "size": 147572,
+            "hash": "e7074efdd7e5e1bc3e08b5ec6de6c1ffa4c755ec18856e5f0a5e52e9080d0c4e"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/script.js",
+            "size": 2758,
+            "hash": "c97993ae4b639530a49f378228c2c29ced1108887567825fc6f4d4a7e1522464"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/style.css",
+            "size": 45600,
+            "hash": "95ea984ecea1fd4215b8e004c1080c0956d2a9e0def3df2ae99b4fb2249ad08c"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/thumbnail.png",
+            "size": 6021,
+            "hash": "8503c6439da54fb0853cd076c098939c0843fa934288df049c3bc7e57476eaab"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/confirm.php",
+            "size": 1224,
+            "hash": "a429feaa6619422fc2866d344e100fd909dad1ea2d6e8938048f8ac6859f4347"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/document.php",
+            "size": 6049,
+            "hash": "a910461ce11590ecb583544bd877e680fcf49240f63d6dbf867c2c53130e46c1"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/editor-fields.php",
+            "size": 34190,
+            "hash": "7edb40512e6ddc083ca5772908b87f94d8697598f22e88fda1f346c7638dda38"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/editor.php",
+            "size": 1347,
+            "hash": "53d87638bccab50a197db265145a8b43bf631dcc1e1da2bc6d67c1b8b5d76cf3"
+        },
+        {
+            "type": "folder",
+            "name": "notice-skin/images"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/latest.php",
+            "size": 2188,
+            "hash": "b9a42257e63b248e5ed6913ac29e40cec5c7f6d5a3e68dd2eef59f33bf0cd7fc"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/list-category-default.php",
+            "size": 7104,
+            "hash": "a029d830d3040d51b47365e4af54198eed406c6f56167cb9e8e96c6cdac92340"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/list-category-tree-select.php",
+            "size": 3031,
+            "hash": "dbbfa9f8745bd391836442e76b001a610eafe3d1f2946cc28f5fdcdc912aff31"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/list-category-tree-tab.php",
+            "size": 3329,
+            "hash": "991701d0c3ed34b1b9f9146a65822c232ab751db65a3f576dbdb771f3bc5edda"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/list.php",
+            "size": 11403,
+            "hash": "7284c3c9dc400e744d419f0729dee00a5fc34c3b6961a6aa818bb94cf289eaea"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/reply-template.php",
+            "size": 2337,
+            "hash": "de73506f7df2c4bc853b50e85b4a4c2253b35c2ec3ec96c000f512d9c18fcdb5"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/screenshot.png",
+            "size": 147572,
+            "hash": "e7074efdd7e5e1bc3e08b5ec6de6c1ffa4c755ec18856e5f0a5e52e9080d0c4e"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/script.js",
+            "size": 2758,
+            "hash": "c97993ae4b639530a49f378228c2c29ced1108887567825fc6f4d4a7e1522464"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/style.css",
+            "size": 33463,
+            "hash": "68f0879f3538a874d5c58fba52d5f2fd142be561e51469b3af5a1b8a4ee82819"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/thumbnail.png",
+            "size": 6021,
+            "hash": "8503c6439da54fb0853cd076c098939c0843fa934288df049c3bc7e57476eaab"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/images/icon-lock.png",
+            "size": 535,
+            "hash": "3f651a915daa8583ea61bf09682c414de8a7ee65d18bd02b6b8f191c716d7801"
+        },
+        {
+            "type": "file",
+            "name": "calendar-skin/images/icon-reply.png",
+            "size": 1096,
+            "hash": "c3976188d450f5c41a93523ffe11523cdb88ad01c1bd5123a9f3d904bdabbf81"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/images/icon-lock.png",
+            "size": 535,
+            "hash": "3f651a915daa8583ea61bf09682c414de8a7ee65d18bd02b6b8f191c716d7801"
+        },
+        {
+            "type": "file",
+            "name": "gallary-skin/images/icon-reply.png",
+            "size": 1096,
+            "hash": "c3976188d450f5c41a93523ffe11523cdb88ad01c1bd5123a9f3d904bdabbf81"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/images/icon-lock.png",
+            "size": 535,
+            "hash": "3f651a915daa8583ea61bf09682c414de8a7ee65d18bd02b6b8f191c716d7801"
+        },
+        {
+            "type": "file",
+            "name": "notice-skin/images/icon-reply.png",
+            "size": 1096,
+            "hash": "c3976188d450f5c41a93523ffe11523cdb88ad01c1bd5123a9f3d904bdabbf81"
+        }
+    ]
+}

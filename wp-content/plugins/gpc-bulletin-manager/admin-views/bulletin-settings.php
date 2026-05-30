@@ -8,9 +8,10 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-$settings      = GPC_Bulletin_AI_Extractor::get_settings();
-$kboard_id     = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
-$notice_prompt = get_option( 'gpc_bulletin_notice_prompt', '' );
+$settings          = GPC_Bulletin_AI_Extractor::get_settings();
+$kboard_id         = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
+$kboard_archive_id = (int) get_option( 'gpc_bulletin_kboard_archive_id', 4 );
+$notice_prompt     = get_option( 'gpc_bulletin_notice_prompt', '' );
 ?>
 <div class="wrap gpc-bulletin-wrap">
     <h1 class="gpc-bulletin-title">⚙️ 설정</h1>
@@ -81,12 +82,20 @@ $notice_prompt = get_option( 'gpc_bulletin_notice_prompt', '' );
                 <input type="number" id="gpc-kboard-id" class="gpc-input" style="max-width:200px"
                        value="<?php echo esc_attr( $kboard_id ?: '' ); ?>"
                        placeholder="예: 1" min="1">
-                <span class="gpc-field-hint">KBoard 관리자 → 게시판 목록에서 확인한 게시판 ID (숫자)를 입력하세요.</span>
+                <span class="gpc-field-hint">KBoard 관리자 → 게시판 목록에서 확인한 공지사항 게시판 ID (숫자)를 입력하세요.</span>
+            </div>
+
+            <div class="gpc-field-group" style="margin-top: 16px;">
+                <label for="gpc-kboard-archive-id">주보 아카이브 게시판 ID</label>
+                <input type="number" id="gpc-kboard-archive-id" class="gpc-input" style="max-width:200px"
+                       value="<?php echo esc_attr( $kboard_archive_id ?: '4' ); ?>"
+                       placeholder="예: 4" min="1">
+                <span class="gpc-field-hint">주보 아카이브를 자동 업로드할 KBoard 게시판 ID (숫자)를 입력하세요. (기본값: 4)</span>
             </div>
 
             <div class="gpc-settings-actions">
                 <button type="button" id="gpc-save-kboard-id" class="gpc-btn gpc-btn-primary">
-                    💾 게시판 ID 저장
+                    💾 게시판 설정 저장
                 </button>
             </div>
 

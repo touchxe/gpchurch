@@ -120,11 +120,5 @@
 			</div>
 			<?php endif?>
 		</div>
-		
-		<?php if($board->contribution() && !$board->meta->always_view_list):?>
-		<div class="kboard-thumbnail-poweredby">
-			<a href="https://www.cosmosfarm.com/products/kboard" onclick="window.open(this.href);return false;" title="<?php echo __('KBoard is the best community software available for WordPress', 'kboard')?>">Powered by KBoard</a>
-		</div>
-		<?php endif?>
 	</div>
 </div>

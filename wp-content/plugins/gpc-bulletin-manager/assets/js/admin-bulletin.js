@@ -368,6 +368,7 @@
     $('#gpc-save-kboard-id').on('click', function () {
         const btn = $(this);
         const kboardId = $('#gpc-kboard-id').val();
+        const kboardArchiveId = $('#gpc-kboard-archive-id').val();
         const $status = $('#gpc-kboard-save-status');
         btn.prop('disabled', true).text('저장 중...');
 
@@ -375,6 +376,7 @@
             action: 'gpc_bulletin_save_kboard_id',
             nonce: nonce,
             kboard_id: kboardId,
+            kboard_archive_id: kboardArchiveId,
         })
         .done(function (res) {
             $status
@@ -388,7 +390,7 @@
             $status.show();
         })
         .always(function () {
-            btn.prop('disabled', false).text('💾 게시판 ID 저장');
+            btn.prop('disabled', false).text('💾 게시판 설정 저장');
         });
     });
 

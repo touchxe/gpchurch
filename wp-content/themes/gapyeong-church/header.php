@@ -103,6 +103,8 @@
                         <ul class="dropdown-menu">
                             <li><a href="/community/notices" class="dropdown-item">공지사항</a></li>
                             <li><a href="/community/gallery" class="dropdown-item">갤러리</a></li>
+                            <li><a href="/community/bulletin" class="dropdown-item">주보</a></li>
+                            <li><a href="/community/교회일정" class="dropdown-item">교회일정</a></li>
                             <li><a href="/community/contact" class="dropdown-item">문의하기</a></li>
                             <li><a href="/community/prayer" class="dropdown-item">기도요청</a></li>
                         </ul>
@@ -199,6 +201,8 @@
                     <div class="mobile-nav-dropdown">
                         <a href="/community/notices">공지사항</a>
                         <a href="/community/gallery">갤러리</a>
+                        <a href="/community/bulletin">주보</a>
+                        <a href="/community/교회일정">교회일정</a>
                         <a href="/community/contact">문의하기</a>
                         <a href="/community/prayer">기도요청</a>
                     </div>
