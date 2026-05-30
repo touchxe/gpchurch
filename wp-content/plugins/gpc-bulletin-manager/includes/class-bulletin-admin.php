@@ -281,6 +281,29 @@ class GPC_Bulletin_Admin {
             wp_send_json_error( '유효하지 않은 ID입니다.' );
         }
 
+        // 🔗 연동된 KBoard 아카이브 게시글 동시 삭제 로직
+        $item = $this->db->get_by_id( $id );
+        if ( $item && (int) $item->bulletin_post_id > 0 ) {
+            $bulletin_post_id = (int) $item->bulletin_post_id;
+
+            // KBContent 클래스 동적 로드
+            if ( ! class_exists( 'KBContent' ) ) {
+                $kboard_path = WP_PLUGIN_DIR . '/kboard/class/KBContent.class.php';
+                if ( file_exists( $kboard_path ) ) {
+                    require_once $kboard_path;
+                }
+            }
+
+            if ( class_exists( 'KBContent' ) ) {
+                $content_obj = new KBContent();
+                $content_obj->initWithUID( $bulletin_post_id );
+                if ( ! empty( $content_obj->uid ) ) {
+                    // KBoard 글, 썸네일, 관련 메타데이터 서버에서 완전 일괄 삭제
+                    $content_obj->remove();
+                }
+            }
+        }
+
         $success = $this->db->delete( $id );
         if ( $success ) {
             wp_send_json_success( '삭제되었습니다.' );
