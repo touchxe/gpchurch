@@ -495,6 +495,17 @@ class GPC_Bulletin_Admin {
             $this->db->update( $bulletin_id, array( 'bulletin_post_id' => $kboard_uid ) );
         }
 
+        // 📅 최신 주보 섹션(page-bulletin.php) 노출용 워드프레스 옵션 자동 갱신
+        $latest_item = $wpdb->get_row( "SELECT * FROM {$this->db->get_table_name()} ORDER BY publish_date DESC LIMIT 1" );
+        if ( $latest_item ) {
+            $latest_time = strtotime( $latest_item->publish_date );
+            $latest_title = $latest_time ? date( 'Y년 m월 d일', $latest_time ) . ' 안식일 예배 주보' : $latest_item->publish_date . ' 안식일 예배 주보';
+
+            update_option( 'gpc_bulletin_image', $latest_item->image_url );
+            update_option( 'gpc_bulletin_title', $latest_title );
+            update_option( 'gpc_bulletin_date', $latest_item->publish_date );
+        }
+
         return $kboard_uid;
     }
 
