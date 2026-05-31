@@ -199,7 +199,7 @@ body #kboard-document .kboard-document-wrap .kboard-title::after {
 }
 
 body #kboard-document .kboard-document-wrap .kboard-title h1 {
-    font-size: 22px !important; font-weight: 700 !important;
+    font-size: 18px !important; font-weight: 700 !important;
     color: #1e293b !important; line-height: 1.45 !important;
     margin: 0 !important; padding: 0 !important;
     letter-spacing: -0.3px !important; position: relative !important;
@@ -343,27 +343,41 @@ body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-n
 body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-title {
     display: flex !important;
     align-items: center !important;
-    gap: 10px !important;
+    gap: 8px !important;
     margin: 0 !important;
     padding: 16px 20px !important;
     background: #f8fafc !important;
     border-bottom: 1px solid #e8edf5 !important;
     color: #1e293b !important;
-    font-size: 17px !important;
+    font-size: 16px !important;
     font-weight: 700 !important;
     line-height: 1.4 !important;
 }
 
 body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-icon {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 34px !important;
-    height: 34px !important;
-    border-radius: 10px !important;
-    background: #eef2ff !important;
-    font-size: 18px !important;
-    flex: 0 0 34px !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+    flex: 0 0 auto !important;
+    margin-top: 1px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-icon img.emoji {
+    display: inline-block !important;
+    width: 1em !important;
+    height: 1em !important;
+    max-width: 1em !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    vertical-align: -0.12em !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-title > span:last-child {
+    display: inline !important;
 }
 
 body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-body {
@@ -402,12 +416,12 @@ body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-n
 
 body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-word .gpc-notice-section-icon,
 body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-welcome .gpc-notice-section-icon {
-    background: #fff7ed !important;
+    background: transparent !important;
 }
 
 body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-prayer .gpc-notice-section-icon,
 body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-offering .gpc-notice-section-icon {
-    background: #fef2f2 !important;
+    background: transparent !important;
 }
 
 @media (max-width: 768px) {
@@ -544,7 +558,7 @@ body #kboard-document .kboard-thumbnail-poweredby { display: none !important; }
 @media (max-width: 768px) {
     body #kboard-document { padding: 12px 10px !important; }
     body #kboard-document .kboard-document-wrap .kboard-title { padding: 22px 20px 18px !important; }
-    body #kboard-document .kboard-document-wrap .kboard-title h1 { font-size: 18px !important; }
+    body #kboard-document .kboard-document-wrap .kboard-title h1 { font-size: 17px !important; }
     body #kboard-document .kboard-document-wrap .kboard-content { padding: 22px 20px !important; }
     body #kboard-document .kboard-document-wrap .kboard-document-action,
     body #kboard-document .kboard-document-wrap .kboard-attach,
