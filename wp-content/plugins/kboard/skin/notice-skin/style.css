@@ -304,6 +304,129 @@ body #kboard-document .kboard-document-wrap .kboard-content .content-view img {
     max-width: 100% !important; border-radius: 10px !important; height: auto !important;
 }
 
+/* ─── AI 주간 공지 HTML 컴포넌트 ─── */
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-article {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    max-width: 760px !important;
+    margin: 0 auto !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-lead {
+    padding: 22px 24px !important;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%) !important;
+    border: 1px solid #dde3f0 !important;
+    border-radius: 14px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-lead p,
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section p {
+    margin: 0 0 0.9em !important;
+    color: #334155 !important;
+    line-height: 1.82 !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-lead p:last-child,
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section p:last-child {
+    margin-bottom: 0 !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05) !important;
+    overflow: hidden !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 16px 20px !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e8edf5 !important;
+    color: #1e293b !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+    background: #eef2ff !important;
+    font-size: 18px !important;
+    flex: 0 0 34px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-body {
+    padding: 18px 20px 20px !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-list {
+    display: grid !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-list li {
+    position: relative !important;
+    margin: 0 !important;
+    padding: 12px 14px 12px 38px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e8edf5 !important;
+    border-radius: 10px !important;
+    color: #334155 !important;
+    line-height: 1.72 !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-list li::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 16px !important;
+    top: 21px !important;
+    width: 7px !important;
+    height: 7px !important;
+    border-radius: 50% !important;
+    background: #6366f1 !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-word .gpc-notice-section-icon,
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-welcome .gpc-notice-section-icon {
+    background: #fff7ed !important;
+}
+
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-prayer .gpc-notice-section-icon,
+body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-offering .gpc-notice-section-icon {
+    background: #fef2f2 !important;
+}
+
+@media (max-width: 768px) {
+    body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-article {
+        gap: 14px !important;
+    }
+    body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-lead,
+    body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-body {
+        padding: 16px !important;
+    }
+    body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-section-title {
+        padding: 14px 16px !important;
+        font-size: 16px !important;
+    }
+    body #kboard-document .kboard-document-wrap .kboard-content .content-view .gpc-notice-list li {
+        padding: 11px 12px 11px 34px !important;
+    }
+}
+
 /* ─── 좋아요/프린트 ─── */
 body #kboard-document .kboard-document-wrap .kboard-document-action {
     display: flex !important; justify-content: space-between !important;

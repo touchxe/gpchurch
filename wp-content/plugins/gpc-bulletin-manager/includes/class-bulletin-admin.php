@@ -328,6 +328,7 @@ class GPC_Bulletin_Admin {
         $bulletin_id   = isset( $_POST['bulletin_id'] ) ? (int) $_POST['bulletin_id'] : 0;
         $post_title    = isset( $_POST['post_title'] )   ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
         $post_content  = isset( $_POST['post_content'] ) ? wp_kses_post( wp_unslash( $_POST['post_content'] ) ) : '';
+        $post_content_html = $this->format_notice_content_html( $post_content );
         $board_id      = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
 
         if ( $bulletin_id <= 0 ) {
@@ -365,7 +366,7 @@ class GPC_Bulletin_Admin {
                 $result = $content_obj->updateContent( array(
                     'board_id'       => $board_id,
                     'title'          => $post_title,
-                    'content'        => nl2br( esc_html( $post_content ) ),
+                    'content'        => $post_content_html,
                     'member_uid'     => get_current_user_id(),
                     'member_display' => wp_get_current_user()->display_name,
                     'notice'         => 1,
@@ -377,7 +378,7 @@ class GPC_Bulletin_Admin {
                 $result = $content_obj->insertContent( array(
                     'board_id'       => $board_id,
                     'title'          => $post_title,
-                    'content'        => nl2br( esc_html( $post_content ) ),
+                    'content'        => $post_content_html,
                     'member_uid'     => get_current_user_id(),
                     'member_display' => wp_get_current_user()->display_name,
                     'notice'         => 1,
@@ -390,7 +391,7 @@ class GPC_Bulletin_Admin {
             $result = $content_obj->insertContent( array(
                 'board_id'       => $board_id,
                 'title'          => $post_title,
-                'content'        => nl2br( esc_html( $post_content ) ),
+                'content'        => $post_content_html,
                 'member_uid'     => get_current_user_id(),
                 'member_display' => wp_get_current_user()->display_name,
                 'notice'         => 1,
@@ -412,6 +413,186 @@ class GPC_Bulletin_Admin {
             'board_id'    => $board_id,
             'is_update'   => $is_update,
         ) );
+    }
+
+    /**
+     * AI/수동 입력 공지 본문을 KBoard 상세 화면용 HTML 컴포넌트로 변환합니다.
+     *
+     * @param string $content 관리자 모달에서 입력한 본문
+     * @return string
+     */
+    private function format_notice_content_html( $content ) {
+        $lines = $this->normalize_notice_lines( $content );
+        if ( empty( $lines ) ) {
+            return '';
+        }
+
+        $sections = array();
+        $lead     = array();
+        $current  = null;
+
+        foreach ( $lines as $line ) {
+            $heading = $this->detect_notice_heading( $line );
+
+            if ( $heading ) {
+                if ( $current ) {
+                    $sections[] = $current;
+                }
+
+                $current = array(
+                    'title' => $heading['title'],
+                    'icon'  => $heading['icon'],
+                    'slug'  => $heading['slug'],
+                    'items' => array(),
+                );
+                continue;
+            }
+
+            if ( $current ) {
+                $current['items'][] = $line;
+            } else {
+                $lead[] = $line;
+            }
+        }
+
+        if ( $current ) {
+            $sections[] = $current;
+        }
+
+        $html = '<div class="gpc-notice-article">';
+
+        if ( ! empty( $lead ) ) {
+            $html .= '<div class="gpc-notice-lead">';
+            foreach ( $lead as $paragraph ) {
+                $html .= '<p>' . esc_html( $paragraph ) . '</p>';
+            }
+            $html .= '</div>';
+        }
+
+        foreach ( $sections as $section ) {
+            $html .= '<div class="gpc-notice-section gpc-notice-section-' . esc_attr( $section['slug'] ) . '">';
+            $html .= '<h2 class="gpc-notice-section-title">';
+            $html .= '<span class="gpc-notice-section-icon" aria-hidden="true">' . esc_html( $section['icon'] ) . '</span>';
+            $html .= '<span>' . esc_html( $section['title'] ) . '</span>';
+            $html .= '</h2>';
+            $html .= '<div class="gpc-notice-section-body">';
+
+            $html .= $this->render_notice_items_html( $section['items'] );
+
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+
+        $html .= '</div>';
+
+        return wp_kses_post( $html );
+    }
+
+    /**
+     * HTML/Markdown/줄바꿈이 섞인 입력을 사람이 읽는 줄 목록으로 정리합니다.
+     */
+    private function normalize_notice_lines( $content ) {
+        $content = (string) $content;
+        $content = preg_replace_callback(
+            '/<img\b[^>]*\balt=["\']([^"\']*)["\'][^>]*>/i',
+            function ( $matches ) {
+                return html_entity_decode( $matches[1], ENT_QUOTES, 'UTF-8' );
+            },
+            $content
+        );
+        $content = preg_replace( '/<br\s*\/?>/i', "\n", $content );
+        $content = preg_replace( '/<\/(p|div|section|h[1-6]|li)>/i', "\n", $content );
+        $content = preg_replace( '/<li[^>]*>/i', "\n* ", $content );
+        $content = wp_strip_all_tags( $content );
+        $content = html_entity_decode( $content, ENT_QUOTES, 'UTF-8' );
+        $content = str_replace( array( "\r\n", "\r" ), "\n", $content );
+        $content = preg_replace( '/\*\*([^*]+)\*\*/u', '$1', $content );
+        $content = preg_replace( '/__([^_]+)__/u', '$1', $content );
+        $content = preg_replace( '/^[\s#>*_=~-]{3,}$/m', '', $content );
+        $content = preg_replace( '/[ \t]+/u', ' ', $content );
+        $content = preg_replace( "/\n{2,}/u", "\n", $content );
+
+        $lines = array();
+        foreach ( explode( "\n", $content ) as $line ) {
+            $line = trim( $line );
+            if ( '' === $line ) {
+                continue;
+            }
+
+            $line = preg_replace( '/^[\*\-]\s*/u', '* ', $line );
+            if ( ! empty( $lines ) && end( $lines ) === $line ) {
+                continue;
+            }
+
+            $lines[] = $line;
+        }
+
+        return $lines;
+    }
+
+    /**
+     * 공지 섹션 제목을 감지해 고정 아이콘/슬러그로 정규화합니다.
+     */
+    private function detect_notice_heading( $line ) {
+        $plain = trim( preg_replace( '/^[^\p{L}\p{N}]+/u', '', $line ) );
+        $plain = preg_replace( '/\s+/u', ' ', $plain );
+
+        $headings = array(
+            array( 'match' => '말씀', 'title' => '이번 주 말씀 나눔', 'icon' => '✨', 'slug' => 'word' ),
+            array( 'match' => '환영', 'title' => '환영합니다', 'icon' => '💖', 'slug' => 'welcome' ),
+            array( 'match' => '교회 소식', 'title' => '교회 소식 및 안내', 'icon' => '📢', 'slug' => 'news' ),
+            array( 'match' => '기도 요청', 'title' => '기도 요청', 'icon' => '🙏', 'slug' => 'prayer' ),
+            array( 'match' => '이번 주 봉사', 'title' => '이번 주 봉사', 'icon' => '🤝', 'slug' => 'service' ),
+            array( 'match' => '다음 주 봉사', 'title' => '다음 주 봉사', 'icon' => '🗓️', 'slug' => 'next-service' ),
+            array( 'match' => '헌금자 명단', 'title' => '헌금자 명단', 'icon' => '💰', 'slug' => 'offering' ),
+        );
+
+        foreach ( $headings as $heading ) {
+            if ( false !== mb_strpos( $plain, $heading['match'] ) && mb_strlen( $plain ) <= 40 ) {
+                return $heading;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 섹션 본문 줄을 문단과 목록으로 나누어 렌더링합니다.
+     */
+    private function render_notice_items_html( $items ) {
+        $html    = '';
+        $in_list = false;
+
+        foreach ( $items as $item ) {
+            $is_bullet = strpos( $item, '* ' ) === 0;
+            $text      = $is_bullet ? trim( substr( $item, 2 ) ) : trim( $item );
+
+            if ( '' === $text ) {
+                continue;
+            }
+
+            if ( $is_bullet ) {
+                if ( ! $in_list ) {
+                    $html   .= '<ul class="gpc-notice-list">';
+                    $in_list = true;
+                }
+                $html .= '<li>' . esc_html( $text ) . '</li>';
+                continue;
+            }
+
+            if ( $in_list ) {
+                $html   .= '</ul>';
+                $in_list = false;
+            }
+
+            $html .= '<p>' . esc_html( $text ) . '</p>';
+        }
+
+        if ( $in_list ) {
+            $html .= '</ul>';
+        }
+
+        return $html;
     }
 
     /**

@@ -342,7 +342,7 @@ function gapyeong_enqueue_scripts()
         'kboard-notice-skin',
         WP_CONTENT_URL . '/plugins/kboard/skin/notice-skin/style.css',
         array('gapyeong-main-css'),
-        '20260228'
+        '20260531-notice-html'
     );
 
     // === KBoard calendar-skin CSS 강제 로드 ===
@@ -930,4 +930,3 @@ function gapyeong_register_acf_hero_text()
     ));
 }
 add_action('acf/init', 'gapyeong_register_acf_hero_text');
-
