@@ -165,17 +165,32 @@ class GPC_Bulletin_AI_Extractor {
             . "\n\n---\n[순서지 데이터]\n" . $data_text
             . "\n---\n\n위 데이터를 바탕으로 공지사항 글 본문만 작성해주세요. JSON 형식이나 코드블록 없이 순수 텍스트로만 작성해주세요.";
 
-        $body = wp_json_encode( array(
+        // ── API 요청 본문 구성 ──
+        // thinking_budget=0: Gemini 2.5 Flash의 내부 추론(thinking)을 비활성화하여
+        // 토큰을 실제 응답에만 사용합니다. (공지 작성은 단순 작업이라 thinking 불필요)
+        $request_data = array(
             'model'       => $settings['model'],
             'messages'    => array(
                 array( 'role' => 'user', 'content' => $full_prompt ),
             ),
-            'max_tokens'  => 4096,
+            'max_tokens'  => 8192,
             'temperature' => 0.7,
-        ) );
+        );
+
+        // Gemini OpenAI 호환 엔드포인트에서 thinking 비활성화
+        if ( strpos( $settings['api_url'], 'generativelanguage.googleapis.com' ) !== false
+             || strpos( $settings['model'], 'gemini' ) !== false ) {
+            $request_data['extra_body'] = array(
+                'thinking_config' => array(
+                    'thinking_budget' => 0,
+                ),
+            );
+        }
+
+        $body = wp_json_encode( $request_data );
 
         $response = wp_remote_post( $settings['api_url'], array(
-            'timeout'     => 60,
+            'timeout'     => 90,
             'headers'     => array(
                 'Content-Type'  => 'application/json',
                 'Authorization' => 'Bearer ' . $settings['api_key'],
@@ -201,10 +216,52 @@ class GPC_Bulletin_AI_Extractor {
             return array( 'success' => false, 'content' => '', 'error' => 'API 오류: ' . $msg );
         }
 
-        $result  = json_decode( $body_raw, true );
-        $content = isset( $result['choices'][0]['message']['content'] )
+        $result        = json_decode( $body_raw, true );
+        $content       = isset( $result['choices'][0]['message']['content'] )
             ? $result['choices'][0]['message']['content']
             : '';
+        $finish_reason = isset( $result['choices'][0]['finish_reason'] )
+            ? $result['choices'][0]['finish_reason']
+            : 'stop';
+
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            error_log( '[GPC Notice] finish_reason: ' . $finish_reason . ', 응답 길이: ' . mb_strlen( $content ) );
+        }
+
+        // finish_reason이 'length'이면 → 이어쓰기 요청 (최대 1회)
+        if ( $finish_reason === 'length' && ! empty( $content ) ) {
+            $continue_body = wp_json_encode( array(
+                'model'      => $settings['model'],
+                'messages'   => array(
+                    array( 'role' => 'user',      'content' => $full_prompt ),
+                    array( 'role' => 'assistant', 'content' => $content ),
+                    array( 'role' => 'user',      'content' => '이어서 계속 작성해주세요.' ),
+                ),
+                'max_tokens' => 4096,
+            ) );
+
+            $continue_response = wp_remote_post( $settings['api_url'], array(
+                'timeout'     => 60,
+                'headers'     => array(
+                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer ' . $settings['api_key'],
+                ),
+                'body'        => $continue_body,
+                'data_format' => 'body',
+            ) );
+
+            if ( ! is_wp_error( $continue_response )
+                 && wp_remote_retrieve_response_code( $continue_response ) === 200 ) {
+                $continue_result  = json_decode( wp_remote_retrieve_body( $continue_response ), true );
+                $continued_text   = isset( $continue_result['choices'][0]['message']['content'] )
+                    ? $continue_result['choices'][0]['message']['content']
+                    : '';
+                $continued_text   = self::strip_thinking_tags( $continued_text );
+                if ( ! empty( trim( $continued_text ) ) ) {
+                    $content .= "\n" . trim( $continued_text );
+                }
+            }
+        }
 
         $content = self::strip_thinking_tags( $content );
         $content = trim( $content );
@@ -218,6 +275,7 @@ class GPC_Bulletin_AI_Extractor {
 
     /**
      * 순서지 이미지에서 데이터 추출
+
      *
      * @param  string $image_path  로컬 이미지 파일 경로 또는 URL
      * @return array  [ 'success' => bool, 'data' => array|null, 'error' => string ]
