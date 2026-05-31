@@ -166,8 +166,8 @@ class GPC_Bulletin_AI_Extractor {
             . "\n---\n\n위 데이터를 바탕으로 공지사항 글 본문만 작성해주세요. JSON 형식이나 코드블록 없이 순수 텍스트로만 작성해주세요.";
 
         // ── API 요청 본문 구성 ──
-        // thinking_budget=0: Gemini 2.5 Flash의 내부 추론(thinking)을 비활성화하여
-        // 토큰을 실제 응답에만 사용합니다. (공지 작성은 단순 작업이라 thinking 불필요)
+        // Gemini OpenAI 호환 엔드포인트에서는 thinking_config를 직접 넣지 않고,
+        // 공식 호환 파라미터인 reasoning_effort로 추론 예산을 제어합니다.
         $request_data = array(
             'model'       => $settings['model'],
             'messages'    => array(
@@ -177,14 +177,11 @@ class GPC_Bulletin_AI_Extractor {
             'temperature' => 0.7,
         );
 
-        // Gemini OpenAI 호환 엔드포인트에서 thinking 비활성화
-        if ( strpos( $settings['api_url'], 'generativelanguage.googleapis.com' ) !== false
-             || strpos( $settings['model'], 'gemini' ) !== false ) {
-            $request_data['extra_body'] = array(
-                'thinking_config' => array(
-                    'thinking_budget' => 0,
-                ),
-            );
+        $is_gemini = strpos( $settings['api_url'], 'generativelanguage.googleapis.com' ) !== false
+            || strpos( $settings['model'], 'gemini' ) !== false;
+
+        if ( $is_gemini && strpos( $settings['model'], 'gemini-2.5-flash' ) !== false ) {
+            $request_data['reasoning_effort'] = 'none';
         }
 
         $body = wp_json_encode( $request_data );
@@ -230,7 +227,7 @@ class GPC_Bulletin_AI_Extractor {
 
         // finish_reason이 'length'이면 → 이어쓰기 요청 (최대 1회)
         if ( $finish_reason === 'length' && ! empty( $content ) ) {
-            $continue_body = wp_json_encode( array(
+            $continue_request_data = array(
                 'model'      => $settings['model'],
                 'messages'   => array(
                     array( 'role' => 'user',      'content' => $full_prompt ),
@@ -238,7 +235,13 @@ class GPC_Bulletin_AI_Extractor {
                     array( 'role' => 'user',      'content' => '이어서 계속 작성해주세요.' ),
                 ),
                 'max_tokens' => 4096,
-            ) );
+            );
+
+            if ( $is_gemini && strpos( $settings['model'], 'gemini-2.5-flash' ) !== false ) {
+                $continue_request_data['reasoning_effort'] = 'none';
+            }
+
+            $continue_body = wp_json_encode( $continue_request_data );
 
             $continue_response = wp_remote_post( $settings['api_url'], array(
                 'timeout'     => 60,
