@@ -170,11 +170,16 @@ $kboard_id      = (int) get_option( 'gpc_bulletin_kboard_id', 0 );
                 <input type="text" id="gpc-publish-title" class="gpc-input">
             </div>
             <div class="gpc-field-group" style="margin-top:12px">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px;">
                     <label for="gpc-publish-content" style="margin-bottom: 0;">내용</label>
-                    <button type="button" id="gpc-ai-reconstruct-btn" class="gpc-btn gpc-btn-secondary" style="padding: 4px 12px; font-size: 12px; height: auto; line-height: 1.5;">
-                        🤖 AI로 재구성하기
-                    </button>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;">
+                        <button type="button" id="gpc-clean-notice-btn" class="gpc-btn gpc-btn-secondary" style="padding: 4px 12px; font-size: 12px; height: auto; line-height: 1.5;">
+                            🧹 반복문구 정리
+                        </button>
+                        <button type="button" id="gpc-ai-reconstruct-btn" class="gpc-btn gpc-btn-secondary" style="padding: 4px 12px; font-size: 12px; height: auto; line-height: 1.5;">
+                            🤖 AI로 재구성하기
+                        </button>
+                    </div>
                 </div>
                 <textarea id="gpc-publish-content" class="gpc-input gpc-textarea" rows="18"></textarea>
             </div>

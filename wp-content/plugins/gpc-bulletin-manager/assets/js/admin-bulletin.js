@@ -465,9 +465,10 @@
         })
         .done(function (res) {
             if (res.success && res.data && res.data.content) {
-                $('#gpc-publish-content').val(res.data.content).attr('placeholder', '');
+                const cleanedContent = cleanNoticeContent(res.data.content);
+                $('#gpc-publish-content').val(cleanedContent).attr('placeholder', '');
                 $('#gpc-publish-result').removeClass('gpc-notice-error').addClass('gpc-notice-success')
-                    .text('✨ AI가 내용을 재구성했습니다. 수정 후 발행하세요.').show();
+                    .text('✨ AI가 내용을 재구성했고 반복 문구를 정리했습니다. 수정 후 발행하세요.').show();
             } else {
                 const fallback = buildNoticeContent($modal.data());
                 $('#gpc-publish-content').val(fallback).attr('placeholder', '');
@@ -489,6 +490,18 @@
             $btn.prop('disabled', false).text('🤖 AI로 재구성하기');
             $('#gpc-publish-confirm').prop('disabled', false);
         });
+    });
+
+    $(document).on('click', '#gpc-clean-notice-btn', function () {
+        const $content = $('#gpc-publish-content');
+        const original = $content.val();
+        const cleaned = cleanNoticeContent(original);
+        const $result = $('#gpc-publish-result');
+
+        $content.val(cleaned);
+        $result.removeClass('gpc-notice-error').addClass('gpc-notice-success')
+            .text(original === cleaned ? '정리할 반복 문구가 없습니다.' : '반복 문구와 표시용 기호를 정리했습니다.')
+            .show();
     });
 
     // 모달 닫기
@@ -564,12 +577,69 @@
         return lines.join('\n').trim();
     }
 
+    function cleanNoticeContent(content) {
+        if (!content) return '';
+
+        let text = String(content)
+            .replace(/\r\n/g, '\n')
+            .replace(/\*\*([^*]+)\*\*/g, '$1')
+            .replace(/__([^_]+)__/g, '$1')
+            .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+            .replace(/`{1,3}/g, '')
+            .replace(/[*_~]{2,}/g, '')
+            .replace(/^[\s>*_=#-]{3,}$/gm, '')
+            .replace(/([!?.。！？~])\1{2,}/g, '$1')
+            .replace(/[ \t]{2,}/g, ' ');
+
+        const lines = text.split('\n');
+        const cleanedLines = [];
+        let previousKey = '';
+
+        lines.forEach(function (line) {
+            const trimmedRight = line.replace(/\s+$/g, '');
+            const key = trimmedRight.replace(/\s+/g, ' ').trim();
+
+            if (key && key === previousKey) {
+                return;
+            }
+
+            cleanedLines.push(trimmedRight);
+            previousKey = key;
+        });
+
+        text = cleanedLines.join('\n')
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+
+        return collapseRepeatedSentences(text);
+    }
+
+    function collapseRepeatedSentences(text) {
+        return text.split('\n').map(function (line) {
+            const parts = line.match(/[^.!?。！？]+[.!?。！？]?/g);
+            if (!parts || parts.length < 2) return line;
+
+            const result = [];
+            let previous = '';
+
+            parts.forEach(function (part) {
+                const normalized = part.replace(/\s+/g, ' ').trim();
+                if (!normalized) return;
+                if (normalized === previous) return;
+                result.push(part.trim());
+                previous = normalized;
+            });
+
+            return result.join(' ');
+        }).join('\n');
+    }
+
     // 발행 확정
     $(document).on('click', '#gpc-publish-confirm', function () {
         const btn = $(this);
         const bulletinId = $('#gpc-publish-notice-btn').data('bulletin-id');
         const title   = $('#gpc-publish-title').val().trim();
-        const content = $('#gpc-publish-content').val().trim();
+        const content = cleanNoticeContent($('#gpc-publish-content').val()).trim();
         const $result = $('#gpc-publish-result');
 
         if (!title) {
@@ -577,6 +647,8 @@
                    .text('❌ 제목을 입력해주세요.').show();
             return;
         }
+
+        $('#gpc-publish-content').val(content);
 
         btn.prop('disabled', true).text('발행 중...');
         $result.hide();
