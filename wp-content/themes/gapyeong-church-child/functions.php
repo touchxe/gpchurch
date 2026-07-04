@@ -79,6 +79,98 @@ add_filter('gapyeong_submenu_community', 'gapyeong_child_filter_community_submen
 
 
 /**
+ * 기본 글 카테고리 생성
+ *
+ * 홈페이지의 메뉴/첫 화면 흐름에 맞춰 WordPress 기본 글에서 사용할
+ * 카테고리를 한 번만 준비합니다. 이미 있는 카테고리는 수정하지 않습니다.
+ */
+function gpc_default_post_categories() {
+    return array(
+        array(
+            'name'        => '공지사항',
+            'slug'        => 'notices',
+            'description' => '공식 안내, 예배 변경, 모집, 행정 공지',
+        ),
+        array(
+            'name'        => '주보',
+            'slug'        => 'bulletin',
+            'description' => '주간 주보, 예배 순서, 교회 소식 아카이브',
+        ),
+        array(
+            'name'        => '교회일정',
+            'slug'        => 'church-events',
+            'description' => '행사 안내, 교육 일정, 교회 관련 일정',
+        ),
+        array(
+            'name'        => '교회활동',
+            'slug'        => 'church-activities',
+            'description' => '행사 후기, 대심방, 식사 교제, 활동 스케치',
+        ),
+        array(
+            'name'        => '예배·말씀',
+            'slug'        => 'worship-word',
+            'description' => '설교 요약, 예배 안내, 말씀 묵상, 특별집회 자료',
+        ),
+        array(
+            'name'        => '안식일학교',
+            'slug'        => 'sabbath-school',
+            'description' => '교과, 반별 소식, 정각출석 캠페인, 안교 자료',
+        ),
+        array(
+            'name'        => '다음세대',
+            'slug'        => 'next-generation',
+            'description' => '어린이부, 청년반, 학생회, 패스파인더 소식',
+        ),
+        array(
+            'name'        => '소그룹·교제',
+            'slug'        => 'small-groups',
+            'description' => '소그룹 모임, 교제 모임, 가정/방문/나눔 이야기',
+        ),
+        array(
+            'name'        => '선교·봉사',
+            'slug'        => 'mission-service',
+            'description' => '선교회, 지역사회봉사회, 도르가회, 후원/구제 활동',
+        ),
+        array(
+            'name'        => '자료실',
+            'slug'        => 'resources',
+            'description' => '사업계획서, 신청서, 포스터, 교과 자료, 다운로드 파일',
+        ),
+    );
+}
+
+function gpc_ensure_default_post_categories() {
+    $seed_version = '20260704';
+
+    if ( get_option( 'gpc_post_categories_seed_version' ) === $seed_version ) {
+        return;
+    }
+
+    foreach ( gpc_default_post_categories() as $category ) {
+        if (
+            term_exists( $category['slug'], 'category' )
+            || term_exists( $category['name'], 'category' )
+        ) {
+            continue;
+        }
+
+        wp_insert_term(
+            $category['name'],
+            'category',
+            array(
+                'slug'        => $category['slug'],
+                'description' => $category['description'],
+            )
+        );
+    }
+
+    update_option( 'gpc_post_categories_seed_version', $seed_version, false );
+}
+add_action( 'admin_init', 'gpc_ensure_default_post_categories' );
+add_action( 'after_switch_theme', 'gpc_ensure_default_post_categories' );
+
+
+/**
  * 로그인 페이지 전용: 커스텀 템플릿 자동 적용
  * 슬러그가 '로그인-화면'인 페이지에 카드 레이아웃 템플릿을 사용
  */

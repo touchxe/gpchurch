@@ -85,3 +85,21 @@ jobs:
             **/.DS_Store
           log-level: verbose
           security: loose
+
+      - name: 📤 mu-plugins 배포
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          protocol: ftp
+          port: 21
+          local-dir: ./wp-content/mu-plugins/
+          server-dir: /www/wp-content/mu-plugins/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+          log-level: verbose
+          security: loose
