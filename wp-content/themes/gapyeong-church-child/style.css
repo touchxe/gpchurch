@@ -1178,6 +1178,317 @@ a.kboard-write-btn {
     transform: translateY(-1px);
 }
 
+/* ==========================================================
+   WordPress shared list views
+   - archive.php, home.php, search.php, 404.php
+   - Uses existing container, card, badge, and button components
+   ========================================================== */
+.gpc-list-page {
+    background: #fff;
+    min-height: 60vh;
+}
+
+.gpc-list-hero {
+    padding: 86px 0 42px;
+    border-bottom: 1px solid var(--slate-200, #e2e8f0);
+    background: linear-gradient(180deg, #fff 0%, var(--slate-50, #f8fafc) 100%);
+}
+
+.gpc-list-hero .container {
+    max-width: 1040px;
+}
+
+.gpc-list-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    margin-bottom: 18px;
+    padding: 0 12px;
+    border: 1px solid var(--primary-200, #ddd6fe);
+    border-radius: 999px;
+    background: var(--primary-50, #f5f3ff);
+    color: var(--primary-700, #6d28d9);
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.gpc-list-title {
+    max-width: 820px;
+    margin: 0;
+    color: var(--slate-900, #0f172a);
+    font-size: clamp(2.15rem, 4.4vw, 3.5rem);
+    font-weight: 850;
+    line-height: 1.18;
+    letter-spacing: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.gpc-list-lead,
+.gpc-list-description {
+    max-width: 680px;
+    margin-top: 18px;
+    color: var(--slate-600, #475569);
+    font-size: 1.08rem;
+    line-height: 1.75;
+    letter-spacing: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.gpc-list-description p {
+    margin: 0;
+}
+
+.gpc-list-content {
+    padding: 44px 0 104px;
+}
+
+.gpc-list-content .container {
+    max-width: 1040px;
+}
+
+.gpc-post-list {
+    display: grid;
+    gap: 18px;
+}
+
+.gpc-post-card.card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    align-items: stretch;
+    min-height: 220px;
+    border: 1px solid var(--slate-200, #e2e8f0);
+    border-radius: 8px;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.gpc-post-card.card:hover {
+    border-color: var(--primary-200, #ddd6fe);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+    transform: translateY(-2px);
+}
+
+.gpc-post-card__media {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 220px;
+    background: var(--slate-100, #f1f5f9);
+}
+
+.gpc-post-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gpc-post-card__body.card-body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 30px;
+}
+
+.gpc-post-card__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: var(--slate-500, #64748b);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.gpc-post-card__category.badge {
+    padding: 5px 10px;
+    border: 1px solid var(--slate-200, #e2e8f0);
+    color: var(--slate-700, #334155);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.gpc-post-card__category.badge:hover {
+    border-color: var(--primary-300, #c4b5fd);
+    color: var(--primary-700, #6d28d9);
+}
+
+.gpc-post-card__title.card-title {
+    margin: 0;
+    color: var(--slate-900, #0f172a);
+    font-size: clamp(1.28rem, 2.1vw, 1.65rem);
+    font-weight: 850;
+    line-height: 1.35;
+    letter-spacing: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.gpc-post-card__title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.gpc-post-card__title a:hover {
+    color: var(--primary-700, #6d28d9);
+}
+
+.gpc-post-card__excerpt.card-text {
+    display: -webkit-box;
+    margin: 14px 0 18px;
+    color: var(--slate-600, #475569);
+    font-size: 1rem;
+    line-height: 1.72;
+    letter-spacing: 0;
+    word-break: keep-all;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.gpc-post-card__link.btn {
+    margin-top: auto;
+    padding-inline: 0;
+    color: var(--primary-700, #6d28d9);
+    font-weight: 800;
+}
+
+.gpc-post-card__link.btn:hover {
+    background: transparent;
+    color: var(--primary-800, #5b21b6);
+}
+
+.gpc-post-card--no-media {
+    grid-template-columns: 1fr;
+}
+
+.gpc-list-pagination {
+    margin-top: 46px;
+}
+
+.gpc-list-pagination .nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.gpc-list-pagination .page-numbers {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--slate-200, #e2e8f0);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--slate-600, #475569);
+    font-size: 0.92rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.gpc-list-pagination .page-numbers.current,
+.gpc-list-pagination .page-numbers:hover {
+    border-color: var(--primary-600, #7c3aed);
+    background: var(--primary-600, #7c3aed);
+    color: #fff;
+}
+
+.gpc-list-search,
+.gpc-not-found-actions,
+.gpc-list-empty__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.gpc-list-page .search-form {
+    display: flex;
+    align-items: stretch;
+    width: min(100%, 460px);
+    gap: 8px;
+}
+
+.gpc-list-page .search-form label {
+    flex: 1;
+    min-width: 0;
+}
+
+.gpc-list-page .search-field {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--slate-300, #cbd5e1);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--slate-900, #0f172a);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.gpc-list-page .search-field:focus {
+    outline: none;
+    border-color: var(--primary-400, #a78bfa);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+}
+
+.gpc-list-page .search-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--primary-700, #6d28d9);
+    color: #fff;
+    font-size: 0.94rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.gpc-list-page .search-submit:hover {
+    background: var(--primary-800, #5b21b6);
+}
+
+.gpc-list-empty {
+    max-width: 680px;
+    padding: 34px;
+    border: 1px solid var(--slate-200, #e2e8f0);
+    border-radius: 8px;
+    background: var(--slate-50, #f8fafc);
+}
+
+.gpc-list-empty h2 {
+    margin: 0 0 12px;
+    color: var(--slate-900, #0f172a);
+    font-size: 1.5rem;
+    line-height: 1.35;
+}
+
+.gpc-list-empty p {
+    margin: 0;
+    color: var(--slate-600, #475569);
+    font-size: 1rem;
+    line-height: 1.7;
+    word-break: keep-all;
+}
+
+.gpc-not-found-hero {
+    min-height: 58vh;
+    display: flex;
+    align-items: center;
+}
+
 @media (max-width: 768px) {
     .gpc-single-post {
         padding: 58px 0 76px;
@@ -1266,5 +1577,65 @@ a.kboard-write-btn {
 
     .gpc-comment-form .submit {
         width: 100%;
+    }
+
+    .gpc-list-hero {
+        padding: 58px 0 34px;
+    }
+
+    .gpc-list-title {
+        font-size: clamp(1.8rem, 9vw, 2.5rem);
+        line-height: 1.25;
+    }
+
+    .gpc-list-lead,
+    .gpc-list-description {
+        font-size: 1rem;
+        line-height: 1.68;
+    }
+
+    .gpc-list-content {
+        padding: 30px 0 76px;
+    }
+
+    .gpc-post-card.card {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .gpc-post-card__media {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+    }
+
+    .gpc-post-card__body.card-body {
+        padding: 22px 20px;
+    }
+
+    .gpc-post-card__excerpt.card-text {
+        -webkit-line-clamp: 3;
+    }
+
+    .gpc-list-search,
+    .gpc-not-found-actions,
+    .gpc-list-empty__actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .gpc-list-page .search-form,
+    .gpc-list-empty__actions .btn,
+    .gpc-not-found-actions .btn {
+        width: 100%;
+    }
+
+    .gpc-list-page .search-submit {
+        flex: 0 0 auto;
+    }
+
+    .gpc-list-empty {
+        padding: 24px 20px;
     }
 }
