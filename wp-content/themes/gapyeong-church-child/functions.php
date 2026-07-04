@@ -25,7 +25,7 @@ function gapyeong_child_enqueue_styles()
         wp_get_theme()->get('Version')
     );
 }
-add_action('wp_enqueue_scripts', 'gapyeong_child_enqueue_styles');
+add_action('wp_enqueue_scripts', 'gapyeong_child_enqueue_styles', 20);
 
 
 /**
