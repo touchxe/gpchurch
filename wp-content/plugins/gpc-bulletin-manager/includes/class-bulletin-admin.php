@@ -10,6 +10,170 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
+    // ── 새로 추가된 주보 템플릿 관련 AJAX 핸들러 ──
+
+    public function ajax_load_plan() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        $date = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
+        if ( empty( $date ) ) {
+            wp_send_json_error( '날짜가 선택되지 않았습니다.' );
+        }
+
+        $plan = $this->db->get_business_plan_by_date( $date );
+        if ( $plan ) {
+            // 객체를 배열로 변환
+            wp_send_json_success( (array) $plan );
+        } else {
+            wp_send_json_error( '해당 날짜의 사업계획서 데이터를 찾을 수 없습니다.' );
+        }
+    }
+
+    public function ajax_save_created() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        $data = array();
+        $columns = GPC_Bulletin_DB::get_data_columns();
+        $hymn_fields = array( 'ss_hymn', 'ws_doxology', 'ws_hymn', 'ws_offering_hymn', 'ws_closing_hymn' );
+
+        foreach ( $columns as $col ) {
+            if ( isset( $_POST[ $col ] ) ) {
+                $val = sanitize_textarea_field( wp_unslash( $_POST[ $col ] ) );
+                if ( in_array( $col, $hymn_fields, true ) ) {
+                    $val = str_replace( array( '(', ')', '（', '）' ), '', $val );
+                    $val = trim( $val );
+                }
+                $data[ $col ] = $val;
+            }
+        }
+
+        if ( empty( $data['publish_date'] ) ) {
+            wp_send_json_error( '발행 날짜는 필수입니다.' );
+        }
+
+        // 이미지 Base64 처리
+        $image_base64 = isset( $_POST['image_base64'] ) ? wp_unslash( $_POST['image_base64'] ) : '';
+        if ( ! empty( $image_base64 ) ) {
+            // Base64 데이터를 이미지 파일로 변환하여 미디어 라이브러리에 저장
+            $img = str_replace( 'data:image/jpeg;base64,', '', $image_base64 );
+            $img = str_replace( ' ', '+', $img );
+            $decoded = base64_decode( $img );
+            
+            $upload_dir = wp_upload_dir();
+            $filename = 'bulletin_' . sanitize_file_name( $data['publish_date'] ) . '_' . time() . '.jpg';
+            $filepath = $upload_dir['path'] . '/' . $filename;
+            
+            file_put_contents( $filepath, $decoded );
+
+            // attachment 생성
+            $attachment = array(
+                'guid'           => $upload_dir['url'] . '/' . $filename, 
+                'post_mime_type' => 'image/jpeg',
+                'post_title'     => sanitize_file_name( $filename ),
+                'post_content'   => '',
+                'post_status'    => 'inherit'
+            );
+            $attach_id = wp_insert_attachment( $attachment, $filepath );
+            require_once( ABSPATH . 'wp-admin/includes/image.php' );
+            $attach_data = wp_generate_attachment_metadata( $attach_id, $filepath );
+            wp_update_attachment_metadata( $attach_id, $attach_data );
+
+            $data['image_url'] = wp_get_attachment_url( $attach_id );
+        }
+
+        $existing = $this->db->get_by_date( $data['publish_date'] );
+        if ( $existing ) {
+            $success = $this->db->update( $existing->id, $data );
+            if ( $success ) {
+                $this->sync_to_kboard_archive( $existing->id );
+                wp_send_json_success( array( 'message' => '업데이트되었습니다.', 'id' => $existing->id ) );
+            } else {
+                wp_send_json_error( '업데이트 실패' );
+            }
+        } else {
+            $new_id = $this->db->insert( $data );
+            if ( $new_id ) {
+                $this->sync_to_kboard_archive( $new_id );
+                wp_send_json_success( array( 'message' => '저장되었습니다.', 'id' => $new_id ) );
+            } else {
+                wp_send_json_error( '저장 실패' );
+            }
+        }
+    }
+
+    public function ajax_upload_plan() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        if ( empty( $_FILES['plan_file'] ) ) {
+            wp_send_json_error( '파일이 없습니다.' );
+        }
+
+        $file = $_FILES['plan_file'];
+        if ( $file['error'] !== UPLOAD_ERR_OK ) {
+            wp_send_json_error( '파일 업로드 오류 발생' );
+        }
+
+        $handle = fopen( $file['tmp_name'], 'r' );
+        if ( $handle !== false ) {
+            global $wpdb;
+            $bp_table = $wpdb->prefix . 'gpc_business_plan';
+            $success_count = 0;
+            $row_count = 0;
+
+            // 컬럼 맵핑 (단순 예시, CSV 첫번째 줄은 헤더로 가정)
+            // 0: plan_date, 1: sabbath_type, 2: ss_host, 3: ss_hymn, 4: ss_prayer, 5: ss_special_song
+            // 6: ss_special_order, 7: ws_host, 8: ws_prayer, 9: ws_offering_leader, 10: ws_special_song
+            // 11: ws_sermon_title, 12: ws_preacher, 13: ws_bible_text, 14: service_this_week, 15: service_next_week
+            while ( ( $data = fgetcsv( $handle, 1000, "," ) ) !== false ) {
+                $row_count++;
+                if ( $row_count === 1 ) continue; // 헤더 스킵
+
+                $plan_date = isset($data[0]) ? trim($data[0]) : '';
+                if ( empty( $plan_date ) ) continue;
+
+                $plan_data = array(
+                    'plan_date'          => $plan_date,
+                    'sabbath_type'       => isset($data[1]) ? sanitize_text_field($data[1]) : '',
+                    'ss_host'            => isset($data[2]) ? sanitize_text_field($data[2]) : '',
+                    'ss_hymn'            => isset($data[3]) ? sanitize_text_field($data[3]) : '',
+                    'ss_prayer'          => isset($data[4]) ? sanitize_text_field($data[4]) : '',
+                    'ss_special_song'    => isset($data[5]) ? sanitize_text_field($data[5]) : '',
+                    'ss_special_order'   => isset($data[6]) ? sanitize_text_field($data[6]) : '',
+                    'ws_host'            => isset($data[7]) ? sanitize_text_field($data[7]) : '',
+                    'ws_prayer'          => isset($data[8]) ? sanitize_text_field($data[8]) : '',
+                    'ws_offering_leader' => isset($data[9]) ? sanitize_text_field($data[9]) : '',
+                    'ws_special_song'    => isset($data[10]) ? sanitize_text_field($data[10]) : '',
+                    'ws_sermon_title'    => isset($data[11]) ? sanitize_text_field($data[11]) : '',
+                    'ws_preacher'        => isset($data[12]) ? sanitize_text_field($data[12]) : '',
+                    'ws_bible_text'      => isset($data[13]) ? sanitize_text_field($data[13]) : '',
+                    'service_this_week'  => isset($data[14]) ? sanitize_textarea_field($data[14]) : '',
+                    'service_next_week'  => isset($data[15]) ? sanitize_textarea_field($data[15]) : '',
+                );
+
+                // 존재 여부 확인 후 업데이트 또는 삽입
+                $existing = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp_table} WHERE plan_date = %s", $plan_date ) );
+                if ( $existing ) {
+                    $wpdb->update( $bp_table, $plan_data, array( 'id' => $existing ) );
+                } else {
+                    $wpdb->insert( $bp_table, $plan_data );
+                }
+                $success_count++;
+            }
+            fclose( $handle );
+            wp_send_json_success( "총 {$success_count}건의 데이터가 성공적으로 반영되었습니다." );
+        } else {
+            wp_send_json_error( 'CSV 파일을 읽을 수 없습니다.' );
+        }
+    }
 }
 
 class GPC_Bulletin_Admin {
@@ -37,6 +201,11 @@ class GPC_Bulletin_Admin {
         add_action( 'wp_ajax_gpc_bulletin_generate_notice',      array( $this, 'ajax_generate_notice_content' ) );
         add_action( 'wp_ajax_gpc_bulletin_save_notice_prompt',   array( $this, 'ajax_save_notice_prompt' ) );
         add_action( 'wp_ajax_gpc_bulletin_bulk_sync',            array( $this, 'ajax_bulk_sync' ) );
+        
+        // 새 기능 AJAX 엔드포인트
+        add_action( 'wp_ajax_gpc_bulletin_load_plan',            array( $this, 'ajax_load_plan' ) );
+        add_action( 'wp_ajax_gpc_bulletin_save_created',         array( $this, 'ajax_save_created' ) );
+        add_action( 'wp_ajax_gpc_bulletin_upload_plan',          array( $this, 'ajax_upload_plan' ) );
 
         // admin_init에서 테이블 존재 확인 (안전장치)
         add_action( 'admin_init', array( $this, 'maybe_create_table' ) );
@@ -97,6 +266,24 @@ class GPC_Bulletin_Admin {
             'gpc-bulletin-settings',
             array( $this, 'render_settings_page' )
         );
+
+        add_submenu_page(
+            'gpc-bulletin',
+            '순서지 만들기',
+            '순서지 만들기',
+            'manage_options',
+            'gpc-bulletin-create',
+            array( $this, 'render_create_page' )
+        );
+
+        add_submenu_page(
+            'gpc-bulletin',
+            '사업계획서 관리',
+            '사업계획서 관리',
+            'manage_options',
+            'gpc-bulletin-plan',
+            array( $this, 'render_plan_page' )
+        );
     }
 
     /**
@@ -121,10 +308,23 @@ class GPC_Bulletin_Admin {
             GPC_BULLETIN_VERSION,
             true
         );
+        
+        wp_enqueue_script(
+            'gpc-admin-bulletin-create-js',
+            GPC_BULLETIN_URL . 'assets/js/admin-bulletin-create.js',
+            array( 'jquery' ),
+            GPC_BULLETIN_VERSION,
+            true
+        );
 
         wp_enqueue_media();
 
         wp_localize_script( 'gpc-admin-bulletin-js', 'gpcBulletin', array(
+            'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
+            'nonce'    => wp_create_nonce( 'gpc_bulletin_nonce' ),
+            'adminUrl' => admin_url( 'admin.php' ),
+        ) );
+        wp_localize_script( 'gpc-admin-bulletin-create-js', 'gpcBulletin', array(
             'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
             'nonce'    => wp_create_nonce( 'gpc_bulletin_nonce' ),
             'adminUrl' => admin_url( 'admin.php' ),
@@ -147,6 +347,14 @@ class GPC_Bulletin_Admin {
 
     public function render_settings_page() {
         include GPC_BULLETIN_DIR . 'admin-views/bulletin-settings.php';
+    }
+
+    public function render_create_page() {
+        include GPC_BULLETIN_DIR . 'admin-views/bulletin-create.php';
+    }
+
+    public function render_plan_page() {
+        include GPC_BULLETIN_DIR . 'admin-views/bulletin-plan.php';
     }
 
     // ── AJAX 핸들러 ──
@@ -875,5 +1083,169 @@ class GPC_Bulletin_Admin {
                 ? "총 {$total}건 중 {$success_count}건 동기화 완료" . ( $fail_count > 0 ? " ({$fail_count}건 실패)" : '' )
                 : "{$processed_so_far}/{$total} 처리 중...",
         ) );
+    }
+    // ── 새로 추가된 주보 템플릿 관련 AJAX 핸들러 ──
+
+    public function ajax_load_plan() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        $date = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
+        if ( empty( $date ) ) {
+            wp_send_json_error( '날짜가 선택되지 않았습니다.' );
+        }
+
+        $plan = $this->db->get_business_plan_by_date( $date );
+        if ( $plan ) {
+            // 객체를 배열로 변환
+            wp_send_json_success( (array) $plan );
+        } else {
+            wp_send_json_error( '해당 날짜의 사업계획서 데이터를 찾을 수 없습니다.' );
+        }
+    }
+
+    public function ajax_save_created() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        $data = array();
+        $columns = GPC_Bulletin_DB::get_data_columns();
+        $hymn_fields = array( 'ss_hymn', 'ws_doxology', 'ws_hymn', 'ws_offering_hymn', 'ws_closing_hymn' );
+
+        foreach ( $columns as $col ) {
+            if ( isset( $_POST[ $col ] ) ) {
+                $val = sanitize_textarea_field( wp_unslash( $_POST[ $col ] ) );
+                if ( in_array( $col, $hymn_fields, true ) ) {
+                    $val = str_replace( array( '(', ')', '（', '）' ), '', $val );
+                    $val = trim( $val );
+                }
+                $data[ $col ] = $val;
+            }
+        }
+
+        if ( empty( $data['publish_date'] ) ) {
+            wp_send_json_error( '발행 날짜는 필수입니다.' );
+        }
+
+        // 이미지 Base64 처리
+        $image_base64 = isset( $_POST['image_base64'] ) ? wp_unslash( $_POST['image_base64'] ) : '';
+        if ( ! empty( $image_base64 ) ) {
+            // Base64 데이터를 이미지 파일로 변환하여 미디어 라이브러리에 저장
+            $img = str_replace( 'data:image/jpeg;base64,', '', $image_base64 );
+            $img = str_replace( ' ', '+', $img );
+            $decoded = base64_decode( $img );
+            
+            $upload_dir = wp_upload_dir();
+            $filename = 'bulletin_' . sanitize_file_name( $data['publish_date'] ) . '_' . time() . '.jpg';
+            $filepath = $upload_dir['path'] . '/' . $filename;
+            
+            file_put_contents( $filepath, $decoded );
+
+            // attachment 생성
+            $attachment = array(
+                'guid'           => $upload_dir['url'] . '/' . $filename, 
+                'post_mime_type' => 'image/jpeg',
+                'post_title'     => sanitize_file_name( $filename ),
+                'post_content'   => '',
+                'post_status'    => 'inherit'
+            );
+            $attach_id = wp_insert_attachment( $attachment, $filepath );
+            require_once( ABSPATH . 'wp-admin/includes/image.php' );
+            $attach_data = wp_generate_attachment_metadata( $attach_id, $filepath );
+            wp_update_attachment_metadata( $attach_id, $attach_data );
+
+            $data['image_url'] = wp_get_attachment_url( $attach_id );
+        }
+
+        $existing = $this->db->get_by_date( $data['publish_date'] );
+        if ( $existing ) {
+            $success = $this->db->update( $existing->id, $data );
+            if ( $success ) {
+                $this->sync_to_kboard_archive( $existing->id );
+                wp_send_json_success( array( 'message' => '업데이트되었습니다.', 'id' => $existing->id ) );
+            } else {
+                wp_send_json_error( '업데이트 실패' );
+            }
+        } else {
+            $new_id = $this->db->insert( $data );
+            if ( $new_id ) {
+                $this->sync_to_kboard_archive( $new_id );
+                wp_send_json_success( array( 'message' => '저장되었습니다.', 'id' => $new_id ) );
+            } else {
+                wp_send_json_error( '저장 실패' );
+            }
+        }
+    }
+
+    public function ajax_upload_plan() {
+        check_ajax_referer( 'gpc_bulletin_nonce', 'nonce' );
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( '권한이 없습니다.' );
+        }
+
+        if ( empty( $_FILES['plan_file'] ) ) {
+            wp_send_json_error( '파일이 없습니다.' );
+        }
+
+        $file = $_FILES['plan_file'];
+        if ( $file['error'] !== UPLOAD_ERR_OK ) {
+            wp_send_json_error( '파일 업로드 오류 발생' );
+        }
+
+        $handle = fopen( $file['tmp_name'], 'r' );
+        if ( $handle !== false ) {
+            global $wpdb;
+            $bp_table = $wpdb->prefix . 'gpc_business_plan';
+            $success_count = 0;
+            $row_count = 0;
+
+            // 컬럼 맵핑 (단순 예시, CSV 첫번째 줄은 헤더로 가정)
+            // 0: plan_date, 1: sabbath_type, 2: ss_host, 3: ss_hymn, 4: ss_prayer, 5: ss_special_song
+            // 6: ss_special_order, 7: ws_host, 8: ws_prayer, 9: ws_offering_leader, 10: ws_special_song
+            // 11: ws_sermon_title, 12: ws_preacher, 13: ws_bible_text, 14: service_this_week, 15: service_next_week
+            while ( ( $data = fgetcsv( $handle, 1000, "," ) ) !== false ) {
+                $row_count++;
+                if ( $row_count === 1 ) continue; // 헤더 스킵
+
+                $plan_date = isset($data[0]) ? trim($data[0]) : '';
+                if ( empty( $plan_date ) ) continue;
+
+                $plan_data = array(
+                    'plan_date'          => $plan_date,
+                    'sabbath_type'       => isset($data[1]) ? sanitize_text_field($data[1]) : '',
+                    'ss_host'            => isset($data[2]) ? sanitize_text_field($data[2]) : '',
+                    'ss_hymn'            => isset($data[3]) ? sanitize_text_field($data[3]) : '',
+                    'ss_prayer'          => isset($data[4]) ? sanitize_text_field($data[4]) : '',
+                    'ss_special_song'    => isset($data[5]) ? sanitize_text_field($data[5]) : '',
+                    'ss_special_order'   => isset($data[6]) ? sanitize_text_field($data[6]) : '',
+                    'ws_host'            => isset($data[7]) ? sanitize_text_field($data[7]) : '',
+                    'ws_prayer'          => isset($data[8]) ? sanitize_text_field($data[8]) : '',
+                    'ws_offering_leader' => isset($data[9]) ? sanitize_text_field($data[9]) : '',
+                    'ws_special_song'    => isset($data[10]) ? sanitize_text_field($data[10]) : '',
+                    'ws_sermon_title'    => isset($data[11]) ? sanitize_text_field($data[11]) : '',
+                    'ws_preacher'        => isset($data[12]) ? sanitize_text_field($data[12]) : '',
+                    'ws_bible_text'      => isset($data[13]) ? sanitize_text_field($data[13]) : '',
+                    'service_this_week'  => isset($data[14]) ? sanitize_textarea_field($data[14]) : '',
+                    'service_next_week'  => isset($data[15]) ? sanitize_textarea_field($data[15]) : '',
+                );
+
+                // 존재 여부 확인 후 업데이트 또는 삽입
+                $existing = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp_table} WHERE plan_date = %s", $plan_date ) );
+                if ( $existing ) {
+                    $wpdb->update( $bp_table, $plan_data, array( 'id' => $existing ) );
+                } else {
+                    $wpdb->insert( $bp_table, $plan_data );
+                }
+                $success_count++;
+            }
+            fclose( $handle );
+            wp_send_json_success( "총 {$success_count}건의 데이터가 성공적으로 반영되었습니다." );
+        } else {
+            wp_send_json_error( 'CSV 파일을 읽을 수 없습니다.' );
+        }
     }
 }

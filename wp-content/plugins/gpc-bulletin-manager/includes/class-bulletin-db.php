@@ -73,6 +73,8 @@ class GPC_Bulletin_DB {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $sql );
+
+        $this->create_business_plan_table();
     }
 
     /**
@@ -80,6 +82,51 @@ class GPC_Bulletin_DB {
      *
      * @return array 컬럼명 배열
      */
+
+    public function create_business_plan_table() {
+        global $wpdb;
+        $charset_collate = $wpdb->get_charset_collate();
+        $bp_table = $wpdb->prefix . 'gpc_business_plan';
+
+        $sql = "CREATE TABLE {$bp_table} (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            plan_date date NOT NULL,
+            sabbath_type varchar(100) DEFAULT '',
+            ss_host varchar(50) DEFAULT '',
+            ss_hymn varchar(50) DEFAULT '',
+            ss_prayer varchar(50) DEFAULT '',
+            ss_special_song varchar(100) DEFAULT '',
+            ss_special_order varchar(100) DEFAULT '',
+            ws_host varchar(50) DEFAULT '',
+            ws_prayer varchar(50) DEFAULT '',
+            ws_offering_leader varchar(50) DEFAULT '',
+            ws_special_song varchar(100) DEFAULT '',
+            ws_sermon_title varchar(200) DEFAULT '',
+            ws_preacher varchar(50) DEFAULT '',
+            ws_bible_text varchar(200) DEFAULT '',
+            service_this_week text,
+            service_next_week text,
+            created_at datetime DEFAULT CURRENT_TIMESTAMP,
+            updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY  (id),
+            UNIQUE KEY plan_date (plan_date)
+        ) $charset_collate;";
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        dbDelta( $sql );
+    }
+
+    public function get_business_plan_by_date( $date ) {
+        global $wpdb;
+        $bp_table = $wpdb->prefix . 'gpc_business_plan';
+        return $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM {$bp_table} WHERE plan_date = %s",
+                $date
+            )
+        );
+    }
+
     public static function get_data_columns() {
         return array(
             'publish_date',
