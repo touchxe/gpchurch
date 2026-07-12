@@ -47,6 +47,28 @@ function gapyeong_church_activity_url()
 
 
 /**
+ * 대표 이미지 아래에 표시할 글 요약을 반환합니다.
+ */
+function gapyeong_get_post_summary($post_id, $length = 100)
+{
+    $summary = get_the_excerpt($post_id);
+
+    if (!$summary) {
+        $summary = get_post_field('post_content', $post_id);
+    }
+
+    $summary = preg_replace('/\s+/', ' ', wp_strip_all_tags(strip_shortcodes($summary)));
+    $summary = trim($summary);
+
+    if (function_exists('mb_strimwidth')) {
+        return mb_strimwidth($summary, 0, $length, '...', 'UTF-8');
+    }
+
+    return wp_trim_words($summary, 24, '...');
+}
+
+
+/**
  * SEO: 페이지별 Meta Description 자동 생성
  *
  * Lighthouse SEO 검사에서 모든 페이지에 meta description 부재 지적(L-03).
