@@ -1,8 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const lightbox = document.getElementById('postImageLightbox');
-    const lightboxImage = lightbox?.querySelector('.post-image-lightbox-image');
-    const closeButton = lightbox?.querySelector('.post-image-lightbox-close');
-    const images = document.querySelectorAll('.post-detail-thumbnail img, .post-detail-body img');
+    let lightbox = document.getElementById('postImageLightbox');
+
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.id = 'postImageLightbox';
+        lightbox.className = 'post-image-lightbox';
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightbox.setAttribute('role', 'dialog');
+        lightbox.setAttribute('aria-modal', 'true');
+        lightbox.setAttribute('aria-label', '이미지 크게 보기');
+        lightbox.innerHTML = '<button class="post-image-lightbox-close" type="button" aria-label="이미지 크게 보기 닫기">&times;</button><img class="post-image-lightbox-image" src="" alt="">';
+        document.body.appendChild(lightbox);
+    }
+
+    const lightboxImage = lightbox.querySelector('.post-image-lightbox-image');
+    const closeButton = lightbox.querySelector('.post-image-lightbox-close');
+    const images = document.querySelectorAll(
+        '.post-detail-thumbnail img, .post-detail-body img, .gpc-single-featured img, .gpc-single-content img'
+    );
     let lastTrigger = null;
 
     if (!lightbox || !lightboxImage || !images.length) return;

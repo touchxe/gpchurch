@@ -31,6 +31,22 @@ add_action('after_setup_theme', 'gapyeong_setup');
 
 
 /**
+ * 교회 활동 카테고리의 실제 아카이브 주소를 반환합니다.
+ *
+ * 일부 서버 템플릿에서 이 함수를 직접 호출하므로, 카테고리가 아직
+ * 생성되지 않은 경우에도 안전한 기본 주소를 반환합니다.
+ */
+function gapyeong_church_activity_url()
+{
+    $category = get_category_by_slug('church-activity');
+
+    return $category
+        ? get_category_link($category->term_id)
+        : home_url('/category/church-activity/');
+}
+
+
+/**
  * SEO: 페이지별 Meta Description 자동 생성
  *
  * Lighthouse SEO 검사에서 모든 페이지에 meta description 부재 지적(L-03).
