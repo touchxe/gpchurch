@@ -345,6 +345,25 @@ function gapyeong_enqueue_scripts()
         '20260531-notice-html-v3'
     );
 
+    if (is_category() || is_singular('post')) {
+        wp_enqueue_style(
+            'gapyeong-post-archive-css',
+            $uri . '/assets/css/post-archive.css',
+            array('gapyeong-main-css'),
+            $version
+        );
+    }
+
+    if (is_singular('post')) {
+        wp_enqueue_script(
+            'gapyeong-post-image-lightbox-js',
+            $uri . '/assets/js/post-image-lightbox.js',
+            array(),
+            $version,
+            true
+        );
+    }
+
     // === KBoard calendar-skin CSS 강제 로드 ===
     wp_enqueue_style(
         'kboard-calendar-skin',
