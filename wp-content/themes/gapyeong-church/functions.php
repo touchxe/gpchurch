@@ -397,7 +397,7 @@ function gapyeong_enqueue_scripts()
             'gapyeong-post-image-lightbox-js',
             $uri . '/assets/js/post-image-lightbox.js',
             array(),
-            $version,
+            filemtime(get_template_directory() . '/assets/js/post-image-lightbox.js'),
             true
         );
     }
