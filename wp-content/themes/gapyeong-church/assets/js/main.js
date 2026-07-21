@@ -120,7 +120,7 @@ async function loadComponents() {
             </a>
             <a href="/live.html" class="btn-live desktop-only"><span class="live-dot"></span>LIVE</a>
             <a href="/live.html" class="btn-icon mobile-only" aria-label="라이브 예배">
-                <i data-lucide="youtube"></i>
+                <i data-lucide="radio"></i>
             </a>
         </div>
 

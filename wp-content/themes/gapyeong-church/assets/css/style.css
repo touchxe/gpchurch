@@ -5055,7 +5055,9 @@ img {
         display: inline-flex !important;
     }
 
+    /* 상단의 .header-actions { display: none } 을 덮어씀 — 모바일 아이콘(로그인/라이브) 표시 */
     .header-actions {
+        display: flex;
         gap: 8px;
     }
 

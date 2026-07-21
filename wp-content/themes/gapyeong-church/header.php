@@ -120,7 +120,7 @@
                 </a>
                 <a href="#" class="btn-live off-air desktop-only" data-gapyeong-live-btn role="button"><span class="live-dot"></span>OFF AIR</a>
                 <a href="#" class="btn-icon mobile-only off-air" data-gapyeong-live-btn aria-label="예배 방송 시간 안내">
-                    <i data-lucide="youtube"></i>
+                    <i data-lucide="radio"></i>
                 </a>
             </div>
 
