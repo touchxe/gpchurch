@@ -116,39 +116,26 @@ $theme_uri = get_template_directory_uri();
             </div>
 
 
-            <!-- Right Image (Swiper Slider) -->
+            <!-- Right Image (Swiper Slider) — church-activity 대표이미지 -->
             <div class="hero-images">
                 <div class="swiper hero-swiper">
                     <div class="swiper-wrapper">
                         <?php
-                        // ACF 개별 이미지 필드에서 슬라이드 가져오기 (슬라이드 1~5)
-                        // get_option('page_on_front')으로 프론트 페이지 ID를 명시 전달
-                        $has_acf_slides = false;
-                        $front_page_id = (int) get_option('page_on_front');
+                        $hero_slides = gapyeong_get_hero_activity_slides(3);
 
-                        if (function_exists('get_field') && $front_page_id > 0):
-                            for ($i = 1; $i <= 5; $i++):
-                                $img = get_field('hero_slide_' . $i, $front_page_id);
-                                if (empty($img))
-                                    continue;
-                                $has_acf_slides = true;
-                                $url = esc_url($img['url'] ?? '');
-                                $alt = esc_attr($img['alt'] ?? '가평교회');
-                                if (!$url)
-                                    continue;
+                        if ($hero_slides):
+                            foreach ($hero_slides as $slide):
                                 ?>
                                 <div class="swiper-slide">
-                                    <div class="hero-slide-item">
-                                        <img src="<?php echo $url; ?>" alt="<?php echo $alt; ?>">
-                                    </div>
+                                    <a href="<?php echo esc_url($slide['link']); ?>" class="hero-slide-item">
+                                        <img src="<?php echo esc_url($slide['url']); ?>"
+                                            alt="<?php echo esc_attr($slide['alt']); ?>">
+                                    </a>
                                 </div>
                                 <?php
-                            endfor;
-                        endif;
-
-
-                        // ACF 이미지가 하나도 없으면 기본 이미지로 폴백
-                        if (!$has_acf_slides):
+                            endforeach;
+                        else:
+                            // 대표이미지가 있는 활동 글이 없으면 테마 기본 이미지
                             $default_slides = array(
                                 array('src' => $theme_uri . '/assets/images/hero-slide-1.jpg', 'alt' => '가평교회 전경 1'),
                                 array('src' => $theme_uri . '/assets/images/hero-slide-2.jpg', 'alt' => '가평교회 전경 2'),

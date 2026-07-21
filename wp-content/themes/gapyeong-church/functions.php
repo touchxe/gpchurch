@@ -47,6 +47,50 @@ function gapyeong_church_activity_url()
 
 
 /**
+ * 홈 히어로용: church-activity 카테고리 최신글의 대표이미지 목록.
+ *
+ * @param int $count 가져올 개수 (기본 3).
+ * @return array{url:string,alt:string,link:string}[]
+ */
+function gapyeong_get_hero_activity_slides($count = 3)
+{
+    $category = get_category_by_slug('church-activity');
+    if (!$category) {
+        return array();
+    }
+
+    $query = new WP_Query(array(
+        'post_type'              => 'post',
+        'posts_per_page'         => (int) $count,
+        'cat'                    => (int) $category->term_id,
+        'meta_key'               => '_thumbnail_id',
+        'orderby'                => 'date',
+        'order'                  => 'DESC',
+        'ignore_sticky_posts'    => true,
+        'no_found_rows'          => true,
+        'update_post_term_cache' => false,
+    ));
+
+    $slides = array();
+    foreach ($query->posts as $post) {
+        $url = get_the_post_thumbnail_url($post, 'large');
+        if (!$url) {
+            continue;
+        }
+
+        $slides[] = array(
+            'url'  => $url,
+            'alt'  => get_the_title($post),
+            'link' => get_permalink($post),
+        );
+    }
+    wp_reset_postdata();
+
+    return $slides;
+}
+
+
+/**
  * 대표 이미지 아래에 표시할 글 요약을 반환합니다.
  */
 function gapyeong_get_post_summary($post_id, $length = 100)
