@@ -18,6 +18,8 @@ function gapyeong_setup()
     add_theme_support('post-thumbnails');
     // HTML5 시맨틱 마크업 지원
     add_theme_support('html5', array('search-form', 'comment-form', 'gallery', 'caption'));
+    // SNS 공유용 OG 비율 (1.91:1)
+    add_image_size('gapyeong-og', 1200, 630, true);
 
     // 내비게이션 메뉴 등록
     register_nav_menus(array(
@@ -193,6 +195,13 @@ function gapyeong_meta_description()
 
     if (is_front_page() || is_home()) {
         $description = '가평 제칠일 안식일 예수재림교회(Gapyeong SDA Church)입니다. 매주 토요일 안식일 예배로 여러분을 초대합니다. 경기도 가평군 가평읍 석봉로 153번길 2.';
+    } elseif (is_singular('post')) {
+        $description = gapyeong_get_post_summary(get_the_ID(), 160);
+    } elseif (is_category()) {
+        $cat_desc = category_description();
+        $description = $cat_desc
+            ? wp_strip_all_tags($cat_desc)
+            : (single_cat_title('', false) . ' — 가평 제칠일 안식일 예수재림교회.');
     } elseif (is_singular('page')) {
         $post = get_post();
         if ($post) {
@@ -226,6 +235,367 @@ function gapyeong_meta_description()
     }
 }
 add_action('wp_head', 'gapyeong_meta_description', 1);
+
+
+/**
+ * SNS 공유용 Open Graph / Twitter Card 메타 출력.
+ *
+ * 홈·목록: church-activity 최근글 대표이미지
+ * 단일 글/페이지: 해당 글 대표이미지
+ * 없으면 테마 로고로 폴백
+ */
+function gapyeong_social_meta()
+{
+    if (defined('WPSEO_VERSION') || defined('AIOSEOP_VERSION') || class_exists('AIOSEOP_Core')) {
+        return;
+    }
+
+    // KBoard 상세는 플러그인 SEO가 처리
+    if (function_exists('kboard_uid') && kboard_uid()) {
+        return;
+    }
+
+    $site_name = '가평 제칠일 안식일 예수재림교회';
+    $title     = wp_get_document_title();
+    $url       = gapyeong_current_canonical_url();
+    $type      = 'website';
+    $description = '';
+
+    if (is_front_page() || is_home()) {
+        $description = '가평 제칠일 안식일 예수재림교회(Gapyeong SDA Church)입니다. 매주 토요일 안식일 예배로 여러분을 초대합니다. 경기도 가평군 가평읍 석봉로 153번길 2.';
+    } elseif (is_singular('post')) {
+        $type = 'article';
+        $description = gapyeong_get_post_summary(get_the_ID(), 160);
+    } elseif (is_singular()) {
+        $description = has_excerpt()
+            ? wp_strip_all_tags(get_the_excerpt())
+            : (get_the_title() . ' — ' . $site_name);
+    } elseif (is_category()) {
+        $description = single_cat_title('', false) . ' — ' . $site_name;
+    }
+
+    $description = apply_filters('gapyeong_meta_description', $description);
+    $image       = gapyeong_get_social_share_image();
+
+    echo "\n<!-- Gapyeong social meta -->\n";
+    echo '<meta property="og:locale" content="ko_KR">' . "\n";
+    echo '<meta property="og:type" content="' . esc_attr($type) . '">' . "\n";
+    echo '<meta property="og:site_name" content="' . esc_attr($site_name) . '">' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
+    echo '<meta property="og:url" content="' . esc_url($url) . '">' . "\n";
+
+    if ($description) {
+        echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
+    }
+    if ($image) {
+        echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
+        echo '<meta property="og:image:alt" content="' . esc_attr($title) . '">' . "\n";
+    }
+
+    echo '<meta name="twitter:card" content="' . esc_attr($image ? 'summary_large_image' : 'summary') . '">' . "\n";
+    echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
+    if ($description) {
+        echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
+    }
+    if ($image) {
+        echo '<meta name="twitter:image" content="' . esc_url($image) . '">' . "\n";
+    }
+    echo "<!-- /Gapyeong social meta -->\n";
+}
+add_action('wp_head', 'gapyeong_social_meta', 2);
+
+
+/**
+ * SNS 공유 썸네일 URL.
+ * 홈/카테고리: church-activity 최근글 대표이미지 → 단일글 썸네일 → 사이트 아이콘/로고.
+ */
+function gapyeong_get_social_share_image()
+{
+    $image = '';
+
+    if (is_singular() && has_post_thumbnail()) {
+        $image = gapyeong_get_attachment_share_image_url(get_post_thumbnail_id());
+    } elseif (is_front_page() || is_home() || is_category('church-activity')) {
+        $image = gapyeong_get_latest_activity_share_image_url();
+    }
+
+    if (!$image) {
+        $image = gapyeong_get_latest_activity_share_image_url();
+    }
+
+    if (!$image) {
+        $site_icon = get_site_icon_url(512);
+        if ($site_icon) {
+            $image = $site_icon;
+        } else {
+            $image = get_template_directory_uri() . '/assets/images/logo.png';
+        }
+    }
+
+    $image = set_url_scheme($image, 'https');
+    return apply_filters('gapyeong_social_share_image', $image);
+}
+
+
+/**
+ * 첨부파일의 OG용 이미지 URL (1200×630 우선).
+ */
+function gapyeong_get_attachment_share_image_url($attachment_id)
+{
+    $attachment_id = (int) $attachment_id;
+    if ($attachment_id <= 0) {
+        return '';
+    }
+
+    foreach (array('gapyeong-og', 'large', 'full') as $size) {
+        $src = wp_get_attachment_image_src($attachment_id, $size);
+        if (!empty($src[0])) {
+            return $src[0];
+        }
+    }
+
+    return '';
+}
+
+
+/**
+ * church-activity 최근글 대표이미지 URL.
+ */
+function gapyeong_get_latest_activity_share_image_url()
+{
+    $posts = gapyeong_get_church_activity_posts(array(
+        'count'             => 1,
+        'require_thumbnail' => true,
+    ));
+
+    if (empty($posts[0]['ID'])) {
+        return '';
+    }
+
+    return gapyeong_get_attachment_share_image_url(get_post_thumbnail_id($posts[0]['ID']));
+}
+
+
+/**
+ * 현재 요청의 canonical URL.
+ */
+function gapyeong_current_canonical_url()
+{
+    if (is_singular()) {
+        return get_permalink();
+    }
+    if (is_front_page() || is_home()) {
+        return home_url('/');
+    }
+    if (is_category()) {
+        return get_category_link(get_queried_object_id());
+    }
+
+    global $wp;
+    $path = isset($wp->request) ? $wp->request : '';
+    return home_url(user_trailingslashit($path));
+}
+
+
+/**
+ * JSON-LD 구조화 데이터 (Church / Article / BreadcrumbList).
+ */
+function gapyeong_schema_jsonld()
+{
+    if (defined('WPSEO_VERSION') || defined('AIOSEOP_VERSION') || class_exists('AIOSEOP_Core')) {
+        return;
+    }
+
+    if (function_exists('kboard_uid') && kboard_uid()) {
+        return;
+    }
+
+    $graphs = array(gapyeong_schema_church());
+
+    if (is_singular('post')) {
+        $article = gapyeong_schema_article(get_the_ID());
+        if ($article) {
+            $graphs[] = $article;
+        }
+    }
+
+    $breadcrumb = gapyeong_schema_breadcrumb();
+    if ($breadcrumb) {
+        $graphs[] = $breadcrumb;
+    }
+
+    $payload = array(
+        '@context' => 'https://schema.org',
+        '@graph'   => array_values(array_filter($graphs)),
+    );
+
+    echo "\n" . '<script type="application/ld+json">' .
+        wp_json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) .
+        '</script>' . "\n";
+}
+add_action('wp_head', 'gapyeong_schema_jsonld', 5);
+
+
+/**
+ * Church 스키마.
+ */
+function gapyeong_schema_church()
+{
+    $logo = get_template_directory_uri() . '/assets/images/logo.png';
+    $image = gapyeong_get_latest_activity_share_image_url() ?: $logo;
+
+    return array(
+        '@type' => 'Church',
+        '@id'   => home_url('/#church'),
+        'name'  => '가평 제칠일 안식일 예수재림교회',
+        'alternateName' => 'Gapyeong SDA Church',
+        'url'   => home_url('/'),
+        'telephone' => '+82-31-581-2765',
+        'image' => set_url_scheme($image, 'https'),
+        'logo'  => set_url_scheme($logo, 'https'),
+        'address' => array(
+            '@type'           => 'PostalAddress',
+            'streetAddress'   => '석봉로 153번길 2',
+            'addressLocality' => '가평읍',
+            'addressRegion'   => '경기도 가평군',
+            'addressCountry'  => 'KR',
+        ),
+        'openingHoursSpecification' => array(
+            array(
+                '@type'     => 'OpeningHoursSpecification',
+                'dayOfWeek' => 'Friday',
+                'opens'     => '19:30',
+                'closes'    => '21:00',
+                'description' => '금요 저녁 예배',
+            ),
+            array(
+                '@type'     => 'OpeningHoursSpecification',
+                'dayOfWeek' => 'Saturday',
+                'opens'     => '09:30',
+                'closes'    => '12:00',
+                'description' => '안식일학교 및 예배',
+            ),
+        ),
+        'sameAs' => array(
+            'https://www.youtube.com/@제칠일안식일예수-z1w',
+        ),
+    );
+}
+
+
+/**
+ * Article 스키마 (단일 게시글).
+ */
+function gapyeong_schema_article($post_id)
+{
+    $post_id = (int) $post_id;
+    if ($post_id <= 0) {
+        return null;
+    }
+
+    $headline = get_the_title($post_id);
+    $url      = get_permalink($post_id);
+    $image    = has_post_thumbnail($post_id)
+        ? gapyeong_get_attachment_share_image_url(get_post_thumbnail_id($post_id))
+        : '';
+
+    $data = array(
+        '@type'            => 'Article',
+        '@id'              => trailingslashit($url) . '#article',
+        'headline'         => $headline,
+        'datePublished'    => get_the_date('c', $post_id),
+        'dateModified'     => get_the_modified_date('c', $post_id),
+        'mainEntityOfPage' => $url,
+        'description'      => gapyeong_get_post_summary($post_id, 160),
+        'author'           => array(
+            '@type' => 'Organization',
+            'name'  => '가평 제칠일 안식일 예수재림교회',
+            '@id'   => home_url('/#church'),
+        ),
+        'publisher'        => array(
+            '@type' => 'Organization',
+            'name'  => '가평 제칠일 안식일 예수재림교회',
+            '@id'   => home_url('/#church'),
+            'logo'  => array(
+                '@type' => 'ImageObject',
+                'url'   => set_url_scheme(get_template_directory_uri() . '/assets/images/logo.png', 'https'),
+            ),
+        ),
+        'isPartOf'         => array('@id' => home_url('/#church')),
+    );
+
+    if ($image) {
+        $data['image'] = array(set_url_scheme($image, 'https'));
+    }
+
+    return $data;
+}
+
+
+/**
+ * BreadcrumbList 스키마.
+ */
+function gapyeong_schema_breadcrumb()
+{
+    $items = array(
+        array(
+            '@type'    => 'ListItem',
+            'position' => 1,
+            'name'     => '홈',
+            'item'     => home_url('/'),
+        ),
+    );
+
+    if (is_front_page() || is_home()) {
+        return null;
+    }
+
+    if (is_singular('post')) {
+        $items[] = array(
+            '@type'    => 'ListItem',
+            'position' => 2,
+            'name'     => '교회 활동',
+            'item'     => gapyeong_church_activity_url(),
+        );
+        $items[] = array(
+            '@type'    => 'ListItem',
+            'position' => 3,
+            'name'     => get_the_title(),
+            'item'     => get_permalink(),
+        );
+    } elseif (is_category()) {
+        $items[] = array(
+            '@type'    => 'ListItem',
+            'position' => 2,
+            'name'     => single_cat_title('', false),
+            'item'     => get_category_link(get_queried_object_id()),
+        );
+    } elseif (is_page()) {
+        $ancestors = array_reverse(get_post_ancestors(get_the_ID()));
+        $position  = 2;
+        foreach ($ancestors as $ancestor_id) {
+            $items[] = array(
+                '@type'    => 'ListItem',
+                'position' => $position++,
+                'name'     => get_the_title($ancestor_id),
+                'item'     => get_permalink($ancestor_id),
+            );
+        }
+        $items[] = array(
+            '@type'    => 'ListItem',
+            'position' => $position,
+            'name'     => get_the_title(),
+            'item'     => get_permalink(),
+        );
+    } else {
+        return null;
+    }
+
+    return array(
+        '@type'           => 'BreadcrumbList',
+        'itemListElement' => $items,
+    );
+}
 
 
 function gapyeong_enqueue_scripts()
