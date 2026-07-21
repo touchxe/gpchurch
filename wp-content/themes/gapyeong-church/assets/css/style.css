@@ -1555,11 +1555,14 @@ img {
 
 /* Featured Activity */
 .activity-featured {
+    display: block;
     background: white;
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: var(--transition);
+    text-decoration: none;
+    color: inherit;
 }
 
 .activity-featured:hover {
@@ -1637,6 +1640,8 @@ img {
     padding: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
     transition: var(--transition);
+    text-decoration: none;
+    color: inherit;
 }
 
 .activity-list-item:hover {

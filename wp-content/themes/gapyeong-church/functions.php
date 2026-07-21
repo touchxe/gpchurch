@@ -47,6 +47,62 @@ function gapyeong_church_activity_url()
 
 
 /**
+ * church-activity 카테고리 최신글을 가져옵니다.
+ *
+ * @param array $args {
+ *     @type int  $count              가져올 개수 (기본 4).
+ *     @type bool $require_thumbnail  대표이미지가 있는 글만 (기본 false).
+ * }
+ * @return array<int, array{ID:int,title:string,link:string,date:string,summary:string,thumb_large:?string,thumb_medium:?string}>
+ */
+function gapyeong_get_church_activity_posts($args = array())
+{
+    $args = wp_parse_args($args, array(
+        'count'             => 4,
+        'require_thumbnail' => false,
+    ));
+
+    $category = get_category_by_slug('church-activity');
+    if (!$category) {
+        return array();
+    }
+
+    $query_args = array(
+        'post_type'              => 'post',
+        'posts_per_page'         => (int) $args['count'],
+        'cat'                    => (int) $category->term_id,
+        'orderby'                => 'date',
+        'order'                  => 'DESC',
+        'ignore_sticky_posts'    => true,
+        'no_found_rows'          => true,
+        'update_post_term_cache' => false,
+    );
+
+    if (!empty($args['require_thumbnail'])) {
+        $query_args['meta_key'] = '_thumbnail_id';
+    }
+
+    $query = new WP_Query($query_args);
+    $posts = array();
+
+    foreach ($query->posts as $post) {
+        $posts[] = array(
+            'ID'           => (int) $post->ID,
+            'title'        => get_the_title($post),
+            'link'         => get_permalink($post),
+            'date'         => get_the_date('Y.m.d', $post),
+            'summary'      => gapyeong_get_post_summary($post->ID, 100),
+            'thumb_large'  => get_the_post_thumbnail_url($post, 'large') ?: '',
+            'thumb_medium' => get_the_post_thumbnail_url($post, 'medium') ?: '',
+        );
+    }
+    wp_reset_postdata();
+
+    return $posts;
+}
+
+
+/**
  * 홈 히어로용: church-activity 카테고리 최신글의 대표이미지 목록.
  *
  * @param int $count 가져올 개수 (기본 3).
@@ -54,37 +110,23 @@ function gapyeong_church_activity_url()
  */
 function gapyeong_get_hero_activity_slides($count = 3)
 {
-    $category = get_category_by_slug('church-activity');
-    if (!$category) {
-        return array();
-    }
-
-    $query = new WP_Query(array(
-        'post_type'              => 'post',
-        'posts_per_page'         => (int) $count,
-        'cat'                    => (int) $category->term_id,
-        'meta_key'               => '_thumbnail_id',
-        'orderby'                => 'date',
-        'order'                  => 'DESC',
-        'ignore_sticky_posts'    => true,
-        'no_found_rows'          => true,
-        'update_post_term_cache' => false,
+    $posts = gapyeong_get_church_activity_posts(array(
+        'count'             => $count,
+        'require_thumbnail' => true,
     ));
 
     $slides = array();
-    foreach ($query->posts as $post) {
-        $url = get_the_post_thumbnail_url($post, 'large');
-        if (!$url) {
+    foreach ($posts as $post) {
+        if (empty($post['thumb_large'])) {
             continue;
         }
 
         $slides[] = array(
-            'url'  => $url,
-            'alt'  => get_the_title($post),
-            'link' => get_permalink($post),
+            'url'  => $post['thumb_large'],
+            'alt'  => $post['title'],
+            'link' => $post['link'],
         );
     }
-    wp_reset_postdata();
 
     return $slides;
 }

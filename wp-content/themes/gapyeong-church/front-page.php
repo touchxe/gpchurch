@@ -516,13 +516,61 @@ $theme_uri = get_template_directory_uri();
             </div>
         </div>
 
-        <!-- KBoard 최신글 모아보기 갤러리 (id=3, gallary-skin) -->
+        <!-- church-activity 최신글 (WP 카테고리) -->
         <div class="activities-blog-grid-header" data-aos="fade-up">
             <h2 class="activities-blog-title">교회 활동</h2>
-            <a href="/community/gallery" class="activities-more-link">전체 보기 <i data-lucide="arrow-right"></i></a>
+            <a href="<?php echo esc_url(gapyeong_church_activity_url()); ?>" class="activities-more-link">전체 보기 <i data-lucide="arrow-right"></i></a>
         </div>
-        <div class="kboard-latestview-wrapper" data-aos="fade-up">
-            <?php echo do_shortcode('[kboard_latestview id="3"]'); ?>
+        <div class="activities-blog-grid" data-aos="fade-up">
+            <?php
+            $activity_posts = gapyeong_get_church_activity_posts(array('count' => 4));
+            if ($activity_posts):
+                $featured = $activity_posts[0];
+                $side_posts = array_slice($activity_posts, 1);
+                ?>
+                <a href="<?php echo esc_url($featured['link']); ?>" class="activity-featured">
+                    <div class="activity-featured-image">
+                        <?php if ($featured['thumb_large']): ?>
+                            <img src="<?php echo esc_url($featured['thumb_large']); ?>"
+                                alt="<?php echo esc_attr($featured['title']); ?>">
+                        <?php endif; ?>
+                        <span class="activity-category">교회 활동</span>
+                    </div>
+                    <div class="activity-featured-content">
+                        <h3><?php echo esc_html($featured['title']); ?></h3>
+                        <?php if ($featured['summary']): ?>
+                            <p><?php echo esc_html($featured['summary']); ?></p>
+                        <?php endif; ?>
+                        <div class="activity-meta">
+                            <span><?php echo esc_html($featured['date']); ?></span>
+                        </div>
+                    </div>
+                </a>
+                <div class="activities-list">
+                    <?php foreach ($side_posts as $item): ?>
+                        <a href="<?php echo esc_url($item['link']); ?>" class="activity-list-item">
+                            <?php if ($item['thumb_medium']): ?>
+                                <div class="activity-list-image">
+                                    <img src="<?php echo esc_url($item['thumb_medium']); ?>"
+                                        alt="<?php echo esc_attr($item['title']); ?>">
+                                </div>
+                            <?php endif; ?>
+                            <div class="activity-list-content">
+                                <span class="activity-list-category">교회 활동</span>
+                                <h4><?php echo esc_html($item['title']); ?></h4>
+                                <?php if ($item['summary']): ?>
+                                    <p><?php echo esc_html(function_exists('mb_strimwidth')
+                                        ? mb_strimwidth($item['summary'], 0, 60, '...', 'UTF-8')
+                                        : wp_trim_words($item['summary'], 12, '...')); ?></p>
+                                <?php endif; ?>
+                                <span class="activity-list-date"><?php echo esc_html($item['date']); ?></span>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="activities-empty">등록된 교회 활동이 없습니다.</p>
+            <?php endif; ?>
         </div>
     </div>
 </section>
